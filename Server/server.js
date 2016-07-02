@@ -3,7 +3,7 @@ var multer  =   require('multer');
 var app         =   express();
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, './uploads');
+    callback(null, __dirname+'/uploads');
   },
   filename: function (req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now());
@@ -12,7 +12,7 @@ var storage =   multer.diskStorage({
 var upload = multer({ storage : storage}).single('userPhoto');
 
 app.get('/',function(req,res){
-      res.sendFile(__dirname + "/index.html");
+      res.sendFile(__dirname + "/FrontEnd/index.html");
 });
 
 app.post('/api/photo',function(req,res){
