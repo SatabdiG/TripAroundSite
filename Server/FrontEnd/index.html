@@ -10,23 +10,29 @@
 <!-- Vendor - Bootstrap stylesheet go here -->
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" >
-<link rel="stylesheet" href="/FrontEnd/css/main.css">
+<link rel="stylesheet" href="/FrontEnd/css/dropzone.css";
 <link href="https://fonts.googleapis.com/css?family=Lemonada|Shadows+Into+Light+Two" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Merienda+One|Pacifico" rel="stylesheet">
+<link rel="stylesheet" href="/FrontEnd/css/main.css">
 
+<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="/FrontEnd/js/socket.io.js"></script>
+<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
 <!-- Vendor: Angular, followed by our custom Javascripts >
 //<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.js"></script>
 <script src="http://popcornjs.org/code/dist/popcorn-complete.js"></script> -->
 
 <script src="/FrontEnd/js/react.js"></script>
-<script src="/FrontEnd/js/react-dom-server.min.jseact-dom-server.min.js"></script>
+<script src="/FrontEnd/js/react-dom-server.min.js"></script>
 <script src="/FrontEnd/js/react-dom.min.js"></script>
+<sript src="/FrontEnd/js/dropzone.js"></sript>
 
+<!--Map API frame work --->
+<script type="text/javascript" src="//scribblemaps.com/api/js/"></script>
 
 <!-- Our Website Javascripts -->
 <script src="/FrontEnd/js/main.js"></script>
@@ -49,14 +55,24 @@
 </nav>
 
 <p>
+
+
+
+<p>
+  This is the most minimal example of Dropzone. The upload in this example
+  doesn't work, because there is no actual server to handle the file upload.
+</p>
+
+
 <form id        =  "uploadForm"
      enctype   =  "multipart/form-data"
      action    =  "/api/photo"
      method    =  "post"
+     class="dropzone"
 >
 <div id=""></div>
-
-<input type="file" name="userPhoto" /><input type="submit" value="Upload Image" name="submit">
+<!--
+<input type="file" name="userPhoto" />--> <input type="submit" value="Upload Image" name="submit">
 </form>
 </p>
 </body>
