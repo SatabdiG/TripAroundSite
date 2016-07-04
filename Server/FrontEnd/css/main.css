@@ -1,0 +1,28 @@
+
+html, body {
+    height: 100%;
+    background-size: cover;
+    font-family: 'Pacifico', cursive;
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+     background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    }
+
+#uploadForm{
+
+  background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%;
+}
