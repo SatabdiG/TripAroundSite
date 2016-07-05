@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c079aa52-ff29-413a-82c9-df87e6484b28" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server/FrontEnd/index.html" afterPath="$PROJECT_DIR$/Server/FrontEnd/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server/FrontEnd/js/main.js" afterPath="$PROJECT_DIR$/Server/FrontEnd/js/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server/server.js" afterPath="$PROJECT_DIR$/Server/server.js" />
     </list>
     <ignored path="TripAroundSite.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -544,7 +541,14 @@
       <option name="project" value="LOCAL" />
       <updated>1467646809171</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Server changes&#10;">
+      <created>1467706255717</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1467706255717</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -586,7 +590,8 @@
     <MESSAGE value="Test Message" />
     <MESSAGE value="Added Socket Framework&#10;" />
     <MESSAGE value="Adding scribble Map API&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding scribble Map API&#10;" />
+    <MESSAGE value="Server changes&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Server changes&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
