@@ -1,6 +1,7 @@
 var express =   require("express");
 var app  =   express();
 var multer  =   require('multer');
+var multer1=require('multer');
 var http=  require('http').Server(app);
 var io=require('socket.io')(http);
 
@@ -19,7 +20,9 @@ var storage =   multer.diskStorage({
 });
 
 
-var upload = multer({ storage : storage}).single('userPhoto');
+var upload = multer({ storage : storage}).array('file',2);
+var upload1 = multer1({ storage : storage}).single('userphoto');
+
 
 app.get('/',function(req,res){
       res.sendFile(__dirname + "/FrontEnd/index.html");
@@ -32,6 +35,14 @@ app.post('/api/photo',function(req,res){
         }
         res.end("File is uploaded");
     });
+    upload1(req,res,function(err) {
+        if(err) {
+            return res.end("Error uploading file.");
+        }
+        res.end("File is uploaded");
+    });
+
+
 });
 
 
