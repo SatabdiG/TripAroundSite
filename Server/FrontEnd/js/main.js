@@ -22,7 +22,10 @@ var socket=io.connect();
                 disableZoom: false
             });
 
-                  
+          sm.onclick=function () {
+            alert("Clicking");
+
+          }
 
 
 

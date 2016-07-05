@@ -20,8 +20,8 @@ var storage =   multer.diskStorage({
 });
 
 
-var upload = multer({ storage : storage}).array('file',2);
-var upload1 = multer1({ storage : storage}).single('userphoto');
+var upload = multer({ storage : storage}).array('file',3);
+var upload1 = multer1({ storage : storage}).array('userphoto',3);
 
 
 app.get('/',function(req,res){
