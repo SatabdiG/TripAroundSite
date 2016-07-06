@@ -55,7 +55,7 @@ app.post('/uploadFiles', function (req, res) {
     uploadedImages = Array.isArray(req.files.uploadedImages) ? req.files.uploadedImages : [req.files.uploadedImages];
 
     uploadedImages.forEach(function (value) {
-      newPath = __dirname + "/public/uploads/" + path.parse(value.path).base;
+      newPath = __dirname + "/uploads/" + path.parse(value.path).base;
       fs.renameSync(value.path, newPath);
 
       uploadedFileNames.push(parseFile(newPath, req));
@@ -80,7 +80,7 @@ app.post('/api/photos', function(req, res){
 
 });
 app.get('/files', function (req, res) {
-  var dirPath = path.normalize('./public/uploads/');
+  var dirPath = path.normalize('./uploads/');
 
   fs.readdir(dirPath, function (err, files) {
     if (err) {
