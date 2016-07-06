@@ -56,7 +56,24 @@
 
 <p>
 
+<!-- Adding uploading forms-->
 
+<h1>Multiple File Upload With ExpressJS 3.x using ajax</h1><br />
+<h3>without ajax ( redirecting to a new page )</h3>
+<form action="/uploadFiles", method="post", enctype="multipart/form-data" name="uploadForm">
+  <input type="file" multiple="multiple" accept="image/*" name="uploadedImages"/><br/>
+  <input type="submit" value="Upload" class="btn btn-info" />
+</form>
+<hr />
+
+
+<h3>with ajax</h3>
+<form action="/uploadFiles", method="post", enctype="multipart/form-data" name="ajaxUploadForm">
+  <input type="file" multiple="multiple" accept="image/*" name="uploadedImages"/><br/>
+  <div id="uploadedImages"></div>
+  <input type="submit" value="Upload in background" class="btn btn-info" />
+</form>
+<!--finish of uploading forms-->
 
 <form id        =  "uploadForm"
      enctype   =  "multipart/form-data"

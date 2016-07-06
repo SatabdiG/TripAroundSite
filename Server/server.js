@@ -1,57 +1,77 @@
-var express =   require("express");
-var app  =   express();
-var multer  =   require('multer');
-var multer1=require('multer');
-var http=  require('http').Server(app);
-var io=require('socket.io')(http);
+'use strict';
 
+var express = require('express'),
+  http = require('http'),
+  app = express(),
+  sys = require('sys'),
+  fs = require('fs'),
+  path = require('path'),
+  bytes = require('bytes'),
+  parseFile = function(file, req) {
+    var parsedFile = path.parse(file),
+      fullUrl = req.protocol + '://' + req.get('host') + '/uploads/';
 
+    return {
+      name: parsedFile.name,
+      base: parsedFile.base,
+      extension: parsedFile.ext.substring(1),
+      url: fullUrl + parsedFile.base,
+      size: bytes(fs.statSync(file).size)
+    };
+  };
 
-app.use("/FrontEnd/css",express.static(__dirname+'/FrontEnd/css'));
-app.use("/FrontEnd/js",express.static(__dirname+'/FrontEnd/js'));
+app.set('port', process.env.PORT || 1526);
+app.use(express.static(__dirname + '/public'));
+app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/_tmp' })); // required for accessing req.files object
 
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, __dirname+'/uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
+app.post('/uploadFiles', function (req, res) {
+  var newPath = null,
+    uploadedFileNames = [],
+    uploadedImages,
+    uploadedImagesCounter = 0;
+
+  if(req.files && req.files.uploadedImages) {
+    uploadedImages = Array.isArray(req.files.uploadedImages) ? req.files.uploadedImages : [req.files.uploadedImages];
+
+    uploadedImages.forEach(function (value) {
+      newPath = __dirname + "/public/uploads/" + path.parse(value.path).base;
+      fs.renameSync(value.path, newPath);
+
+      uploadedFileNames.push(parseFile(newPath, req));
+    });
+
+    res.type('application/json');
+    res.send(JSON.parse(JSON.stringify({"uploadedFileNames": uploadedFileNames})));
+
   }
 });
 
+app.get('/files', function (req, res) {
+  var dirPath = path.normalize('./public/uploads/');
 
-var upload = multer({ storage : storage}).array('file',3);
-var upload1 = multer1({ storage : storage}).array('userphoto',3);
+  fs.readdir(dirPath, function (err, files) {
+    if (err) {
+      throw err;
+      res.send(500, {})
+    }
 
-
-app.get('/',function(req,res){
-      res.sendFile(__dirname + "/FrontEnd/index.html");
-});
-
-app.post('/api/photo',function(req,res){
-    upload(req,res,function(err) {
-        if(err) {
-            return res.end("Error uploading file.");
-        }
-        res.end("File is uploaded");
-    });
-    upload1(req,res,function(err) {
-        if(err) {
-            return res.end("Error uploading file.");
-        }
-        res.end("File is uploaded");
+    var uploadedFiles = files.filter(function (file) {
+      return file !== '.gitignore';
+    }).map(function (file) {
+      return path.join(dirPath, file);
+    }).filter(function (file) {
+      return fs.statSync(file).isFile();
+    }).map(function (file) {
+      return parseFile(file, req);
     });
 
+    res.type('application/json');
+    res.send(uploadedFiles);
+  });
 
 });
 
-
-io.on('connection', function(socket){
-  console.log("A user connected");
-
-});
-
-
-http.listen(3000,function(){
-    console.log("Working on port 3000");
+http.createServer(app).listen(app.get('port'), function () {
+  console.log("\n\nNode version: " + process.versions.node);
+  console.log("Express server listening on port " + app.get('port') + "\n\n");
 });
