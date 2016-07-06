@@ -20,7 +20,7 @@ var express = require('express'),
     };
   };
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 1526);
 app.use(express.static(__dirname + '/public'));
 app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/_tmp' })); // required for accessing req.files object
 
