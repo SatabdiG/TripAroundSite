@@ -123,7 +123,7 @@ MongoClient.connect("mongodb://localhost:27017/path", function(err, db) {
 */
 
 // Adding MongoDB
-
+/*
 db = new mongodb.Db('test', new mongodb.Server('localhost', 27017, {}), {});
 
 //var db = require('mongo-lite').connect('mongodb://localhost:1526')
@@ -150,3 +150,4 @@ db.open(function(error, client) {
   });
 });
 
+*/
