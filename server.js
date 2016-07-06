@@ -7,7 +7,14 @@ var express = require('express'),
   fs = require('fs'),
   path = require('path'),
   bytes = require('bytes'),
-  parseFile = function(file, req) {
+  //
+  qs = require('querystring'),
+  url = require('url'),
+  mongodb = require('mongodb'),
+  //
+
+
+parseFile = function(file, req) {
     var parsedFile = path.parse(file),
       fullUrl = req.protocol + '://' + req.get('host') + '/uploads/';
 
@@ -101,3 +108,45 @@ http.createServer(app).listen(app.get('port'), function () {
   console.log("\n\nNode version: " + process.versions.node);
   console.log("Express server listening on port " + app.get('port') + "\n\n");
 });
+
+/*
+// Retrieve
+var MongoClient = require('mongodb').MongoClient;
+
+// Connect to the db
+MongoClient.connect("mongodb://localhost:27017/path", function(err, db) {
+  if(!err) {
+    console.log("We are connected");
+  }
+});
+
+*/
+
+// Adding MongoDB
+
+db = new mongodb.Db('test', new mongodb.Server('localhost', 27017, {}), {});
+
+//var db = require('mongo-lite').connect('mongodb://localhost:1526')
+
+db.addListener("error", function(error) {
+  console.log("Error connecting to mongo -- perhaps it isn't running?");
+});
+
+
+db.open(function(error, client) {
+  db.collection('guestbook', function(err, collection) {
+    guestbookCollection = collection;
+
+    http.createServer(function (req, res) {
+      if (req.url.indexOf('/api/') == 0) {
+        handleAPI(req, res);
+      }
+      else if (req.method == 'GET') {
+        handleStatic(req, res);
+      }
+    }).listen(1526, 'localhost');
+
+    console.log('Server running at http://localhost:1526/');
+  });
+});
+
