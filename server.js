@@ -19,10 +19,24 @@ var express = require('express'),
       size: bytes(fs.statSync(file).size)
     };
   };
+var multer = require('multer');
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, __dirname+'/uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
+});
 
-app.set('port', process.env.PORT || 1526);
+
+app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
-app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/_tmp' })); // required for accessing req.files object
+app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/uploads' })); // required for accessing req.files object
+
+
+app.use("/FrontEnd/css",express.static(__dirname+'/FrontEnd/css'));
+app.use("/FrontEnd/js",express.static(__dirname+'/FrontEnd/js'));
 
 app.post('/uploadFiles', function (req, res) {
   var newPath = null,
@@ -44,8 +58,20 @@ app.post('/uploadFiles', function (req, res) {
     res.send(JSON.parse(JSON.stringify({"uploadedFileNames": uploadedFileNames})));
 
   }
-});
 
+
+
+});
+var upload = multer({ storage : storage}).array('file',3);
+app.post('/api/photos', function(req, res){
+  upload(req,res,function(err) {
+    if(err) {
+      return res.end("Error uploading file.");
+    }
+    res.end("File is uploaded");
+  });
+
+});
 app.get('/files', function (req, res) {
   var dirPath = path.normalize('./public/uploads/');
 

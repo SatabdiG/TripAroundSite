@@ -1,7 +1,7 @@
 /**
  * Created by tasu on 04.07.16.
  */
-var socket=io.connect();
+
 
     window.onload = function() {
 
@@ -26,6 +26,10 @@ var socket=io.connect();
             alert("Clicking");
 
           }
+      Dropzone.options.dragdrop={
+        paramName:"file"
+
+      }
 
 
 
