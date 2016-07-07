@@ -145,19 +145,6 @@ process.on('SIGTERM', function(){
 });
 
 
-/*
-// Retrieve
-var MongoClient = require('mongodb').MongoClient;
-
-// Connect to the db
-MongoClient.connect("mongodb://localhost:27017/path", function(err, db) {
-  if(!err) {
-    console.log("We are connected");
-  }
-});
-
-*/
-
 // Adding MongoDB
 /*
 db = new mongodb.Db('test', new mongodb.Server('localhost', 27017, {}), {});

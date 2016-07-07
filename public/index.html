@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="tripApp">
+<html ng-app="tripApp" xmlns="http://www.w3.org/1999/html">
 <head>
  <meta charset="UTF-8">
     <meta charset="utf-8">
@@ -28,11 +28,15 @@
 <script src="/FrontEnd/js/react-dom-server.min.js"></script>
 <script src="/FrontEnd/js/react-dom.min.js"></script>
 <sript src="/FrontEnd/js/dropzone.js"></sript>
+<script src="/FrontEnd/js/exif.js"></script>
+<script src="/FrontEnd/js/binaryajax.js"></script>
 
-<!--Map API frame work --->
-<script type="text/javascript" src="//scribblemaps.com/api/js/"></script>
+<!--Map API frame work-->
 
-<!-- Our Website Javascripts -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rpSwtuzsvOykF3C25s-rT0a2AqugfU"></script>
+<!--<script src="http://maps.googleapis.com/maps/api/js"></script>-->
+<!--Our Main ja file -->
+
 <script src="/FrontEnd/js/main.js"></script>
 <body>
 
@@ -101,12 +105,14 @@
      class="dropzone"
 >
 
-<input type="file" name="userphoto" /><input type="submit" value="Upload Image" name="submit">
+<input type="file" name="userphoto" id="userphotoid"> Click here </input> <input type="submit" value="Upload Image" name="submit">
 </form>
-</p>
 
-<p>
-  <div id="ScribbleMap" style="width: 500px; height: 500px"></div>
-</p>
+
+<div id="googleMap" style="width:500px;height:380px;"></div>
+
+
+
+
 </body>
 </html>
