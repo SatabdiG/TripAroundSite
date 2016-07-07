@@ -64,8 +64,10 @@ app.post('/uploadFiles', function (req, res) {
       uploadedFileNames.push(parseFile(newPath, req));
     });
 
-    res.type('application/json');
-    res.send(JSON.parse(JSON.stringify({"uploadedFileNames": uploadedFileNames})));
+    //res.type('application/json');
+    //res.send(JSON.parse(JSON.stringify({"uploadedFileNames": uploadedFileNames})));
+    console.log("Success");
+    res.sendfile(__dirname+"/public/index.html");
 
   }
 
@@ -78,7 +80,8 @@ app.post('/photos', function(req, res){
     if(err) {
       return res.end("Error uploading file.");
     }
-    return res.end("Success");
+    console.log("Success");
+    res.sendfile(__dirname+"/public/index.html");
   });
 
 });
