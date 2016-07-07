@@ -26,18 +26,7 @@ parseFile = function(file, req) {
       size: bytes(fs.statSync(file).size)
     };
   };
-
 var multer = require('multer');
-
-app.set('port', process.env.PORT || 3000);
-app.use(express.static(__dirname + '/public'));
-app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/uploads' })); // required for accessing req.files object
-
-
-app.use("/FrontEnd/css",express.static(__dirname+'/FrontEnd/css'));
-app.use("/FrontEnd/js",express.static(__dirname+'/FrontEnd/js'));
-
-
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, __dirname+'/uploads');
@@ -46,6 +35,15 @@ var storage =   multer.diskStorage({
     callback(null, file.fieldname + '-' + Date.now());
   }
 });
+
+
+app.set('port', process.env.PORT || 3000);
+app.use(express.static(__dirname + '/public'));
+app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/uploads' })); // required for accessing req.files object
+
+
+app.use("/FrontEnd/css",express.static(__dirname+'/FrontEnd/css'));
+app.use("/FrontEnd/js",express.static(__dirname+'/FrontEnd/js'));
 
 app.post('/uploadFiles', function (req, res) {
   var newPath = null,
@@ -72,12 +70,12 @@ app.post('/uploadFiles', function (req, res) {
 
 });
 var upload = multer({ storage : storage}).array('file',3);
-app.post('/photos', function(req, res){
+app.post('/api/photos', function(req, res){
   upload(req,res,function(err) {
     if(err) {
       return res.end("Error uploading file.");
     }
-    return res.end("Success");
+    res.end("File is uploaded");
   });
 
 });
