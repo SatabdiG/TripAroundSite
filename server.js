@@ -121,7 +121,8 @@ var connect=require('./AdditionServerSide/MongoDbLib');
 var connectionstring="mongodb://localhost:27017/testimage";
 var db=connect.establishConnection(connectionstring, 'storedimages',null, 'filename',function(results)
 {
-  console.log(results)
+  //results contain the results of database connection
+ // console.log(results)
 
 
 
