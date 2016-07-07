@@ -10,7 +10,7 @@ var express = require('express'),
   //
   qs = require('querystring'),
   url = require('url'),
-  mongodb = require('mongodb'),
+  mongodb = require('mongodb').MongoClient,
   //
 
 
@@ -26,15 +26,8 @@ parseFile = function(file, req) {
       size: bytes(fs.statSync(file).size)
     };
   };
+
 var multer = require('multer');
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, __dirname+'/uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
-  }
-});
 
 
 app.set('port', process.env.PORT || 3000);
@@ -44,6 +37,16 @@ app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/uplo
 
 app.use("/FrontEnd/css",express.static(__dirname+'/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/FrontEnd/js'));
+
+
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, __dirname+'/uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
+});
 
 app.post('/uploadFiles', function (req, res) {
   var newPath = null,
@@ -69,13 +72,13 @@ app.post('/uploadFiles', function (req, res) {
 
 
 });
-var upload = multer({ storage : storage}).array('file',3);
-app.post('/api/photos', function(req, res){
+var upload = multer({ storage : storage}).array('file',20);
+app.post('/photos', function(req, res){
   upload(req,res,function(err) {
     if(err) {
       return res.end("Error uploading file.");
     }
-    res.end("File is uploaded");
+    return res.end("Success");
   });
 
 });
@@ -108,6 +111,34 @@ http.createServer(app).listen(app.get('port'), function () {
   console.log("\n\nNode version: " + process.versions.node);
   console.log("Express server listening on port " + app.get('port') + "\n\n");
 });
+
+
+var connect=require('./AdditionServerSide/MongoDbLib');
+var connectionstring="mongodb://localhost:27017/testimage";
+var db=connect.establishConnection(connectionstring, 'storedimages',null, 'filename',function(results)
+{
+  console.log(results)
+
+
+
+});
+
+//connect.addvalues(connectionstring,'storedimages','test4','./uploads');
+
+
+
+
+
+
+
+
+// --- Graceful exit code ---
+process.on('SIGTERM', function(){
+  http.close(function(){
+    process.exit(0);
+  });
+});
+
 
 /*
 // Retrieve

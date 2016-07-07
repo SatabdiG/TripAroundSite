@@ -1,3 +1,6 @@
+//Main Js file
+//Description: Ajax file handling 
+
 function initPage() {
 	onUploadForm();	
 };
@@ -98,3 +101,8 @@ function ajaxx(url, method, data, responseHandler, async) {
 		console.error("Please use a browser with Ajax support.");
 	}
 };
+
+
+
+
+
