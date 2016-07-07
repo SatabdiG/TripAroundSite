@@ -27,7 +27,7 @@
 
           }
       Dropzone.options.dragdrop={
-        paramName:"file"
+        paramName:"uploadedImages"
 
       }
 

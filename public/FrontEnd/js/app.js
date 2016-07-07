@@ -22,7 +22,7 @@ function onUploadForm() {
 		var uploadedImagesContainer = document.getElementById('uploadedImages');
 
 		responseText['uploadedFileNames'].forEach(function(value) {
-			uploadedImagesContainer.innerHTML += '<img src="/uploads/' + value.base + '" width="150" />';
+			uploadedImagesContainer.innerHTML += '<img src="/uploads' + value.base + '" width="150" />';
 		});
 
 	}

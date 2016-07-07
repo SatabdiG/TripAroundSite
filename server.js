@@ -26,16 +26,8 @@ parseFile = function(file, req) {
       size: bytes(fs.statSync(file).size)
     };
   };
-var multer = require('multer');
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, __dirname+'/uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
-  }
-});
 
+var multer = require('multer');
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
@@ -44,6 +36,16 @@ app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/uplo
 
 app.use("/FrontEnd/css",express.static(__dirname+'/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/FrontEnd/js'));
+
+
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, __dirname+'/uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
+});
 
 app.post('/uploadFiles', function (req, res) {
   var newPath = null,
@@ -70,12 +72,12 @@ app.post('/uploadFiles', function (req, res) {
 
 });
 var upload = multer({ storage : storage}).array('file',3);
-app.post('/api/photos', function(req, res){
+app.post('/photos', function(req, res){
   upload(req,res,function(err) {
     if(err) {
       return res.end("Error uploading file.");
     }
-    res.end("File is uploaded");
+    return res.end("Success");
   });
 
 });
