@@ -1,5 +1,4 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    $(document).ready(function() {
+$(document).ready(function() {
 
         $('#uploadForm2').submit(function() {
             $("#status").empty().text("File is uploading...");
@@ -20,4 +19,4 @@
         });
     });
 
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+

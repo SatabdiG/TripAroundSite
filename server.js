@@ -5,7 +5,8 @@ var multer	=	require('multer');
 
 var app	=	express();
 app.use(bodyParser.json());
-
+app.use("/FrontEnd/css",express.static(__dirname+'/public/FrontEnd/css'));
+app.use("/FrontEnd/js",express.static(__dirname+'/public/FrontEnd/js'));
 var connect=require('./AdditionServerSide/MongoDbLib');
 
 var storage	=	multer.diskStorage({
