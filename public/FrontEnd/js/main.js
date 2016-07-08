@@ -9,10 +9,6 @@ var marker;
 google.maps.event.addDomListener(window, 'load', initialize);
 window.onload = function() {
 
-  Dropzone.options.dragdrop={
-    paramName:"uploadedImages"
-
-  }
 
   $("#userphotoid").on('change', function (event) {
 
