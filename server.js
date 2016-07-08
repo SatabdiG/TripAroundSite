@@ -3,7 +3,6 @@ var express	=	require("express");
 var bodyParser =	require("body-parser");
 var multer	=	require('multer');
 var multerdragdrop = require('multer');
-var filepath="./uploads";
 var app	=	express();
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
@@ -14,7 +13,7 @@ app.use("/FrontEnd/css",express.static(__dirname+'/public/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/public/FrontEnd/js'));
 var connect=require('./AdditionServerSide/MongoDbLib');
 
-//Multer Storeage 
+//Multer Storeage
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, __dirname+'/uploads');
@@ -30,7 +29,7 @@ var uploaddragdrop=multerdragdrop({ storage : storage }).array('file',8);
 app.get('/',function(req,res){
     res.sendFile(__dirname + "/public/index.html");
 });
-
+//Image Upload form
 app.post('/api/photo',function(req,res){
     upload(req,res,function(err) {
         //console.log(req.body);
