@@ -6,9 +6,10 @@
 var map;
 var myCenter=new google.maps.LatLng(51.508742,-0.120850);
 var marker;
+var socket=io();
+
 google.maps.event.addDomListener(window, 'load', initialize);
 window.onload = function() {
-
 
   $("#userphotoid").on('change', function (event) {
 
@@ -27,6 +28,8 @@ window.onload = function() {
         lon = (lon[0] + lon[1]/60 + lon[2]/3600) * (lonRef == "W" ? -1 : 1);
         console.log("Latitide : "+lat);
         console.log("Longitude : "+ lon);
+        socket.emit('Latitude', lat);
+        socket.emit('Longitude',lon);
         myCenter=new google.maps.LatLng(lat,lon);
         var marker=new google.maps.Marker({
           position:myCenter,

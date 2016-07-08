@@ -5,6 +5,8 @@ var multer	=	require('multer');
 var multerdragdrop = require('multer');
 var filepath="./uploads";
 var app	=	express();
+var http=require("http").Server(app);
+var socket=require("socket.io")(http);
 app.use(bodyParser.json());
 
 //Path for loading static files
@@ -54,8 +56,26 @@ app.post('/photos',function(req,res){
   });
 
 })
+//******** Socket Function to receive data *********
 
-app.listen(3000,function(){
+socket.on('connection',function(socket){
+  console.log("A user has connected");
+  socket.on('disconnect', function(){
+    console.log("A user has disconnected");
+  });
+
+  socket.on('Latitude', function(msg){
+
+    console.log("Latitude"+ msg);
+  });
+
+  socket.on('Longitude', function(msg){
+    console.log("Longittude"+msg);
+  });
+
+});
+
+http.listen(3000,function(){
     console.log("Working on port 3000");
 });
 
