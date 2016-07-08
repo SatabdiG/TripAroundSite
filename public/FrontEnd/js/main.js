@@ -11,6 +11,11 @@ var socket=io();
 google.maps.event.addDomListener(window, 'load', initialize);
 window.onload = function() {
 
+  //Dropzone parameter change
+  Dropzone.options.uploadForm ={
+    paramName: "file"
+  }
+
   $("#userphotoid").on('change', function (event) {
 
     console.log("changed");

@@ -48,35 +48,54 @@ app.post('/api/photo',function(req,res){
 //Drag and Drop Form Control
 app.post('/photos',function(req,res){
   uploaddragdrop(req,res,function(err){
+
       if(err){
-        return res.end("Error Uploadindg file");
-      }else
+
+        return res.end("Error Uploading file");
+      }else {
+        //console.log(req.files[0].originalname);
+
+       //connect.addvalues('mongodb://localhost:27017/testimages','storedimages',req.files[0].originalname,req.files[0].path);
         return res.end("Success");
+      }
 
   });
 
 })
+
+
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
-  console.log("A user has connected");
+  //console.log("A user has connected");
   socket.on('disconnect', function(){
-    console.log("A user has disconnected");
+   // console.log("A user has disconnected");
   });
 
   socket.on('Latitude', function(msg){
 
-    console.log("Latitude"+ msg);
+   // console.log("Latitude"+ msg);
   });
 
   socket.on('Longitude', function(msg){
-    console.log("Longittude"+msg);
+   // console.log("Longittude"+msg);
   });
+
+  socket.emit("Status", function(msg){
+    msg="Works";
+  })
 
 });
 
 http.listen(3000,function(){
-    console.log("Working on port 3000");
+   console.log("Working on port 3000");
+});
+
+//For Node to exit gracefully 
+process.on('SIGTERM', function(){
+  http.close(function(){
+    process.exit(0);
+  });
 });
 
 
