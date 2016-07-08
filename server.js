@@ -14,6 +14,7 @@ app.use("/FrontEnd/css",express.static(__dirname+'/public/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/public/FrontEnd/js'));
 var connect=require('./AdditionServerSide/MongoDbLib');
 
+//Multer Storeage 
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, __dirname+'/uploads');
@@ -91,7 +92,7 @@ http.listen(3000,function(){
    console.log("Working on port 3000");
 });
 
-//For Node to exit gracefully 
+//For Node to exit gracefully
 process.on('SIGTERM', function(){
   http.close(function(){
     process.exit(0);
