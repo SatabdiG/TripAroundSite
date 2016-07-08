@@ -3,9 +3,11 @@ var express	=	require("express");
 var bodyParser =	require("body-parser");
 var multer	=	require('multer');
 var multerdragdrop = require('multer');
-
+var filepath="./uploads";
 var app	=	express();
 app.use(bodyParser.json());
+
+//Path for loading static files
 app.use("/FrontEnd/css",express.static(__dirname+'/public/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/public/FrontEnd/js'));
 var connect=require('./AdditionServerSide/MongoDbLib');
@@ -32,7 +34,7 @@ app.post('/api/photo',function(req,res){
         //console.log( req.files);
         console.log( req.files[0].filename);
         console.log( req.files[0].path);
-        connect.addvalues('mongodb://localhost:27017/testimages','testimages',req.files[0].filename,req.files[0].path);
+        connect.addvalues('mongodb://localhost:27017/testimages','storedimages',req.files[0].filename,req.files[0].path);
 
         if(err) {
             return res.end("Error uploading file.");
