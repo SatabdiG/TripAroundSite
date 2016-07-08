@@ -19,6 +19,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+
 <!-- Vendor: Angular, followed by our custom Javascripts >
 //<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.js"></script>
@@ -30,6 +31,7 @@
 <sript src="/FrontEnd/js/dropzone.js"></sript>
 <script src="/FrontEnd/js/exif.js"></script>
 <script src="/FrontEnd/js/binaryajax.js"></script>
+<script src="/FrontEnd/js/uploadImage.js"></script>
 
 <!--Map API frame work-->
 
@@ -59,60 +61,37 @@
 <p>
 
 <!-- Adding uploading forms-->
-
-<h1>Multiple File Upload With ExpressJS 3.x using ajax</h1><br />
-<h3>without ajax ( redirecting to a new page )</h3>
-<form action="/uploadFiles", method="post", enctype="multipart/form-data" name="uploadForm">
-  <input type="file" multiple="multiple" accept="image/*" name="uploadedImages"/><br/>
-  <input type="submit" value="Upload" class="btn btn-info" />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+<h1>Multiple File Upload With ExpressJS, Multer and NodeJs</h1><br />
+<form id="uploadForm2"
+      enctype="multipart/form-data"
+      action="/api/photo"
+      method="post">
+    <input type="file" name="userPhoto" multiple />
+    <input type="submit" value="Upload Image" name="submit">
+    <input type='text' id='random' name='random'><br>
+    <span id = "status"></span>
 </form>
-<hr />
 
 
-<h3>with ajax</h3>
-<form action="/uploadFiles", method="post", enctype="multipart/form-data" name="ajaxUploadForm">
-  <input type="file" multiple="multiple" accept="image/*" name="uploadedImages"/><br/>
-  <div id="uploadedImages"></div>
-  <input type="submit" value="Upload in background" class="btn btn-info" />
-</form>
 <!--finish of uploading forms-->
 
-
-<!--ADDING Guest Book-->
-<h1>Guestbook</h1>
-
-<input id="new-entry-name" placeholder="Name" type="text"/> <br/>
-<textarea id="new-entry-message" placeholder="Message" type="text"></textarea> <br/>
-<button id="new-entry-submit">Add</button>
-
-<div id="entries">
-  <ul id="entry-list">
-  </ul>
-</div>
-
-
-<script type="text/template" id="entry-template">
-  <div class="entry-message"><%= message %></div>
-  <div class="entry-name"><%= name %></div>
-  <div class="entry-date"><%= date.getMonth() + 1 %>/<%= date.getDate() %>/<%= date.getYear()+1900 %> <%= date.getHours() %>:<%= date.getMinutes() %></div>
-</script>
-<!--End of Adding Guest Book-->
-
 <form id        =  "uploadForm"
-     enctype   =  "multipart/form-data"
-     action    =  "/photos"
-     method    =  "post"
-     class="dropzone"
+      enctype   =  "multipart/form-data"
+      action    =  "/photos"
+      method    =  "post"
+      class="dropzone"
 >
 
-<input type="file" name="userphoto" id="userphotoid"> Click here </input> <input type="submit" value="Upload Image" name="submit">
+    <input type="file" name="userphoto" id="userphotoid"> Click here </input> <input type="submit" value="Upload Image" name="submit">
 </form>
 
 
 <div id="googleMap" style="width:500px;height:380px;"></div>
-
-
-
-
 </body>
+
 </html>

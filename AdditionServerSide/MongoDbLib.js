@@ -68,9 +68,12 @@ module.exports= {
 
       var collec = db.collection(databasename);
       if (collec != null) {
-        db.collection('storedimages').insert({"filename":filename,"filepath":filepath},{w:1},function(err,records){
+        db.collection('storedimages').insert({
+          "filename": filename,
+          "filepath": filepath
+        }, {w: 1}, function (err, records) {
 
-          if(records!=null) {
+          if (records != null) {
             console.log("Record added");
             db.close();
           }
@@ -86,8 +89,37 @@ module.exports= {
 
     });
 
+  },
 
-  }
+    retrievevalues: function ( connectionstring, databasename, filename, filepath, callback) {
+      if (callback) {
+        callback();
+      }
+
+
+      mongodb.connect(connectionstring, function (err, db) {
+
+        var collec = db.collection(databasename);
+        if (collec != null) {
+          db.collection('storedimages').find({"filename":filename,"filepath":filepath},{w:1},function(err,records){
+            if(records!=null) {
+              console.log("Record retrieved");
+              db.close();
+            }
+            else
+              console.log("Cannot retrieve");
+          });
+
+        }
+        else {
+          console.log("Database not found! error");
+        }
+
+
+      });
+
+
+    },
 }
 
 

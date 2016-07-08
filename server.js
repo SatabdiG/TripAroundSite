@@ -1,176 +1,81 @@
-'use strict';
 
-var express = require('express'),
-  http = require('http'),
-  app = express(),
-  sys = require('sys'),
-  fs = require('fs'),
-  path = require('path'),
-  bytes = require('bytes'),
-  //
-  qs = require('querystring'),
-  url = require('url'),
-  mongodb = require('mongodb').MongoClient,
-  //
+var express	=	require("express");
+var bodyParser =	require("body-parser");
+var multer	=	require('multer');
 
-
-parseFile = function(file, req) {
-    var parsedFile = path.parse(file),
-      fullUrl = req.protocol + '://' + req.get('host') + '/uploads/';
-
-    return {
-      name: parsedFile.name,
-      base: parsedFile.base,
-      extension: parsedFile.ext.substring(1),
-      url: fullUrl + parsedFile.base,
-      size: bytes(fs.statSync(file).size)
-    };
-  };
-
-var multer = require('multer');
-
-
-app.set('port', process.env.PORT || 3000);
-app.use(express.static(__dirname + '/public'));
-app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/uploads' })); // required for accessing req.files object
-
-
-app.use("/FrontEnd/css",express.static(__dirname+'/FrontEnd/css'));
-app.use("/FrontEnd/js",express.static(__dirname+'/FrontEnd/js'));
-
-
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, __dirname+'/uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
-  }
-});
-
-app.post('/uploadFiles', function (req, res) {
-  var newPath = null,
-    uploadedFileNames = [],
-    uploadedImages,
-    uploadedImagesCounter = 0;
-
-  if(req.files && req.files.uploadedImages) {
-    uploadedImages = Array.isArray(req.files.uploadedImages) ? req.files.uploadedImages : [req.files.uploadedImages];
-
-    uploadedImages.forEach(function (value) {
-      newPath = __dirname + "/uploads/" + path.parse(value.path).base;
-      fs.renameSync(value.path, newPath);
-
-      uploadedFileNames.push(parseFile(newPath, req));
-    });
-
-    //res.type('application/json');
-    //res.send(JSON.parse(JSON.stringify({"uploadedFileNames": uploadedFileNames})));
-    console.log("Success");
-    res.sendfile(__dirname+"/public/index.html");
-
-  }
-
-
-
-});
-var upload = multer({ storage : storage}).array('file',20);
-app.post('/photos', function(req, res){
-  upload(req,res,function(err) {
-    if(err) {
-      return res.end("Error uploading file.");
-    }
-    console.log("Success");
-    res.sendfile(__dirname+"/public/index.html");
-  });
-
-});
-app.get('/files', function (req, res) {
-  var dirPath = path.normalize('./uploads/');
-
-  fs.readdir(dirPath, function (err, files) {
-    if (err) {
-      throw err;
-      res.send(500, {})
-    }
-
-    var uploadedFiles = files.filter(function (file) {
-      return file !== '.gitignore';
-    }).map(function (file) {
-      return path.join(dirPath, file);
-    }).filter(function (file) {
-      return fs.statSync(file).isFile();
-    }).map(function (file) {
-      return parseFile(file, req);
-    });
-
-    res.type('application/json');
-    res.send(uploadedFiles);
-  });
-
-});
-
-http.createServer(app).listen(app.get('port'), function () {
-  console.log("\n\nNode version: " + process.versions.node);
-  console.log("Express server listening on port " + app.get('port') + "\n\n");
-});
-
-
+var app	=	express();
+app.use(bodyParser.json());
 
 var connect=require('./AdditionServerSide/MongoDbLib');
-var connectionstring="mongodb://localhost:27017/testimage";
-var db=connect.establishConnection(connectionstring, 'storedimages',null, 'filename',function(results)
-{
-  //results contain the results of database connection
- // console.log(results)
 
+//var db=connect.establishConnection('mongodb://localhost:27017/testimage', 'testimage',null, 'filename',function(results)
+//{
+    //results contain the results of database connection
+    //console.log(results)
 
+//});
 
-});
-
-//connect.addvalues(connectionstring,'storedimages','test4','./uploads');
-
-
-
-
-
-
-
-
-// --- Graceful exit code ---
-process.on('SIGTERM', function(){
-  http.close(function(){
-    process.exit(0);
-  });
-});
-
-
-// Adding MongoDB
 /*
-db = new mongodb.Db('test', new mongodb.Server('localhost', 27017, {}), {});
+var mongo = require('mongodb');
+var MongoClient = require('mongodb').MongoClient
+var db;
+MongoClient.connect('mongodb://localhost:27017/local', function(err, Db) {
+    if (err) {
+        console.log('Unable to connect to the mongoDB server. Error:', err);
+    } else {
+        console.log('CONNECTED TO MONGODB');
+        db = Db;
 
-//var db = require('mongo-lite').connect('mongodb://localhost:1526')
+        var collection = db.collection('players');
+        collection.insertOne([{"imgUrl":"a"}], (err, res) => {
+            if (err) {
+                console.log('Error:', err);
+            } else {
+                console.log('OK');
+            }
+        });
 
-db.addListener("error", function(error) {
-  console.log("Error connecting to mongo -- perhaps it isn't running?");
-});
-
-
-db.open(function(error, client) {
-  db.collection('guestbook', function(err, collection) {
-    guestbookCollection = collection;
-
-    http.createServer(function (req, res) {
-      if (req.url.indexOf('/api/') == 0) {
-        handleAPI(req, res);
-      }
-      else if (req.method == 'GET') {
-        handleStatic(req, res);
-      }
-    }).listen(1526, 'localhost');
-
-    console.log('Server running at http://localhost:1526/');
-  });
+    }
 });
 
 */
+
+var storage	=	multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './uploads');
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.fieldname + '-' + Date.now());
+    }
+});
+var upload = multer({ storage : storage }).array('userPhoto',8);
+
+
+app.get('/',function(req,res){
+    res.sendFile(__dirname + "/public/index.html");
+});
+
+app.post('/api/photo',function(req,res){
+   upload(req,res,function(err) {
+        //console.log(req.body);
+        //console.log( req.files);
+       console.log( req.files[0].filename);
+       console.log( req.files[0].path);
+       connect.addvalues('mongodb://localhost:27017/testimages','testimages',req.files[0].filename,req.files[0].path);
+
+       if(err) {
+            return res.end("Error uploading file.");
+        }
+        res.end("File is uploaded");
+
+    });
+});
+
+app.listen(3000,function(){
+    console.log("Working on port 3000");
+});
+
+
+
+
+
