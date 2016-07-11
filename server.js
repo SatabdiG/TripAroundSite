@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 //Path for loading static files
 app.use("/FrontEnd/css",express.static(__dirname+'/public/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/public/FrontEnd/js'));
+app.use("/FrontEnd/partials",express.static(__dirname+'/public/FrontEnd/partials'));
 var connect=require('./AdditionServerSide/MongoDbLib');
 
 //Multer Storeage

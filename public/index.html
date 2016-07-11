@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="tripApp" xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/html">
 <head>
  <meta charset="UTF-8">
     <meta charset="utf-8">
@@ -22,14 +22,14 @@
 <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
 
 
-<!-- Vendor: Angular, followed by our custom Javascripts >
-//<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.js"></script>
+<!-- Vendor: Angular, followed by our custom Javascripts > -->
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.js"></script>
-<script src="http://popcornjs.org/code/dist/popcorn-complete.js"></script> -->
 <script src="/FrontEnd/js/socket.io.js"></script>
+<!--
 <script src="/FrontEnd/js/react.js"></script>
 <script src="/FrontEnd/js/react-dom-server.min.js"></script>
-<script src="/FrontEnd/js/react-dom.min.js"></script>
+<script src="/FrontEnd/js/react-dom.min.js"></script> -->
 <sript src="/FrontEnd/js/dropzone.js"></sript>
 <script src="/FrontEnd/js/exif.js"></script>
 <script src="/FrontEnd/js/binaryajax.js"></script>
@@ -37,14 +37,17 @@
 
 <!--Map API frame work-->
 
+
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rpSwtuzsvOykF3C25s-rT0a2AqugfU"></script>
 <!--<script src="http://maps.googleapis.com/maps/api/js"></script>-->
 <!--Our Main javascript  file -->
 
 <script src="/FrontEnd/js/main.js"></script>
-<body>
 
-<nav class="navbar navbar-default navbar-fixed-top">
+<body>
+<div ng-app="tripapp">
+<nav class="navbar navbar-default navbar-fixed-top" ng-controller="maincontroller">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">
@@ -53,7 +56,7 @@
     </div>
       <ul class="nav navbar-nav navbar-right">
         <li> <a href="#"><i class="fa fa-home fa-2x" style="font-size: 22px"></i> Home</a></li>
-        <li> <a href="#about"><i class="fa fa-shield fa-2x" style="font-size: 22px"></i> About Us</a></li>
+        <li> <a href="#product"><i class="fa fa-shield fa-2x" style="font-size: 22px"></i> About Us</a></li>
         <li> <a href="#contact"><i class="fa fa-shield fa-2x" style="font-size: 22px"></i>Contact</a></li>
         <li> <a href="#Services"><i class="fa fa-shield fa-2x" style="font-size: 22px"></i>Services</a></li>
       </ul>
@@ -61,13 +64,11 @@
 </nav>
 
 <p>
+<div id="main">
+  <div ng-view></div>
+</div>
+</div>
 
-<!-- Adding uploading forms-->
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
     <h1>Multiple File Upload With ExpressJS, Multer and NodeJs</h1><br />
     <h3>Saving into FileSystem and the path in MongoDB</h3><br />
 <form id="uploadForm2"
@@ -88,8 +89,8 @@
       enctype   =  "multipart/form-data"
       action    =  "/photos"
       method    =  "post"
-      class="dropzone"
->
+      class="dropzone">
+
 
 <input type="file" name="userphoto" id="userphotoid"> Click here </input> <input type="submit" value="Upload Image" name="submit">
 </form>

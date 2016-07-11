@@ -50,6 +50,7 @@ window.onload = function() {
 
 }
 
+
 function initialize()
 {
   var mapProp = {
@@ -67,5 +68,60 @@ function initialize()
   marker.setMap(map);
 
 }
+
+
+//code for product html
+
+$("#menu-toggle").click(function(e){
+  e.preventDefault();
+  $("#wrapper").toggleClass("toggled");
+});
+
+
+
+//end of the code for product html
+
+
+
+
+
+//Angular js and Routing
+
+var tripapp= angular.module('tripapp', ['ngRoute']);
+var product=angular.module('product', ['ngRoute']);
+tripapp.config(function($routeProvider) {
+  $routeProvider
+  .when('/', {
+    templateUrl: '/FrontEnd/partials/home.html',
+    controller: 'maincontroller'
+  })
+    .when('/product',{
+      templateUrl:'/FrontEnd/partials/product.html',
+      controller: 'productcontroller'
+    })
+  .when('/uploadphotos',{
+    templateUrl:'/FrontEnd/partials/imageupload.html',
+    controller:'productcontroller'
+  })
+
+});
+
+product.config(function($routeProvider){
+  $routeProvider
+    .when('/',{
+      templateUrl:'/FrontEnd/partials/product.html',
+      controller:'productcontroller'
+    })
+});
+
+tripapp.controller('maincontroller',function($scope){
+  $scope.message="Hi there";
+})
+
+product.controller('productcontroller', function($scope){
+  $scope.message="Working";
+})
+
+
 
 
