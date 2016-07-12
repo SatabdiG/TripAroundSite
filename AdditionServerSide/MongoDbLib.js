@@ -12,58 +12,33 @@
 var mongodb = require('mongodb').MongoClient;
 
 
-
 module.exports= {
 
   establishConnection: function (connectionstring, databasename, queryby, queryval, callback) {
-    var temp;
+    var filenames=[];
+    var filepaths=[];
     var results;
 
     mongodb.connect(connectionstring, function (err, db) {
       if (callback) {
         callback();
       }
-
-
       if (!err) {
-
-        if (queryby == null)
-          var cursor = db.collection(databasename).find({});
-        else
-          var cursor = db.collection(databasename).find(queryby);
-
-        cursor.each(function (err, doc) {
-
-          if (queryval == null) {
-            if (doc != null) {
-              results=doc;
+          var cursor=db.collection(databasename).find();
+          cursor.each(function(err,doc){
+            if(doc!=null) {
+              callback(doc.filename+","+doc.filepath);
             }
-          }
-          else {
-            if (doc != null) {
-              results=doc.filename;
-            }
-          }
-          callback(results);
-
-        });
-
-
+          })
       }
       else
         console.log("Error happened");
-
-
     });
-
-
   },
   addvalues: function (connectionstring, databasename, filename, filepath, callback) {
     if (callback) {
       callback();
     }
-
-
     mongodb.connect(connectionstring, function (err, db) {
 
       var collec = db.collection(databasename);
@@ -85,18 +60,13 @@ module.exports= {
       else {
         console.log("Database not found! error");
       }
-
-
     });
-
   },
 
     retrievevalues: function ( connectionstring, databasename, filename, filepath, callback) {
       if (callback) {
         callback();
       }
-
-
       mongodb.connect(connectionstring, function (err, db) {
 
         var collec = db.collection(databasename);
@@ -114,12 +84,8 @@ module.exports= {
         else {
           console.log("Database not found! error");
         }
-
-
       });
-
-
-    },
+    }
 }
 
 

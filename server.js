@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 app.use("/FrontEnd/css",express.static(__dirname+'/public/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/public/FrontEnd/js'));
 app.use("/FrontEnd/partials",express.static(__dirname+'/public/FrontEnd/partials'));
+app.use("/uploads",express.static(__dirname+'/uploads'));
 var connect=require('./AdditionServerSide/MongoDbLib');
 
 //Multer Storeage
@@ -34,10 +35,10 @@ app.get('/',function(req,res){
 app.post('/api/photo',function(req,res){
     upload(req,res,function(err) {
         //console.log(req.body);
-        //console.log( req.files);
-        console.log( req.files[0].filename);
-        console.log( req.files[0].path);
-        connect.addvalues('mongodb://localhost:27017/testimages','storedimages',req.files[0].filename,req.files[0].path);
+          console.log( req.files[0].destination);
+        //console.log( req.files[0].filename);
+        //console.log( req.files[0].path);
+        connect.addvalues('mongodb://localhost:27017/testimages','storedimages',req.files[0].filename,req.files[0].destination);
 
         if(err) {
             return res.end("Error uploading file.");
@@ -68,7 +69,6 @@ app.post('/photos',function(req,res){
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
-  //console.log("A user has connected");
   socket.on('disconnect', function(){
    // console.log("A user has disconnected");
   });
@@ -82,14 +82,23 @@ socket.on('connection',function(socket){
    // console.log("Longittude"+msg);
   });
 
-  socket.emit("Status", function(msg){
-    msg="Works";
-  })
+  //Request from page to load images
+  socket.on("LoadImage",function(msg){
+    //Connect to data base and extract images
+    connect.establishConnection("mongodb://localhost:27017/testimages","storedimages",null,null,function(results){
+      if(results!=undefined) {
+       if(msg.toUpperCase()=="YES"){
+          socket.emit("ImageUploads", results+','+__dirname);
+        }
+      }
+    })
 
+
+  });
 });
 
 http.listen(3000,function(){
-   console.log("Working on port 3000");
+  console.log("Working on port 3000");
 });
 
 //For Node to exit gracefully
