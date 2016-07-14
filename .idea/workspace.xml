@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0152ce83-d44d-4376-a704-348c55ff3d1b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/css/main.css" afterPath="$PROJECT_DIR$/public/FrontEnd/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/js/main.js" afterPath="$PROJECT_DIR$/public/FrontEnd/js/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/partials/map.html" afterPath="$PROJECT_DIR$/public/FrontEnd/partials/map.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/public/index.html" />
     </list>
     <ignored path="TripAroundSite.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -387,7 +383,7 @@
       <workItem from="1468405790792" duration="6247000" />
       <workItem from="1468435948878" duration="341000" />
       <workItem from="1468488206885" duration="1782000" />
-      <workItem from="1468503753912" duration="6249000" />
+      <workItem from="1468503753912" duration="6370000" />
     </task>
     <task id="LOCAL-00001" summary="testWebStorm">
       <created>1467934430388</created>
@@ -466,11 +462,18 @@
       <option name="project" value="LOCAL" />
       <updated>1468340103731</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="&#10;clickable pin&#10;">
+      <created>1468513067378</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1468513067378</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="82506000" />
+    <option name="totallyTimeSpent" value="82627000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -546,7 +549,8 @@
     <MESSAGE value="Adding Comments&#10;&#10;" />
     <MESSAGE value="Preliminary frontend folder structure&#10;&#10;" />
     <MESSAGE value="Main Collapsable sidebar for the main app. &#10;&#10;Better database front end mapping&#10;&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Main Collapsable sidebar for the main app. &#10;&#10;Better database front end mapping&#10;&#10;" />
+    <MESSAGE value="&#10;clickable pin&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;clickable pin&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
