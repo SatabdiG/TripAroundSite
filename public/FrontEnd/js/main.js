@@ -87,25 +87,29 @@ function imageupload() {
     var filepath=firstbreak[1];
     var currentdir=firstbreak[2];
     var locations=filepath.substr(currentdir.length,filepath.length);
-    $("#imagethumb ul").append('<li><img src="'+locations+'/'+filename+'"class="img-thumbnail" alt="Cinque Terre" class="drag"></li>');
-  });
-   initialize();
-  $("#drag").ready(function(){
-    console.log("Ready");
+    var src=locations+'/'+filename;
+     $("#thumbnail").append('<li><img  draggable="true" src="'+locations+'/'+filename+'"class="img-thumbnail" alt="Cinque Terre" ></li>');
+    //$("<div id='drag' style='background-image: url("+src+") class='img-thumbnail()'/>").html("").appendTo($("#thumbnail"));
+    });
+    initialize();
+    var temp=document.getElementById("thumbnail");
+    $('#thumbnail').on('click','li',function(){
+       console.log("Clicked");
+      $("<div id='drag' draggable='true' />").html("").appendTo($("#thumbnail"));
+
     });
 
-  $("#imagethumb ul li").on("click",function(){
-    console.log("Works");
+  }
+
+$(function(){
+  console.log("Logging");
+  $('#drag').draggable({
+    revert:'invalid',
+    helper:'clone'
   });
-
- }
-
+});
 
 //end of the code for product html
-
-
-
-
 
 //Angular js and Routing
 

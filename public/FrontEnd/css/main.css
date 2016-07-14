@@ -130,14 +130,19 @@ html, body {
   padding: 20px;
 }
 
-.imagethumb{
+.lists{
   padding:20px;
   overflow: hidden;
 }
 
-.imagethumb img{
+.lists img{
   width: 32px;
   height: 32px;
 }
 
+#drag{
+  height: 20px;
+  width: 30px;
+  background-color: #0b97c4;
+}
 
