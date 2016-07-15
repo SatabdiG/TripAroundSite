@@ -140,9 +140,28 @@ html, body {
   height: 32px;
 }
 
-#drag{
-  height: 20px;
+#something{
+  height: 35px;
   width: 30px;
-  background-color: #0b97c4;
+  z-index: 1000;
+  background-image: url("/FrontEnd/Pictures/marker.png");
+  background-size: 30px 28px;
+  background-repeat: no-repeat;
 }
+
+.modal-content{
+  overflow: hidden;
+  height:400px;
+  width: 300px;
+  position: relative;
+}
+.imageholder{
+  height: 300px;
+  width:200px;
+  position: relative;
+  z-index: 100000000;
+  opacity: 2.7;
+
+}
+
 

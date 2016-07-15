@@ -13,6 +13,7 @@ app.use("/FrontEnd/css",express.static(__dirname+'/public/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/public/FrontEnd/js'));
 app.use("/FrontEnd/partials",express.static(__dirname+'/public/FrontEnd/partials'));
 app.use("/uploads",express.static(__dirname+'/uploads'));
+app.use("/FrontEnd/Pictures",express.static(__dirname+'/public/FrontEnd/Pictures'));
 var connect=require('./AdditionServerSide/MongoDbLib');
 
 //Multer Storeage

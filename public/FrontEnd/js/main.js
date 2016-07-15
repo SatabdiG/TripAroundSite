@@ -8,6 +8,8 @@ var myCenter=new google.maps.LatLng(51.508742,-0.120850);
 var marker;
 var socket=io();
 var renderlist=[];
+var overlay;
+var src;
 
 //google.maps.event.addDomListener(window, 'load', initialize);
 window.onload = function() {
@@ -39,15 +41,10 @@ window.onload = function() {
         var marker=new google.maps.Marker({
           position:myCenter,
         });
-
         marker.setMap(map);
-
       });
-
     }
-
   });
-
 }
 
 
@@ -67,7 +64,20 @@ function initialize()
 
 }
 
+function placemarker(location){
+  console.log("In place marker"+location);
+  var marker=new google.maps.Marker({
+    position:location,
+  });
+  marker.setMap(map);
+  marker.addListener('click',function () {
+    console.log(src);
+    $('#image-container').append('<img class="imageholder" src="'+src+'"</img>');
+    $('#myModal').modal('show');
 
+  });
+  $('#something').hide();
+}
 
 //code for product html
 
@@ -78,6 +88,7 @@ $("#menu-toggle").click(function(e){
 
 
 function imageupload() {
+  $('#something').hide();
 //Fetch images from Server using socketio
   socket.emit("LoadImage", "yes");
 
@@ -87,27 +98,34 @@ function imageupload() {
     var filepath=firstbreak[1];
     var currentdir=firstbreak[2];
     var locations=filepath.substr(currentdir.length,filepath.length);
-    var src=locations+'/'+filename;
-     $("#thumbnail").append('<li><img  draggable="true" src="'+locations+'/'+filename+'"class="img-thumbnail" alt="Cinque Terre" ></li>');
-    //$("<div id='drag' style='background-image: url("+src+") class='img-thumbnail()'/>").html("").appendTo($("#thumbnail"));
+    src=locations+'/'+filename;
+    $("#thumbnail").append('<li><img src="'+locations+'/'+filename+'"class="img-thumbnail" alt="Cinque Terre" ></li>');
+    //$("#thumbnail").append('<li id="dragged">Hell There</li>')
     });
     initialize();
     var temp=document.getElementById("thumbnail");
     $('#thumbnail').on('click','li',function(){
        console.log("Clicked");
-      $("<div id='drag' draggable='true' />").html("").appendTo($("#thumbnail"));
+      if($('#something').is(':visible'))
+       $('#something').hide();
+      else
+        $('#something').show();
 
     });
+    $('#something').draggable({
+      revert: true
+    });
 
+    $('#something').on('dragstop',function(evt,ui){
+      console.log(ui);
+      var mOffset=$(map.getDiv()).offset();
+      var point=new google.maps.Point( ui.offset.left-mOffset.left+(ui.helper.width()/2),ui.offset.top-mOffset.top+(ui.helper.height()));
+      var ll=overlay.getProjection().fromContainerPixelToLatLng(point);
+      console.log("ll:"+ll);
+      placemarker(ll);
+    });
   }
 
-$(function(){
-  console.log("Logging");
-  $('#drag').draggable({
-    revert:'invalid',
-    helper:'clone'
-  });
-});
 
 //end of the code for product html
 
