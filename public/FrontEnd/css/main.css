@@ -158,7 +158,7 @@ html, body {
 .imageholder{
   height: 300px;
   width:200px;
-  position: relative;
+  position: absolute;
   z-index: 100000000;
   opacity: 2.7;
 
