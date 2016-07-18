@@ -1,41 +1,48 @@
 <!-- Description : User can drag drop images to images -->
-<div id="manualtag" class="container-fluid">
-  <div class="row">
-   <div class="col-lg-4" id="imagethumb">
-    <!-- Display uploaded images here as thumbnails -->
-     <ul class="lists" id="thumbnail"></ul>
-   </div>
-   <div id="something" class="test"></div>
-  <!--Start of Google Maps -->
-    <div id="googlemapcontainer">
-      <div class="col-lg-8">
-            <div id="googleMap"style="height:380px;"></div>
-       </div>
+
+  <nav  class="navbar navbar-default navbar-top" id="mapnavigation">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav navbar-left" id="maplinks">
+        <li><a href="#UploadImages">Upload Images</a></li>
+        <li><a href="#ViewImages">View Uploaded Images</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div id="manualtag" class="container-fluid">
+    <div class="row">
+     <div class="col-lg-4" id="imagethumb">
+      <!-- Display uploaded images here as thumbnails -->
+       <ul class="lists" id="thumbnail"></ul>
+     </div>
+     <div id="something" class="test"></div>
+    <!--Start of Google Maps -->
+      <div id="googlemapcontainer">
+        <div class="col-lg-8">
+              <div id="googleMap"style="height:380px;"></div>
+         </div>
+      </div>
     </div>
   </div>
-</div>
 
 
-<!--Modal Window -->
-<div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Tagged Image</h4>
-      </div>
-      <div class="modal-body">
-       <div id="image-container"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  <!--Modal Window -->
+    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Tagged Image</h4>
+        </div>
+        <div class="modal-body">
+         <div id="image-container"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
-
   </div>
-</div>
 
-</div>
+
 

@@ -25,7 +25,9 @@ html, body {
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background: #000;
+  /*background: #000;*/
+  background-image: url("/FrontEnd/Pictures/subtle_carbon.png");
+  background-repeat: repeat;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -37,7 +39,6 @@ html, body {
 }
 
 #page-content-wrapper {
-  width: 100%;
   position: absolute;
   padding: 15px;
 }
@@ -157,11 +158,37 @@ html, body {
 }
 .imageholder{
   height: 300px;
-  width:200px;
+  width:  200px;
   position: absolute;
   z-index: 100000000;
   opacity: 2.7;
 
 }
 
+#maincontainerpanel{
+  background-image: url("/FrontEnd/Pictures/striped_lens.png") ;
+  background-repeat: repeat;
+}
+
+#mapnavigation{
+  background-image:url("/FrontEnd/Pictures/subtle_carbon.png");
+  background-repeat: repeat;
+}
+
+#maplinks li a{
+  text-decoration: none;
+  color: #f0f0f0;
+
+}
+
+#maplinks li a:hover{
+  text-decoration: none;
+  color: #fff;
+  background: rgba(255,255,255,0.2);
+}
+
+#dragdrop{
+  padding: 15px;
+  width: 100%;
+}
 

@@ -156,7 +156,17 @@ tripapp.config(function($routeProvider) {
     .when('/viewmaps',{
       templateUrl:'/FrontEnd/partials/map.html',
       controller:'mapcontroller'
-    });
+    })
+
+    .when('/UploadImages',{
+      templateUrl:'/FrontEnd/partials/imageupload.html',
+      controller: 'productcontroller'
+  })
+
+  .when('/ViewImages',{
+    templateUrl:'/FrontEnd/partials/map.html',
+    controller: 'mapcontroller'
+  });
 
 
 });
