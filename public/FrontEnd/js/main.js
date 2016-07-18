@@ -11,6 +11,9 @@ var renderlist=[];
 var overlay;
 var src;
 
+
+
+
 //google.maps.event.addDomListener(window, 'load', initialize);
 window.onload = function() {
 
@@ -88,8 +91,10 @@ $("#menu-toggle").click(function(e){
 
 
 function imageupload() {
+
   $('#something').hide();
-//Fetch images from Server using socketio
+
+  //Fetch images from Server using socketio
   socket.emit("LoadImage", "yes");
 
   var list=socket.on('ImageUploads',function(msg){
@@ -99,7 +104,9 @@ function imageupload() {
     var currentdir=firstbreak[2];
     var locations=filepath.substr(currentdir.length,filepath.length);
     src=locations+'/'+filename;
-    $("#thumbnail").append('<li><img src="'+locations+'/'+filename+'"class="img-thumbnail" alt="Cinque Terre" ></li>');
+    if($("#thumbnail li").length == 0)
+      $("#thumbnail").append('<li><img src="'+locations+'/'+filename+'"class="img-thumbnail" alt="Cinque Terre" ></li>');
+
     //$("#thumbnail").append('<li id="dragged">Hell There</li>')
     });
     initialize();
@@ -124,6 +131,7 @@ function imageupload() {
       console.log("ll:"+ll);
       placemarker(ll);
     });
+
   }
 
 
@@ -165,6 +173,7 @@ tripapp.controller('productcontroller', function($scope){
 
 tripapp.controller('mapcontroller', function($scope){
   $scope.init=imageupload();
+
 })
 
 
