@@ -68,6 +68,7 @@ function initialize()
 }
 
 function placemarker(location){
+  var markercoor=[];
   console.log("In place marker"+location);
   var marker=new google.maps.Marker({
     position:location,
@@ -79,8 +80,12 @@ function placemarker(location){
     $('#myModal').modal('show');
 
   });
+  markercoor.push(marker);
   $('#something').hide();
+
+  console.log(markercoor);
 }
+
 
 //code for product html
 
@@ -134,6 +139,45 @@ function imageupload() {
 
   }
 
+function airplanehandler(){
+  var startpos,startend;
+  var path;
+  console.log("In airplane loop");
+  var flightPlanCoordinates = [
+    {lat: 37.772, lng: -122.214},
+    {lat: 21.291, lng: -157.821},
+    {lat: -18.142, lng: 178.431},
+    {lat: -27.467, lng: 153.027}
+  ];
+
+  map.addListener("click",function(event){
+    var obj=[];
+    map.setOptions({draggable: false});
+    console.log(event.latLng);
+    startpos=event.latLng.lat();
+    startend=event.latLng.lng();
+    var coors=new google.maps.LatLng(startpos,startend);
+    var coorssum=new google.maps.LatLng(startpos+5,startend+5);
+    map.panTo(coors);
+    var tempobj= {lat: 37.772, lng: -122.214};
+    obj.push(coors);
+    obj.push(coorssum);
+    console.log("obj"+obj);
+     path=new google.maps.Polyline({
+      path:obj,
+      editable:true,
+      map:map
+    });
+    if(path!=undefined) {
+      path.addListener("click", function (event) {
+        console.log("Dragging");
+      });
+    }
+  });
+
+  map.setOptions({draggable: true});
+
+}
 
 //end of the code for product html
 

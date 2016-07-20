@@ -64,9 +64,7 @@ app.post('/photos',function(req,res){
 
   });
 
-})
-
-
+});
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
