@@ -12,7 +12,57 @@ var overlay;
 var src;
 
 
+/*** Home page initializer **/
+function homeinit(){
+  $(document).ready(function(){
+    $("#nextpagebutton").hover(function(){
+      $("#nextpagebutton span").text("");
+    }, function(){
+      $("#nextpagebutton span").text(">");
+    });
 
+    $("#nextpagebutton").click(function(){
+      window.location.href="#UploadImages";
+    });
+    $("#header").hover(function(){
+      $("#header").fadeOut(500, function(){
+        $(this).text("We make trips better").fadeIn(500);
+        $(this).fadeOut(500,function () {
+          $(this).text("TripAround").fadeIn(500);
+        });
+
+      });
+    }, function(){});
+
+  });
+}
+
+/** Image upload Controller function **/
+function imagecontroller(){
+
+  $(document).ready(function(){
+    $("#nextpagebutton").hover(function(){
+      $("#nextpagebutton span").text("");
+    }, function(){
+      $("#nextpagebutton span").text(">");
+    });
+
+    $("#nextpagebutton").click(function(){
+      window.location.href="#ViewImages";
+    });
+
+    $("#beforepagebutton").hover(function(){
+      $("#beforepagebutton span").text("");
+    }, function(){
+      $("#beforepagebutton span").text("<");
+    });
+
+    $("#beforepagebutton").click(function(){
+      window.location.href="#";
+    });
+  });
+
+}
 
 //google.maps.event.addDomListener(window, 'load', initialize);
 window.onload = function() {
@@ -86,19 +136,28 @@ function placemarker(location){
   console.log(markercoor);
 }
 
-
 //code for product html
-
 $("#menu-toggle").click(function(e){
   e.preventDefault();
   $("#wrapper").toggleClass("toggled");
 });
 
-
+/** Controller for Map Page **/
 function imageupload() {
+  $(document).ready(function(){
+    $("#beforepagebutton").hover(function(){
+      $("#beforepagebutton span").text("");
+    }, function(){
+      $("#beforepagebutton span").text("<");
+    });
+    $("#beforepagebutton").click(function(){
+      window.location.href="#UploadImages";
+    });
+  });
 
-  $('#something').hide();
 
+
+$('#something').hide();
   //Fetch images from Server using socketio
   socket.emit("LoadImage", "yes");
 
@@ -191,12 +250,6 @@ tripapp.config(function($routeProvider) {
     templateUrl: '/FrontEnd/partials/home.html',
     controller: 'maincontroller'
   })
-
-   .when('/uploadphotos', {
-     templateUrl: '/FrontEnd/partials/imageupload.html',
-    controller: 'productcontroller'
-  })
-
     .when('/viewmaps',{
       templateUrl:'/FrontEnd/partials/map.html',
       controller:'mapcontroller'
@@ -204,7 +257,7 @@ tripapp.config(function($routeProvider) {
 
     .when('/UploadImages',{
       templateUrl:'/FrontEnd/partials/imageupload.html',
-      controller: 'productcontroller'
+      controller: 'imagecontroller'
   })
 
   .when('/ViewImages',{
@@ -217,18 +270,24 @@ tripapp.config(function($routeProvider) {
 
 
 tripapp.controller('maincontroller',function($scope){
+  $scope.init=homeinit();
   $scope.message="Hi there";
 
-})
+});
 
 tripapp.controller('productcontroller', function($scope){
   $scope.init=initialize();
-})
+});
 
 tripapp.controller('mapcontroller', function($scope){
   $scope.init=imageupload();
 
-})
+});
+tripapp.controller('imagecontroller', function($scope){
+$scope.init=imagecontroller();
+
+
+});
 
 
 

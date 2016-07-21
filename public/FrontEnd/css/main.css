@@ -48,6 +48,11 @@ html, body {
   margin-right: -250px;
 }
 
+#wrapper.toggled #menu-toggle{
+  position:relative;
+  left:20px;
+  }
+
 /* Sidebar Styles */
 
 .sidebar-nav {
@@ -197,5 +202,102 @@ html, body {
   padding: 10px;
   background-image: url("/FrontEnd/Pictures/menu.png");
   background-size: contain;
-
 }
+#wrapper.toggled #menu-toggle{
+  position: relative;
+  left:-30px;
+}
+
+#wrapper .toggled #menu-toggle{
+  left:0.5%;
+}
+#nextpagebutton{
+  position: fixed;
+  right:0.5%;
+  top:50%;
+  background-color:  #f4511e;
+  border: none;
+  color: #FFFFFF;
+  cursor:pointer;
+  padding:20px;
+  text-align: center;
+  font-size: 10px;
+  width:50px;
+  transition: all 0.5s;
+  overflow: auto;
+  border-radius: 89%;
+}
+
+#nextpagebutton span{
+  cursor:pointer;
+  position: relative;
+  transition: 0.5s;
+  overflow: auto;
+}
+
+#nextpagebutton span:after{
+  content: '>>';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#nextpagebutton:hover span{
+ padding-right:25px;
+}
+
+#nextpagebutton:hover span:after{
+  opacity: 1;
+  right: 0;
+}
+
+#beforepagebutton{
+  position:fixed;
+  left:0.5%;
+  top:50%;
+  background-color:  #f4511e;
+  border: none;
+  color: #FFFFFF;
+  cursor:pointer;
+  padding:20px;
+  text-align: center;
+  font-size: 10px;
+  width:50px;
+  transition: all 0.5s;
+  overflow: auto;
+  border-radius: 89%;
+}
+
+
+#beforepagebutton span{
+  cursor:pointer;
+  position: relative;
+  transition: 0.5s;
+  overflow: auto;
+}
+
+#beforepagebutton span:after{
+  content: '<<';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#beforepagebutton:hover span{
+  padding-right:25px;
+}
+
+#beforepagebutton:hover span:after{
+  opacity: 1;
+  right: 0;
+}
+
+#header{
+  position:fixed;
+}
+
+
