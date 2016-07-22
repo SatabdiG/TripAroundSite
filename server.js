@@ -6,8 +6,6 @@ var multerdragdrop = require('multer');
 var app	=	express();
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
-var mkdirp = require('mkdirp');
-
 app.use(bodyParser.json());
 
 //Path for loading static files
@@ -21,21 +19,7 @@ var connect=require('./AdditionServerSide/MongoDbLib');
 //Multer Storeage
 var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
-    if (guest) {
-      mkdirp(__dirname + '/uploads' + '/guest', function(err) {
-
-        // path exists unless there was an error
-
-      });
-      callback(null, __dirname + '/uploads' + '/guest');
-    }else{
-      mkdirp(__dirname + '/uploads' + '/'+_userid+'/'+_mapid+'/version_first', function(err) {
-
-        // path exists unless there was an error
-
-      });
-      callback(null, __dirname + '/uploads' + '/'+_userid+'/'+_mapid+'/version_first');
-    }
+    callback(null, __dirname+'/uploads');
   },
   filename: function (req, file, callback) {
     callback(null, file.fieldname + '-' + Date.now());
