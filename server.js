@@ -11,14 +11,13 @@ app.use(bodyParser.json());
 const mkdirp = require('mkdirp')
 
 //Path for loading static files
+app.use(bodyParser.json());
 app.use("/FrontEnd/css",express.static(__dirname+'/public/FrontEnd/css'));
 app.use("/FrontEnd/js",express.static(__dirname+'/public/FrontEnd/js'));
 app.use("/FrontEnd/partials",express.static(__dirname+'/public/FrontEnd/partials'));
 app.use("/uploads",express.static(__dirname+'/uploads'));
 app.use("/FrontEnd/Pictures",express.static(__dirname+'/public/FrontEnd/Pictures'));
 var connect=require('./AdditionServerSide/MongoDbLib');
-
-
 
 /*
 //Json Data Extraction
@@ -63,20 +62,21 @@ _markerid = req.files[0].markerid;
 //_Latid = req.files[0].latid;
 //_Lngid = req.files[0].lngid;
 */
-//Multer Storeage
+
+//Multer Storage
 var storage =   multer.diskStorage({
   guest: function (req, file, callback) {
     callback(null, file._guest);
   },
   destination: function (req, file, callback) {
-    if (file[0].guest()){
+    if (userid=="guest"){
       callback(null, __dirname + '/uploads' + '/guest');
   }else{
       _userid = files[0].userid;
       _mapid= files[0].mapid;
       const dir = __dirname +'/uploads' + _userid+'/'+_mapid+'/version_1';
       fs.exists(dir, function(exists) {
-        let uploadedFileName;
+        var uploadedFileName;
         if (exists) {
           callback(null, __dirname +'/uploads' + _userid+'/'+_mapid+'/version_1');
         } else {
@@ -130,27 +130,43 @@ app.get('/',function(req,res){
 });
 //Image Upload form
 app.post('/api/photo',function(req,res){
+  console.log("In server");
+  console.log(JSON.stringify(req.body));
+  console.log(JSON.stringify(req.body.files.context.location));
+  console.log(JSON.stringify(req.body.userid));
+  console.log(JSON.stringify(req.body.filename));
     upload(req,res,function(err) {
         //console.log(req.body);
         //console.log( req.files[0].destination);
         //console.log( req.files[0].filename);
         //console.log( req.files[0].path);
-      _userid = req.files[0].userid;
-      _userpassword = req.files[0].userpassword;
-      _username = req.files[0].username;
-      _mapid= req.files[0].mapid;
-      _mapdataversionid =  req.files[0].mapdataversionid;
-      _markerid = req.files[0].markerid;
+        _userid = req.body.userid;
+      // _userpassword = req.files[0].userpassword;
+     // _username = req.files[0].username;
+      _mapid= req.body.mapid;
+      _mapdataversionid =  req.body.mapdataversionid;
+      _markerid = req.body.markerid;
       //_Latid = req.files[0].Latid;
       //_Lngid = req.files[0].Lngid;
-      _imagename= req.files[0].filename;
-      _imagepath = req.files[0].destination;
-      connect.addusers('mongodb://localhost:27017/testimages','usercollection', _userid, _username, _userpassword);
-      connect.addmaps('mongodb://localhost:27017/testimages','mapcollection', _mapid, _userid);
-      connect.addmapversion('mongodb://localhost:27017/testimages','mapdataversioncollection', _mapdataversionid, _mapid, _userid);
-      connect.addmarkers('mongodb://localhost:27017/testimages','markercollection', _mapdataversionid, _markerid, _userid, _mapid, _Latid, _Lngid);
-      connect.addvalues('mongodb://localhost:27017/testimages','storedimages', _mapdataversionid, _markerid , _imagename, _imagepath, _userid, _mapid);
+      _imagename= req.body.filename;
+      //_imagepath = req.files[0].destination;
+      if(__userid == "guest")
+      {
+        _imagename=__dirname+'/uploads/guest';
+        _mapid="guestmap";
+        _mapdataversionid="guestid";
+      }
+      if(__userid != "guest") {
+        connect.addusers('mongodb://localhost:27017/testimages', 'usercollection', _userid, _username, _userpassword);
+        connect.addmaps('mongodb://localhost:27017/testimages', 'mapcollection', _mapid, _userid);
+        connect.addmapversion('mongodb://localhost:27017/testimages', 'mapdataversioncollection', _mapdataversionid, _mapid, _userid);
+        connect.addmarkers('mongodb://localhost:27017/testimages', 'markercollection', _mapdataversionid, _markerid, _userid, _mapid, _Latid, _Lngid);
+        connect.addvalues('mongodb://localhost:27017/testimages', 'storedimages', _mapdataversionid, _markerid, _imagename, _imagepath, _userid, _mapid);
+      }
+      else
+      {
 
+      }
         if(err) {
             return res.end("Error uploading file.");
         }
@@ -183,12 +199,12 @@ socket.on('connection',function(socket){
   });
 
   socket.on('Latitude', function(msg){
-    _Latid = msg[0].latitude;
+    _Latid = msg;
     console.log("Latitude"+ msg);
   });
 
   socket.on('Longitude', function(msg){
-    _Lngid = msg[0].longitude;
+    _Lngid = msg
    console.log("Longittude"+msg);
   });
 

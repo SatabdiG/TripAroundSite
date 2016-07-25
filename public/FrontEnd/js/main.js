@@ -40,7 +40,70 @@ function homeinit(){
 /** Image upload Controller function **/
 function imagecontroller(){
 
+  initialize();
+
   $(document).ready(function(){
+
+    //Dropzone parameter change
+    Dropzone.options.uploadForm ={
+      paramName: "file"
+    }
+    $('input#submitbutton').click(function(event){
+      event.preventDefault();
+      var formdata=new FormData($("#uploadForm2")[0]);
+      console.log(formdata);
+      var data={};
+      data.userid="guest";
+      data.filename=$("#userphoto").val().split('\\').pop();
+      data.files=$('#userphoto');
+      //data.mapid="paris";
+      //data.mapdataversionid="temp";
+      //data.markerid="mapmarker";
+
+      $.ajax({
+        url:'/api/photo',
+        type:'POST',
+        data:JSON.stringify(data),
+        contentType: 'application/json',
+      }).done(function(data){
+        console.log(data);
+      });
+    });
+
+    $("#userphoto").on('change', function (event) {
+
+      console.log("changed");
+      var input=$("#userphoto").get(0).files;
+      for(var i=0;i<input.length;i++)
+      {
+        EXIF.getData(input[0], function(){
+
+          var lat=EXIF.getTag(this,"GPSLatitude");
+          var lon=EXIF.getTag(this,"GPSLongitude");
+          var latRef = EXIF.GPSLatitudeRef || "N";
+          var lonRef = EXIF.GPSLongitudeRef || "W";
+          if(lat == undefined || lon== undefined)
+            alert("Sorry No Geo Tags present in images");
+          else {
+            lat = (lat[0] + lat[1] / 60 + lat[2] / 3600) * (latRef == "N" ? 1 : -1);
+            lon = (lon[0] + lon[1] / 60 + lon[2] / 3600) * (lonRef == "W" ? -1 : 1);
+
+            console.log("Latitide : " + lat);
+            console.log("Longitude : " + lon);
+            socket.emit('Latitude', lat);
+            socket.emit('Longitude', lon);
+            myCenter = new google.maps.LatLng(lat, lon);
+            var marker = new google.maps.Marker({
+              position: myCenter,
+            });
+            marker.setMap(map);
+          }
+        });
+
+      }
+    });
+
+
     $("#nextpagebutton").hover(function(){
       $("#nextpagebutton span").text("");
     }, function(){
@@ -64,41 +127,7 @@ function imagecontroller(){
 
 }
 
-//google.maps.event.addDomListener(window, 'load', initialize);
-window.onload = function() {
 
-  //Dropzone parameter change
-  Dropzone.options.uploadForm ={
-    paramName: "file"
-  }
-
-  $("#userphotoid").on('change', function (event) {
-
-    console.log("changed");
-    var input=$("#userphotoid").get(0).files;
-    for(var i=0;i<input.length;i++)
-    {
-        EXIF.getData(input[0], function(){
-
-        var lat=EXIF.getTag(this,"GPSLatitude");
-        var lon=EXIF.getTag(this,"GPSLongitude");
-        var latRef = EXIF.GPSLatitudeRef || "N";
-        var lonRef = EXIF.GPSLongitudeRef || "W";
-        lat = (lat[0] + lat[1]/60 + lat[2]/3600) * (latRef == "N" ? 1 : -1);
-        lon = (lon[0] + lon[1]/60 + lon[2]/3600) * (lonRef == "W" ? -1 : 1);
-        console.log("Latitide : "+lat);
-        console.log("Longitude : "+ lon);
-        socket.emit('Latitude', lat);
-        socket.emit('Longitude',lon);
-        myCenter=new google.maps.LatLng(lat,lon);
-        var marker=new google.maps.Marker({
-          position:myCenter,
-        });
-        marker.setMap(map);
-      });
-    }
-  });
-}
 
 
 function initialize()
@@ -144,6 +173,7 @@ $("#menu-toggle").click(function(e){
 
 /** Controller for Map Page **/
 function imageupload() {
+
   $(document).ready(function(){
     $("#beforepagebutton").hover(function(){
       $("#beforepagebutton span").text("");
@@ -283,6 +313,7 @@ tripapp.controller('mapcontroller', function($scope){
   $scope.init=imageupload();
 
 });
+
 tripapp.controller('imagecontroller', function($scope){
 $scope.init=imagecontroller();
 
