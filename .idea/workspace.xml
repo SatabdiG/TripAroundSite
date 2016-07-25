@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0152ce83-d44d-4376-a704-348c55ff3d1b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/uploads/userPhoto-1469021214523" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/uploads/userPhoto-1469177933603" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/js/main.js" afterPath="$PROJECT_DIR$/public/FrontEnd/js/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html" afterPath="$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
     </list>
     <ignored path="TripAroundSite.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -536,7 +531,7 @@
       <workItem from="1469098305492" duration="980000" />
       <workItem from="1469105059771" duration="10160000" />
       <workItem from="1469174369036" duration="2896000" />
-      <workItem from="1469434369064" duration="12043000" />
+      <workItem from="1469434369064" duration="12099000" />
     </task>
     <task id="LOCAL-00001" summary="testWebStorm">
       <created>1467934430388</created>
@@ -685,11 +680,18 @@
       <option name="project" value="LOCAL" />
       <updated>1469115314828</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Basic Animations and buttons&#10;">
+      <created>1469446451189</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1469446451189</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="145681000" />
+    <option name="totallyTimeSpent" value="145737000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
