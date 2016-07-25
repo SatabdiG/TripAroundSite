@@ -15,8 +15,8 @@ var mongodb = require('mongodb').MongoClient;
 module.exports= {
 
   establishConnection: function (connectionstring, databasename, queryby, queryval, callback) {
-    var filenames=[];
-    var filepaths=[];
+    var filenames = [];
+    var filepaths = [];
     var results;
 
     mongodb.connect(connectionstring, function (err, db) {
@@ -24,18 +24,139 @@ module.exports= {
         callback();
       }
       if (!err) {
-          var cursor=db.collection(databasename).find();
-          cursor.each(function(err,doc){
-            if(doc!=null) {
-              callback(doc.filename+","+doc.filepath);
-            }
-          })
+        var cursor = db.collection(databasename).find();
+        cursor.each(function (err, doc) {
+          if (doc != null) {
+            callback(doc.filename + "," + doc.filepath);
+          }
+        })
       }
       else
         console.log("Error happened");
     });
   },
-  addvalues: function (connectionstring, databasename, filename, filepath, callback) {
+addusers: function (connectionstring, databasename,_userid, _username, _userpassword, callback) {
+
+  if (callback) {
+    callback();
+  }
+  mongodb.connect(connectionstring, function (err, db) {
+
+    var collec = db.collection(databasename);
+    if (collec != null) {
+      db.collection('usercollection').insert({
+        "userid": _userid,
+        "username": _username,
+        "userpassword": _userpassword
+      }, {w: 1}, function (err, records) {
+
+        if (records != null) {
+          console.log("User Record added");
+          db.close();
+        }
+        else
+          console.log("User Cannot add");
+      });
+
+    }
+    else {
+      console.log("Database not found! error");
+    }
+  });
+},
+addmaps: function (connectionstring, databasename,_mapid,_userid, callback) {
+
+
+  if (callback) {
+    callback();
+  }
+  mongodb.connect(connectionstring, function (err, db) {
+
+    var collec = db.collection(databasename);
+    if (collec != null) {
+      db.collection('mapcollection').insert({
+        "mapid": _mapid,
+        "userid": _userid
+              }, {w: 1}, function (err, records) {
+
+        if (records != null) {
+          console.log(" Map Record added");
+          db.close();
+        }
+        else
+          console.log("Map Cannot add");
+      });
+
+    }
+    else {
+      console.log("Database not found! error");
+    }
+  });
+},
+addmapversion: function (connectionstring, databasename,_mapdataversionid, _userid,_mapid, callback) {
+
+
+  if (callback) {
+    callback();
+  }
+  mongodb.connect(connectionstring, function (err, db) {
+
+    var collec = db.collection(databasename);
+    if (collec != null) {
+      db.collection('mapdataversioncollection').insert({
+        "_mapdataversionid": _mapdataversionid,
+        "mapid": _mapid,
+        "userid": _userid
+      }, {w: 1}, function (err, records) {
+
+        if (records != null) {
+          console.log("Map Data Version Record added");
+          db.close();
+        }
+        else
+          console.log("Map Data Version Cannot add");
+      });
+
+    }
+    else {
+      console.log("Database not found! error");
+    }
+  });
+},
+addmarkers: function (connectionstring, databasename,_mapdataversionid,_markerid,_userid,_mapid,_Latid,_Lngid, callback) {
+  if (callback) {
+    callback();
+  }
+  mongodb.connect(connectionstring, function (err, db) {
+
+    var collec = db.collection(databasename);
+    if (collec != null) {
+      db.collection('markercollection').insert({
+        "mapdataversionid": _mapdataversionid,
+        "markerid": _markerid,
+        "userid": _userid,
+        "mapid": _mapid,
+        "Lat": _Latid,
+        "Lng": _Lngid
+     }, {w: 1}, function (err, records) {
+
+        if (records != null) {
+          console.log("Marker Record added");
+          db.close();
+        }
+        else
+          console.log("Marker Cannot add");
+      });
+
+    }
+    else {
+      console.log("Database not found! error");
+    }
+  });
+},
+  addvalues: function (connectionstring, databasename,_mapdataversionid, _markerid,_imagename, _imagepath,_userid,_mapid,  callback) {
+
+
     if (callback) {
       callback();
     }
@@ -44,16 +165,20 @@ module.exports= {
       var collec = db.collection(databasename);
       if (collec != null) {
         db.collection('storedimages').insert({
-          "filename": filename,
-          "filepath": filepath
+          "mapdataversionid": _mapdataversionid,
+          "markerid": _markerid,
+          "imagename": _imagename,
+          "imagepath": _imagepath,
+          "userid": _userid,
+          "mapid": _mapid
         }, {w: 1}, function (err, records) {
 
           if (records != null) {
-            console.log("Record added");
+            console.log("Image Record added");
             db.close();
           }
           else
-            console.log("Cannot add");
+            console.log("Image Cannot add");
         });
 
       }
@@ -62,8 +187,7 @@ module.exports= {
       }
     });
   },
-
-    retrievevalues: function ( connectionstring, databasename, filename, filepath, callback) {
+    retrievevalues: function ( connectionstring, databasename, _mapdataversionid, _markerid,_imagename, _imagepath,_userid,_mapid, callback) {
       if (callback) {
         callback();
       }
@@ -71,13 +195,20 @@ module.exports= {
 
         var collec = db.collection(databasename);
         if (collec != null) {
-          db.collection('storedimages').find({"filename":filename,"filepath":filepath},{w:1},function(err,records){
+          db.collection('storedimages').find({
+            "mapdataversionid": _mapdataversionid,
+            "markerid": _markerid,
+            "imagename": _imagename,
+            "imagepath": _imagepath,
+            "userid": _userid,
+            "mapid": _mapid
+          },{w:1},function(err,records){
             if(records!=null) {
-              console.log("Record retrieved");
+              console.log("Image Record retrieved");
               db.close();
             }
             else
-              console.log("Cannot retrieve");
+              console.log("Image Cannot retrieve");
           });
 
         }
