@@ -3,12 +3,14 @@ var express	=	require("express");
 var bodyParser =	require("body-parser");
 var multer	=	require('multer');
 var multerdragdrop = require('multer');
+var multerguest=require('multer');
 var app	=	express();
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
 app.use(bodyParser.json());
-
-const mkdirp = require('mkdirp')
+var userid;
+var filename;
+const mkdirp = require('mkdirp');
 
 //Path for loading static files
 app.use(bodyParser.json());
@@ -122,8 +124,19 @@ var storage =   multer.diskStorage({
 
 });
 
+var gueststore =   multerguest.diskStorage({
+  ddestination: function (req, file, callback) {
+    callback(null, __dirname+'/uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
+});
+
+
 var upload = multer({ storage : storage }).array('userPhoto',8);
 var uploaddragdrop=multerdragdrop({ storage : storage }).array('file',8);
+var uploadguest= multerguest({ storage : gueststore }).array('file',8);
 
 app.get('/',function(req,res){
     res.sendFile(__dirname + "/public/index.html");
@@ -135,6 +148,8 @@ app.post('/api/photo',function(req,res){
   console.log(JSON.stringify(req.body.files.context.location));
   console.log(JSON.stringify(req.body.userid));
   console.log(JSON.stringify(req.body.filename));
+  console.log("User id"+__userid);
+  console.log(filedata);
     upload(req,res,function(err) {
         //console.log(req.body);
         //console.log( req.files[0].destination);
@@ -165,7 +180,7 @@ app.post('/api/photo',function(req,res){
       }
       else
       {
-
+          console.log("In here");
       }
         if(err) {
             return res.end("Error uploading file.");
@@ -177,20 +192,117 @@ app.post('/api/photo',function(req,res){
 //Drag and Drop Form Control
 app.post('/photos',function(req,res){
   uploaddragdrop(req,res,function(err){
-
       if(err){
-
         return res.end("Error Uploading file");
       }else {
-        //console.log(req.files[0].originalname);
-
-       //connect.addvalues('mongodb://localhost:27017/testimages','storedimages',req.files[0].originalname,req.files[0].path);
         return res.end("Success");
       }
+  });
+});
 
+/* Guest Log in */
+app.post('/guestlogin', function(req,res){
+  uploadguest(req,res,function (err) {
+   if(err)
+     return res.end("no");
+
+    return res.end("yes");
+
+  });
+});
+
+/* var flag=true;
+ if(userid=="guest") {
+
+ connect.addvalues('mongodb://localhost:27017/testimages', 'someversion', req.files[0].filename, req.files[0].destination,"guest","guestmap",function(mssg){
+ if(mssg=="yes"){
+ flag=true;
+ }
+ else
+ flag=false;
+ });
+ }
+
+ if(err)
+ return res.end("no");
+
+ return res.end("yes");*/
+
+//** upload and save map coordinates
+app.post('/mapupload', function(req,res){
+  var flag=true;
+  var date=new Date();
+  var marker=[];
+  var currenthours=date.getMinutes();
+  (req.body.markerobj).forEach(function(eve){
+    console.log(eve);
+    marker.push(eve);
+  });
+  if(marker.length>0) {
+    connect.addmaps("mongodb://localhost:27017/testimages", req.body.name, req.body.id, function (mssg) {
+      console.log("Fetched data  " + mssg);
+      if (mssg != undefined) {
+        if (mssg == "true")
+           flag=true;
+        else
+          flag=false;
+      }
+    });
+    for(i=0;i<marker.length;i++)
+    {
+      var markerid=req.body.id+i+currenthours;
+      console.log("Data  "+ marker[i].lat);
+      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",markerid,req.body.id,req.body.name,marker[i].lat,marker[i].lon, function(mssg){
+      console.log(mssg);
+        if(mssg!=undefined) {
+          if (mssg == "yes")
+            flag = true;
+          else
+            flag = false;
+        }
+      });
+    }
+    console.log("flag    "+flag);
+    if(flag == true)
+    {
+      return res.end("yes");
+    }
+    else
+      return res.end("no");
+  }
+  else {
+    console.log("Empty");
+    return res.end("no");
+  }
+
+});
+
+app.post('/login',function(req,res){
+  var username=req.body.name;
+  var password=req.body.password;
+  //Access MongoDB - see if user is authorized
+  connect.verifyusers('mongodb://localhost:27017/testimages','usercollection',username, password,function(results){
+    if(results!=undefined){
+      console.log("fetched results"+ results);
+      if(results == 'success')
+      {
+        //user present entered correct password allow login
+        return res.end("success");
+
+      }
+      else
+      {
+        //Either username or password id incorrect disallow login
+        return res.end("fail");
+
+      }
+    }
+    else
+      console.log("Fetched results were undefined");
   });
 
 });
+
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
@@ -208,6 +320,14 @@ socket.on('connection',function(socket){
    console.log("Longittude"+msg);
   });
 
+
+
+  socket.on('UserData',function(msg){
+    userid=msg.id;
+    filename=msg.file;
+    console.log("Socket  "+msg);
+  });
+
   //Request from page to load images
   socket.on("LoadImage",function(msg){
     //Connect to data base and extract images
@@ -218,9 +338,22 @@ socket.on('connection',function(socket){
         }
       }
     })
+  });
 
+
+  socket.on("LoadMarker",function(msg){
+  //Access database and retrive markers
+    var userid=msg.id;
+    var maps=msg.mapid;
+    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng){
+      if(lat != undefined || lng != undefined) {
+        console.log("Retrived   " + lat + "  " + lng);
+        socket.emit("drawmarkers", {lat: lat, lng: lng});
+      }
+    });
 
   });
+
 });
 
 http.listen(3000,function(){

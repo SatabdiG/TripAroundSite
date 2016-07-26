@@ -300,4 +300,26 @@ html, body {
   position:fixed;
 }
 
+#userentry{
+  position: relative;
+  padding-top: 55px;
+  padding-bottom: 30px;
 
+}
+
+#usertext
+{
+  position: relative;
+  padding: 60px;
+}
+
+#uploadstatus
+{
+  position: relative;
+  padding: 30px;
+}
+
+#savemap{
+  position: relative;
+  padding: 30px;
+}

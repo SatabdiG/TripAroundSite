@@ -10,11 +10,53 @@ var socket=io();
 var renderlist=[];
 var overlay;
 var src;
-
+var userid;
+var password;
 
 /*** Home page initializer **/
 function homeinit(){
+  userid="";
+  password="";
   $(document).ready(function(){
+    $('#guestlink').click(function(event){
+      console.log("Guest link click");
+      event.preventDefault();
+      userid="guest";
+      window.location.href="#UploadImages";
+    });
+    $('input#usersub').click(function(event) {
+      event.preventDefault();
+      var data = {};
+      data.name = $('#usr').val();
+      data.password = $('#pass').val();
+      console.log(data);
+
+      $.ajax({
+        url: '/login',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json'
+      }).done(function (data) {
+        console.log("Browser Data"+data);
+        if(data != "fail")
+        {
+          console.log("Successful Login");
+          userid=data.name;
+          password=data.password;
+          window.location.href="#UploadImages";
+        }
+        else
+        {
+          console.log("Wrong cred");
+          $('#usertext').text("The user id or password is wrong. Please re-enter!!");
+          $('#usertext').css({'color':'red'});
+          $('#usr').val('');
+          $('#pass').val('');
+
+        }
+      });
+    });
+    /*
     $("#nextpagebutton").hover(function(){
       $("#nextpagebutton span").text("");
     }, function(){
@@ -23,7 +65,8 @@ function homeinit(){
 
     $("#nextpagebutton").click(function(){
       window.location.href="#UploadImages";
-    });
+    });*/
+
     $("#header").hover(function(){
       $("#header").fadeOut(500, function(){
         $(this).text("We make trips better").fadeIn(500);
@@ -39,39 +82,101 @@ function homeinit(){
 
 /** Image upload Controller function **/
 function imagecontroller(){
-
+  var markercollec=[];
+  var markerobj={};
+  var markers=[];
+  console.log("User logged in as" + userid);
   initialize();
-
   $(document).ready(function(){
-
     //Dropzone parameter change
     Dropzone.options.uploadForm ={
       paramName: "file"
-    }
+    };
+
     $('input#submitbutton').click(function(event){
       event.preventDefault();
-      var formdata=new FormData($("#uploadForm2")[0]);
-      console.log(formdata);
-      var data={};
-      data.userid="guest";
-      data.filename=$("#userphoto").val().split('\\').pop();
-      data.files=$('#userphoto');
-      //data.mapid="paris";
-      //data.mapdataversionid="temp";
-      //data.markerid="mapmarker";
-
-      $.ajax({
-        url:'/api/photo',
-        type:'POST',
-        data:JSON.stringify(data),
-        contentType: 'application/json',
-      }).done(function(data){
-        console.log(data);
-      });
+      if(userid == "guest") {
+        var form=new FormData(this);
+        $.ajax({
+          url:"/guestlogin",
+          type:"POST",
+          data:form,
+          processData:false,
+          contentType:false
+        }).done(function(msg){
+            console.log(msg);
+            if(msg == "yes") {
+              $("#uploadstatus").text("File has been uploaded");
+              $("#uploadstatus").css({"color":"green"});
+              $("#uploadForm2")[0].reset();
+            }
+            else
+              $("#uploadstatus").text("File has not been uploaded");
+        });
+        var filename=$("#userphoto").val().split('\\').pop();
+        console.log("Filename   "+filename);
+        socket.emit('UserData',{id:userid,file:filename});
+      }
+      else {
+          //For registered users
+          var data = {};
+          data.file = $("#userphoto")[0].files;
+          data.filename = $("#userphoto").val().split('\\').pop();
+          if (userid == "guest") {
+            /*
+             $.ajax({
+             url:'/guestlogin',
+             type:'POST',
+             data:JSON.stringify(data),
+             contentType: false,
+             processData: false,
+             }).done(function(data){
+             console.log(data);
+             });*/
+            $('#uploadForm2').attr('action', 'guestlogin');
+            $('#uploadForm2').submit();
+        }
+      }
     });
 
+    $('#savemap').click(function(evt){
+      evt.preventDefault();
+      if(userid == "guest")
+      {
+        //save the guest map
+        var maps={};
+        maps.name="guestmap";
+        maps.id=userid;
+        console.log("Map coordinates "+ markerobj);
+        maps.markerobj=markercollec;
+        $.ajax({
+          url:"/mapupload",
+          type:'POST',
+          data:JSON.stringify(maps),
+          contentType:'application/json'
+        }).done(function(response){
+          console.log(response);
+          if(response =="yes") {
+            $("#uploadstatus").text("The Map has been saved");
+            $("#uploadstatus").css({"color":"green"});
+            //Reset Map
+            if($.isEmptyObject(markers) == false) {
+              for (i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+              }
+            }
+            map.setCenter(new google.maps.LatLng(51.508742,-0.120850));
+            map.setZoom(3);
+          }
+          else
+          {
+            $("#uploadstatus").text("The Map has not been saved");
+            $("#uploadstatus").css({"color":"red"});
+          }
+        });
+      }
+    });
     $("#userphoto").on('change', function (event) {
-
       console.log("changed");
       var input=$("#userphoto").get(0).files;
       for(var i=0;i<input.length;i++)
@@ -92,14 +197,19 @@ function imagecontroller(){
             console.log("Longitude : " + lon);
             socket.emit('Latitude', lat);
             socket.emit('Longitude', lon);
+            markerobj.lat=lat;
+            markerobj.lon=lon;
+            markercollec.push(markerobj);
             myCenter = new google.maps.LatLng(lat, lon);
             var marker = new google.maps.Marker({
-              position: myCenter,
+              position: myCenter
             });
+            map.setCenter(marker.getPosition());
+            map.setZoom(4);
             marker.setMap(map);
+            markers.push(marker);
           }
         });
-
       }
     });
 
@@ -127,11 +237,7 @@ function imagecontroller(){
 
 }
 
-
-
-
-function initialize()
-{
+function initialize(){
   var mapProp = {
     center:new google.maps.LatLng(51.508742,-0.120850),
     zoom:5,
@@ -173,8 +279,10 @@ $("#menu-toggle").click(function(e){
 
 /** Controller for Map Page **/
 function imageupload() {
-
   $(document).ready(function(){
+    //Get markers and initialize them on map
+
+    initialize();
     $("#beforepagebutton").hover(function(){
       $("#beforepagebutton span").text("");
     }, function(){
@@ -185,9 +293,7 @@ function imageupload() {
     });
   });
 
-
-
-$('#something').hide();
+  $('#something').hide();
   //Fetch images from Server using socketio
   socket.emit("LoadImage", "yes");
 
@@ -203,7 +309,7 @@ $('#something').hide();
 
     //$("#thumbnail").append('<li id="dragged">Hell There</li>')
     });
-    initialize();
+
     var temp=document.getElementById("thumbnail");
     $('#thumbnail').on('click','li',function(){
        console.log("Clicked");
@@ -225,6 +331,25 @@ $('#something').hide();
       console.log("ll:"+ll);
       placemarker(ll);
     });
+
+  if(userid="guest")
+  {
+    //request markers
+    socket.emit("LoadMarker", {id:userid,mapid:"guestmap"});
+
+    socket.on("drawmarkers",function(msg){
+      console.log(msg.lat+"    "+msg.lng);
+      //draw markers on map
+      var myCenter = new google.maps.LatLng(msg.lat, msg.lng);
+      var marker = new google.maps.Marker({
+        position: myCenter
+      });
+      map.setCenter(marker.getPosition());
+      map.setZoom(4);
+      marker.setMap(map);
+
+    });
+  }
 
   }
 
