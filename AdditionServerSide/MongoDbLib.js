@@ -117,7 +117,6 @@ module.exports= {
       callback();
     }
     mongodb.connect(connectionstring, function (err, db) {
-
       var collec = db.collection(databasename);
       if (collec != null) {
         db.collection('picturescollection').insert({
