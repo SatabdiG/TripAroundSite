@@ -110,6 +110,41 @@ module.exports= {
   });
 },
 
+  storeImages: function (connectionstring, mapdataversionid, userid,mapid, markerid,picname,picpath,callback) {
+
+
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+
+      var collec = db.collection(databasename);
+      if (collec != null) {
+        db.collection('picturescollection').insert({
+          "_mapdataversionid": mapdataversionid,
+          "mapid": mapid,
+          "userid": userid,
+          "userid":userid,
+          "markerid":markerid,
+          "picname":picname,
+          "picpath":picpath
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Map Data Version Record added");
+            db.close();
+          }
+          else
+            console.log("Map Data Version Cannot add");
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+    });
+  },
+
  addmaps: function (connectionstring,mapid,userid, callback) {
   if (callback) {
     callback();
@@ -168,6 +203,7 @@ addmapversion: function (connectionstring, databasename,_mapdataversionid, _user
     }
   });
 },
+
 addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid, callback) {
   if (callback) {
     callback();

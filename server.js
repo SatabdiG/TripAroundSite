@@ -6,11 +6,12 @@ var multerdragdrop = require('multer');
 var multerguest=require('multer');
 var path=require('path');
 var app	=	express();
+var fs=require('fs');
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
 var formidable=require('formidable');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+
 
 var userid;
 var filename;
@@ -208,11 +209,14 @@ var uploadguest= multer({dest:__dirname+'/uploads'});
 
 /* Guest Log in */
 app.post('/guestlogin', function(req,res){
-  
   console.log("In guest handler");
+  console.log()
   var form=new formidable.IncomingForm();
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
+  form.on('file',function(field,file){
+    fs.rename(file.path,path.join(form.uploadDir,file.name));
+  });
   form.on('error',function(err){
     console.log("Error has ocurred");
     return res.end("no");
@@ -222,8 +226,14 @@ app.post('/guestlogin', function(req,res){
   });
 
   form.parse(req);
+ 
+});
 
-
+app.post('/guestdetailssave',function(req,res){
+  console.log("In guest details handler");
+  console.log(req.body);
+  console.log("User id "+req.body.userid);
+  connect.
 });
 
 /* var flag=true;
