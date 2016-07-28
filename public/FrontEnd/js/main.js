@@ -96,7 +96,17 @@ function imagecontroller(){
     $('input#submitbutton').click(function(event){
       event.preventDefault();
       if(userid == "guest") {
-        var form=new FormData(this);
+        var form=new FormData();
+        var formelement=document.getElementById('userphoto');
+        var fileemenet=formelement.files;
+        if(fileemenet.length>0)
+        {
+          for(var i=0;i<fileemenet.length;i++)
+          {
+            var filetmp=fileemenet[i];
+            form.append('uploads[]',filetmp,filetmp.name);
+          }
+        }
         $.ajax({
           url:"/guestlogin",
           type:"POST",
@@ -113,11 +123,13 @@ function imagecontroller(){
             else
               $("#uploadstatus").text("File has not been uploaded");
         });
+
         var filename=$("#userphoto").val().split('\\').pop();
         console.log("Filename   "+filename);
         socket.emit('UserData',{id:userid,file:filename});
       }
       else {
+          event.preventDefault();
           //For registered users
           var data = {};
           data.file = $("#userphoto")[0].files;

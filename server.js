@@ -4,10 +4,14 @@ var bodyParser =	require("body-parser");
 var multer	=	require('multer');
 var multerdragdrop = require('multer');
 var multerguest=require('multer');
+var path=require('path');
 var app	=	express();
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
+var formidable=require('formidable');
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+
 var userid;
 var filename;
 const mkdirp = require('mkdirp');
@@ -125,7 +129,7 @@ var storage =   multer.diskStorage({
 });
 
 var gueststore =   multerguest.diskStorage({
-  ddestination: function (req, file, callback) {
+  destination: function (req, file, callback) {
     callback(null, __dirname+'/uploads');
   },
   filename: function (req, file, callback) {
@@ -136,7 +140,7 @@ var gueststore =   multerguest.diskStorage({
 
 var upload = multer({ storage : storage }).array('userPhoto',8);
 var uploaddragdrop=multerdragdrop({ storage : storage }).array('file',8);
-var uploadguest= multerguest({ storage : gueststore }).array('file',8);
+
 
 app.get('/',function(req,res){
     res.sendFile(__dirname + "/public/index.html");
@@ -200,15 +204,25 @@ app.post('/photos',function(req,res){
   });
 });
 
+var uploadguest= multer({dest:__dirname+'/uploads'});
+
 /* Guest Log in */
 app.post('/guestlogin', function(req,res){
-  uploadguest(req,res,function (err) {
-   if(err)
-     return res.end("no");
-
-    return res.end("yes");
-
+  console.log("In guest handler");
+  var form=new formidable.IncomingForm();
+  form.multiple=true;
+  form.uploadDir=path.join(__dirname,'/uploads');
+  form.on('error',function(err){
+    console.log("Error has ocurred");
+    return res.end("no");
   });
+  form.on('end',function(){
+    res.send("yes");
+  });
+
+  form.parse(req);
+
+
 });
 
 /* var flag=true;
