@@ -208,6 +208,7 @@ var uploadguest= multer({dest:__dirname+'/uploads'});
 
 /* Guest Log in */
 app.post('/guestlogin', function(req,res){
+  
   console.log("In guest handler");
   var form=new formidable.IncomingForm();
   form.multiple=true;
