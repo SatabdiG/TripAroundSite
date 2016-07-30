@@ -233,7 +233,7 @@ app.post('/guestdetailssave',function(req,res){
   console.log("In guest details handler");
   console.log(req.body);
   console.log("User id "+req.body.userid);
-  connect.
+ 
 });
 
 /* var flag=true;
