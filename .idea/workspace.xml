@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0152ce83-d44d-4376-a704-348c55ff3d1b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js" afterPath="$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/js/main.js" afterPath="$PROJECT_DIR$/public/FrontEnd/js/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
     </list>
     <ignored path="TripAroundSite.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,8 +27,8 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/FrontEnd/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="135" column="41" selection-start-line="135" selection-start-column="41" selection-end-line="135" selection-end-column="41" />
+            <state relative-caret-position="1980">
+              <caret line="196" column="11" selection-start-line="196" selection-start-column="11" selection-end-line="196" selection-end-column="11" />
               <folding>
                 <element signature="n#!!block;n#homeinit#0" expanded="false" />
                 <element signature="n#!!block;n#initialize#0" expanded="false" />
@@ -48,6 +45,16 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="229">
+              <caret line="55" column="6" selection-start-line="55" selection-start-column="6" selection-end-line="55" selection-end-column="68" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="imageupload.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -60,26 +67,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="235" column="10" selection-start-line="235" selection-start-column="10" selection-end-line="235" selection-end-column="10" />
+            <state relative-caret-position="710">
+              <caret line="234" column="10" selection-start-line="234" selection-start-column="10" selection-end-line="234" selection-end-column="10" />
               <folding>
                 <element signature="e#2461#4232#0" expanded="false" />
                 <element signature="e#4773#6727#0" expanded="false" />
-                <element signature="e#8114#9281#0" expanded="false" />
-                <element signature="e#9320#9969#0" expanded="false" />
+                <element signature="e#8105#9272#0" expanded="false" />
+                <element signature="e#9311#9960#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MongoDbLib.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MongoDbLib.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="423">
-              <caret line="129" column="27" selection-start-line="129" selection-start-column="27" selection-end-line="129" selection-end-column="27" />
+            <state relative-caret-position="420">
+              <caret line="118" column="58" selection-start-line="118" selection-start-column="58" selection-end-line="118" selection-end-column="58" />
               <folding>
                 <element signature="e#500#972#0" expanded="false" />
                 <element signature="e#1038#1412#0" expanded="false" />
@@ -87,11 +94,11 @@
                 <element signature="e#2300#2906#0" expanded="false" />
                 <element signature="e#2318#2339#0" expanded="false" />
                 <element signature="e#2395#2902#0" expanded="false" />
-                <element signature="e#3885#4508#0" expanded="false" />
-                <element signature="e#4612#5259#0" expanded="false" />
-                <element signature="e#5363#6120#0" expanded="false" />
-                <element signature="e#6224#7022#0" expanded="false" />
-                <element signature="e#7161#7973#0" expanded="false" />
+                <element signature="e#3884#4507#0" expanded="false" />
+                <element signature="e#4611#5258#0" expanded="false" />
+                <element signature="e#5362#6119#0" expanded="false" />
+                <element signature="e#6223#7021#0" expanded="false" />
+                <element signature="e#7160#7972#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -172,7 +179,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -202,12 +208,13 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="uploads" />
+              <option name="myItemId" value="public" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -234,6 +241,116 @@
       <recent name="$PROJECT_DIR$/public/FrontEnd/Pictures" />
       <recent name="$PROJECT_DIR$/public/FrontEnd/js" />
     </key>
+  </component>
+  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
+    <UpdatedFiles>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Updated from server" />
+        <option name="myStatusName" value="Changed on server" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="CHANGED_ON_SERVER" />
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated" />
+          <option name="myStatusName" value="Changed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UPDATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/server.js</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Created" />
+          <option name="myStatusName" value="Created" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CREATED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Deleted" />
+          <option name="myStatusName" value="Deleted" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="true" />
+          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Restored" />
+          <option name="myStatusName" value="Will be restored" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="RESTORED" />
+        </FILE-GROUP>
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Modified" />
+        <option name="myStatusName" value="Modified" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MODIFIED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Skipped" />
+        <option name="myStatusName" value="Skipped" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SKIPPED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with conflicts" />
+        <option name="myStatusName" value="Will be merged with conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_CONFLICTS" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with tree conflicts" />
+        <option name="myStatusName" value="Merged with tree conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with property conflicts" />
+        <option name="myStatusName" value="Will be merged with property conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged" />
+        <option name="myStatusName" value="Will be merged" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Not in repository" />
+        <option name="myStatusName" value="Not in repository" />
+        <option name="mySupportsDeletion" value="true" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="UNKNOWN" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally added" />
+        <option name="myStatusName" value="Locally added" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_ADDED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally removed" />
+        <option name="myStatusName" value="Locally removed" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_REMOVED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Switched" />
+        <option name="myStatusName" value="Switched" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SWITCHED" />
+      </FILE-GROUP>
+    </UpdatedFiles>
   </component>
   <component name="RunManager" selected="Node.js.Server.js">
     <configuration default="false" name="Server.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-node="/usr/bin/node" path-to-js-file="server.js" working-dir="$PROJECT_DIR$">
@@ -353,7 +470,10 @@
       <workItem from="1469529454737" duration="23316000" />
       <workItem from="1469620360587" duration="7107000" />
       <workItem from="1469698384596" duration="2155000" />
-      <workItem from="1469700617375" duration="5911000" />
+      <workItem from="1469700617375" duration="6922000" />
+      <workItem from="1469736658261" duration="688000" />
+      <workItem from="1469737835849" duration="305000" />
+      <workItem from="1469896755643" duration="139000" />
     </task>
     <task id="LOCAL-00001" summary="testWebStorm">
       <created>1467934430388</created>
@@ -558,11 +678,25 @@
       <option name="project" value="LOCAL" />
       <updated>1469709782607</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Image upload and Save. Implemented as a seperate form&#10;">
+      <created>1469714292388</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1469714292388</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Image upload and Save. Implemented as a seperate form&#10;">
+      <created>1469714325538</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1469714325538</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="194170000" />
+    <option name="totallyTimeSpent" value="196313000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -579,16 +713,16 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24963397" sideWeight="0.35853976" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12255541" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12537314" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32537314" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21641791" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21641791" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.4947994" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4033675" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985657" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.64146024" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40895522" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12537314" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -659,9 +793,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -679,8 +810,8 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#8114#9281#0" expanded="false" />
-            <element signature="e#9320#9969#0" expanded="false" />
+            <element signature="e#8105#9272#0" expanded="false" />
+            <element signature="e#9311#9960#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -708,9 +839,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -728,8 +856,8 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#8114#9281#0" expanded="false" />
-            <element signature="e#9320#9969#0" expanded="false" />
+            <element signature="e#8105#9272#0" expanded="false" />
+            <element signature="e#9311#9960#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -757,9 +885,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -777,8 +902,8 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#8114#9281#0" expanded="false" />
-            <element signature="e#9320#9969#0" expanded="false" />
+            <element signature="e#8105#9272#0" expanded="false" />
+            <element signature="e#9311#9960#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -821,9 +946,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="5" column="26" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="26" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -848,8 +970,8 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#8114#9281#0" expanded="false" />
-            <element signature="e#9320#9969#0" expanded="false" />
+            <element signature="e#8105#9272#0" expanded="false" />
+            <element signature="e#9311#9960#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -892,9 +1014,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -919,8 +1038,8 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#8114#9281#0" expanded="false" />
-            <element signature="e#9320#9969#0" expanded="false" />
+            <element signature="e#8105#9272#0" expanded="false" />
+            <element signature="e#9311#9960#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -993,8 +1112,8 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#8114#9281#0" expanded="false" />
-            <element signature="e#9320#9969#0" expanded="false" />
+            <element signature="e#8105#9272#0" expanded="false" />
+            <element signature="e#9311#9960#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1041,8 +1160,8 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#8114#9281#0" expanded="false" />
-            <element signature="e#9320#9969#0" expanded="false" />
+            <element signature="e#8105#9272#0" expanded="false" />
+            <element signature="e#9311#9960#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1066,9 +1185,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="870">
           <caret line="58" column="72" selection-start-line="58" selection-start-column="72" selection-end-line="58" selection-end-column="72" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1083,7 +1199,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-585">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1091,14 +1206,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="94" column="4" selection-start-line="94" selection-start-column="4" selection-end-line="94" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="25" column="24" selection-start-line="25" selection-start-column="23" selection-end-line="25" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1113,7 +1220,26 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1843">
           <caret line="322" column="21" selection-start-line="322" selection-start-column="21" selection-end-line="322" selection-end-column="21" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="118" column="58" selection-start-line="118" selection-start-column="58" selection-end-line="118" selection-end-column="58" />
+          <folding>
+            <element signature="e#500#972#0" expanded="false" />
+            <element signature="e#1038#1412#0" expanded="false" />
+            <element signature="e#1500#2199#0" expanded="false" />
+            <element signature="e#2300#2906#0" expanded="false" />
+            <element signature="e#2318#2339#0" expanded="false" />
+            <element signature="e#2395#2902#0" expanded="false" />
+            <element signature="e#3884#4507#0" expanded="false" />
+            <element signature="e#4611#5258#0" expanded="false" />
+            <element signature="e#5362#6119#0" expanded="false" />
+            <element signature="e#6223#7021#0" expanded="false" />
+            <element signature="e#7160#7972#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1129,8 +1255,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/FrontEnd/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="135" column="41" selection-start-line="135" selection-start-column="41" selection-end-line="135" selection-end-column="41" />
+        <state relative-caret-position="1980">
+          <caret line="196" column="11" selection-start-line="196" selection-start-column="11" selection-end-line="196" selection-end-column="11" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
@@ -1146,35 +1272,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.js">
+    <entry file="file://$PROJECT_DIR$/public/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="235" column="10" selection-start-line="235" selection-start-column="10" selection-end-line="235" selection-end-column="10" />
-          <folding>
-            <element signature="e#2461#4232#0" expanded="false" />
-            <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#8114#9281#0" expanded="false" />
-            <element signature="e#9320#9969#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="229">
+          <caret line="55" column="6" selection-start-line="55" selection-start-column="6" selection-end-line="55" selection-end-column="68" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js">
+    <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="129" column="27" selection-start-line="129" selection-start-column="27" selection-end-line="129" selection-end-column="27" />
+        <state relative-caret-position="710">
+          <caret line="234" column="10" selection-start-line="234" selection-start-column="10" selection-end-line="234" selection-end-column="10" />
           <folding>
-            <element signature="e#500#972#0" expanded="false" />
-            <element signature="e#1038#1412#0" expanded="false" />
-            <element signature="e#1500#2199#0" expanded="false" />
-            <element signature="e#2300#2906#0" expanded="false" />
-            <element signature="e#2318#2339#0" expanded="false" />
-            <element signature="e#2395#2902#0" expanded="false" />
-            <element signature="e#3885#4508#0" expanded="false" />
-            <element signature="e#4612#5259#0" expanded="false" />
-            <element signature="e#5363#6120#0" expanded="false" />
-            <element signature="e#6224#7022#0" expanded="false" />
-            <element signature="e#7161#7973#0" expanded="false" />
+            <element signature="e#2461#4232#0" expanded="false" />
+            <element signature="e#4773#6727#0" expanded="false" />
+            <element signature="e#8105#9272#0" expanded="false" />
+            <element signature="e#9311#9960#0" expanded="false" />
           </folding>
         </state>
       </provider>
