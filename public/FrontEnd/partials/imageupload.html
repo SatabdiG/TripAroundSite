@@ -34,9 +34,9 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
-          <form id="uploadForm" enctype="multipart/form-data" action="/photos" method="post" class="dropzone">
-            <input type="file" name="userphoto" id="userphotoid"> Click here </input> <input type="submit" value="Upload Image" name="submit">
-            Drag and drop images here.
+          <form id="uploadForm" action="/dragdrop">
+            <div id="someid" class="dropzone"></div>
+            <input type="submit" value="Upload Image" name="submit" id="dragdropbutton"></p>
           </form>
         </div>
       </div>

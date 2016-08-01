@@ -12,6 +12,7 @@ var overlay;
 var src;
 var userid;
 var password;
+var markers=[];
 
 /*** Home page initializer **/
 function homeinit(){
@@ -91,14 +92,47 @@ function imagecontroller(){
   initialize();
   $(document).ready(function(){
     //Dropzone parameter change
-    Dropzone.options.uploadForm ={
-      paramName: "file"
-    };
+    var mydropzone=new Dropzone("div#someid", {url: "/dragdrop"});
+    $('input#dragdropbutton').click(function(evt){
+      evt.preventDefault();
+      var filename=[];
+      var formelement=$('input[name=file]')[0];
+      console.log(formelement);
+      var fileemenet=formelement.files;
+      if(fileemenet.length>0)
+      {
+        for(var i=0;i<fileemenet.length;i++)
+        {
+          var filetmp=fileemenet[i];
+          form.append('uploads[]',filetmp,filetmp.name);
+          filename.push(filetmp.name);
+          picobj=filetmp.name;
+        }
+      }
+
+      $.ajax({
+        url:"/dragdrop",
+        type:"POST",
+        data:form,
+        processData:false,
+        contentType:false
+      }).done(function(msg){
+        console.log(msg);
+        if(msg == "yes") {
+          $("#uploadstatus").text("File has been uploaded");
+          $("#uploadstatus").css({"color":"green"});
+          $("#uploadForm2")[0].reset();
+        }
+        else
+          $("#uploadstatus").text("File has not been uploaded");
+      });
+    });
 
     $('input#submitbutton').click(function(event){
       event.preventDefault();
       if(userid == "guest") {
         var form=new FormData();
+        var dragdropfrm=new FormData();
         var filename=[];
         var formelement=document.getElementById('userphoto');
         var fileemenet=formelement.files;
@@ -112,7 +146,8 @@ function imagecontroller(){
             picobj=filetmp.name;
           }
         }
-          $.ajax({
+
+        $.ajax({
           url:"/guestlogin",
           type:"POST",
           data:form,
@@ -128,6 +163,7 @@ function imagecontroller(){
             else
               $("#uploadstatus").text("File has not been uploaded");
         });
+
         console.log("Names  "+filename);
         var userpicinfo={};
         userpicinfo.userid=userid;
@@ -370,10 +406,12 @@ function imageupload() {
   {
     //request markers
     socket.emit("LoadMarker", {id:userid,mapid:"guestmap"});
-
+    markers =[];
+    var paths=[];
     socket.on("drawmarkers",function(msg){
       console.log(msg.lat+"    "+msg.lng);
       //draw markers on map
+      paths.push({lat: msg.lat, lng:msg.lng});
       var myCenter = new google.maps.LatLng(msg.lat, msg.lng);
       var marker = new google.maps.Marker({
         position: myCenter
@@ -381,8 +419,20 @@ function imageupload() {
       map.setCenter(marker.getPosition());
       map.setZoom(4);
       marker.setMap(map);
-
+      markers.push(marker);
     });
+    console.log("Markers  "+paths);
+
+    //connect the markers
+    var path=new google.maps.Polyline({
+      path:paths,
+      geodesic:true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    path.setMap(map);
   }
 
   }
@@ -392,8 +442,7 @@ function imagegallerycontroller(){
   $(document).ready(function(){
     $('#image').magnificPopup({
       type:'image',
-      closeOnContentClick: true,
-    });
+      });
     console.log("User is logged as"+ userid);
     if(userid =="guest")
     {
@@ -410,10 +459,13 @@ function imagegallerycontroller(){
         var loc="uploads/"+mssg.picname;
       }
       if(mssg.picname != undefined) {
+        //create an image element
+        var image=document.createElement('img');
+        var append=document.getElementById('image');
+        append.appendChild(image);
+        $('#image').attr('href', loc);
         $('#image').append('<img class="images" src="'+loc+'" height="75" width="75">');
       }
-
-
     });
 
   });

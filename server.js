@@ -209,7 +209,6 @@ var uploadguest= multer({dest:__dirname+'/uploads'});
 /* Guest Log in */
 app.post('/guestlogin', function(req,res){
   console.log("In guest handler");
-  console.log()
   var form=new formidable.IncomingForm();
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
@@ -296,6 +295,29 @@ app.post('/mapupload', function(req,res){
     console.log("Empty");
     return res.end("no");
   }
+
+});
+//Handler for drag and drop
+app.post('/dragdrop', function(req,res){
+  console.log("In drag and drop handler");
+  var form=new formidable.IncomingForm();
+  
+  form.multiple=true;
+  if(userid == "guest")
+    form.uploadDir=path.join(__dirname,'/uploads');
+  form.on('file',function(field,file){
+    fs.rename(file.path,path.join(form.uploadDir,file.name));
+  });
+  form.on('error',function(err){
+    console.log("Error has ocurred");
+    return res.end("no");
+  });
+  form.on('end',function(){
+    res.send("yes");
+  });
+
+  form.parse(req);
+
 
 });
 

@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0152ce83-d44d-4376-a704-348c55ff3d1b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/FrontEnd/partials/imagegallery.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js" afterPath="$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/js/main.js" afterPath="$PROJECT_DIR$/public/FrontEnd/js/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/partials/imagegallery.html" afterPath="$PROJECT_DIR$/public/FrontEnd/partials/imagegallery.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html" afterPath="$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/partials/map.html" afterPath="$PROJECT_DIR$/public/FrontEnd/partials/map.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/public/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
     </list>
@@ -31,22 +29,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/FrontEnd/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="387">
-              <caret line="412" column="83" selection-start-line="412" selection-start-column="83" selection-end-line="412" selection-end-column="83" />
+            <state relative-caret-position="330">
+              <caret line="423" column="33" selection-start-line="423" selection-start-column="33" selection-end-line="423" selection-end-column="33" />
               <folding>
-                <element signature="n#!!block;n#homeinit#0" expanded="false" />
                 <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
                 <element signature="n#!!block;n#initialize#0" expanded="false" />
-                <element signature="e#8711#8776#0" expanded="false" />
-                <element signature="n#!!block;n#imageupload#0" expanded="false" />
-                <element signature="e#9923#10077#0" expanded="false" />
+                <element signature="n#!!block;n#placemarker#0" expanded="false" />
+                <element signature="e#9741#9806#0" expanded="false" />
+                <element signature="e#10953#11107#0" expanded="false" />
+                <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
                 <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-                <element signature="e#13717#13748#0" expanded="false" />
-                <element signature="e#13804#13837#0" expanded="false" />
-                <element signature="e#13895#13931#0" expanded="false" />
+                <element signature="e#15283#15314#0" expanded="false" />
+                <element signature="e#15370#15403#0" expanded="false" />
+                <element signature="e#15461#15497#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -55,8 +53,8 @@
       <file leaf-file-name="imageupload.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="63" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="63" />
+            <state relative-caret-position="345">
+              <caret line="38" column="86" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="86" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -82,25 +80,35 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="map.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/map.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-255">
+              <caret line="7" column="65" selection-start-line="7" selection-start-column="65" selection-end-line="7" selection-end-column="65" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3840">
-              <caret line="382" column="30" selection-start-line="382" selection-start-column="19" selection-end-line="382" selection-end-column="30" />
+            <state relative-caret-position="-1455">
+              <caret line="142" column="18" selection-start-line="142" selection-start-column="4" selection-end-line="142" selection-end-column="18" />
               <folding>
                 <element signature="e#2461#4232#0" expanded="false" />
                 <element signature="e#4773#6727#0" expanded="false" />
-                <element signature="e#9504#10153#0" expanded="false" />
+                <element signature="e#10034#10683#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="imagegallery.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/imagegallery.html">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="10" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
+            <state relative-caret-position="393">
+              <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
               <folding />
             </state>
           </provider>
@@ -147,13 +155,13 @@
         <option value="$PROJECT_DIR$/public/FrontEnd/partials/product.html" />
         <option value="$PROJECT_DIR$/public/FrontEnd/partials/home.html" />
         <option value="$PROJECT_DIR$/public/FrontEnd/css/main.css" />
-        <option value="$PROJECT_DIR$/public/index.html" />
-        <option value="$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html" />
         <option value="$PROJECT_DIR$/public/FrontEnd/partials/map.html" />
         <option value="$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js" />
+        <option value="$PROJECT_DIR$/public/FrontEnd/partials/imagegallery.html" />
+        <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html" />
         <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/public/FrontEnd/js/main.js" />
-        <option value="$PROJECT_DIR$/public/FrontEnd/partials/imagegallery.html" />
       </list>
     </option>
   </component>
@@ -192,6 +200,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -296,14 +306,34 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TripAroundSite2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TripAroundSite2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FrontEnd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -458,7 +488,8 @@
       <workItem from="1469736658261" duration="688000" />
       <workItem from="1469737835849" duration="305000" />
       <workItem from="1469896755643" duration="590000" />
-      <workItem from="1470036122217" duration="11431000" />
+      <workItem from="1470036122217" duration="11487000" />
+      <workItem from="1470049669946" duration="11988000" />
     </task>
     <task id="LOCAL-00001" summary="testWebStorm">
       <created>1467934430388</created>
@@ -684,11 +715,18 @@
       <option name="project" value="LOCAL" />
       <updated>1469896915791</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="imagegallery&#10;database updates&#10;">
+      <created>1470047669577</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1470047669577</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="208195000" />
+    <option name="totallyTimeSpent" value="220239000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -703,7 +741,7 @@
     <frame x="0" y="0" width="1366" height="768" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24963397" sideWeight="0.35853976" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24816984" sideWeight="0.35853976" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12255541" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32537314" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -754,11 +792,20 @@
     <MESSAGE value="Image upload fix -- Formidable&#10;" />
     <MESSAGE value="Image upload and Save. Implemented as a seperate form&#10;" />
     <MESSAGE value="upload&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="upload&#10;" />
+    <MESSAGE value="imagegallery&#10;database updates&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="imagegallery&#10;database updates&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="9" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/public/FrontEnd/js/main.js</url>
+          <line>423</line>
+          <properties />
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="13" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -784,7 +831,7 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#9504#10153#0" expanded="false" />
+            <element signature="e#10034#10683#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -794,16 +841,16 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="e#8711#8776#0" expanded="false" />
-            <element signature="n#!!block;n#imageupload#0" expanded="false" />
-            <element signature="e#9923#10077#0" expanded="false" />
+            <element signature="n#!!block;n#placemarker#0" expanded="false" />
+            <element signature="e#9741#9806#0" expanded="false" />
+            <element signature="e#10953#11107#0" expanded="false" />
+            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#13717#13748#0" expanded="false" />
-            <element signature="e#13804#13837#0" expanded="false" />
-            <element signature="e#13895#13931#0" expanded="false" />
+            <element signature="e#15283#15314#0" expanded="false" />
+            <element signature="e#15370#15403#0" expanded="false" />
+            <element signature="e#15461#15497#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -829,7 +876,7 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#9504#10153#0" expanded="false" />
+            <element signature="e#10034#10683#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -839,16 +886,16 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="e#8711#8776#0" expanded="false" />
-            <element signature="n#!!block;n#imageupload#0" expanded="false" />
-            <element signature="e#9923#10077#0" expanded="false" />
+            <element signature="n#!!block;n#placemarker#0" expanded="false" />
+            <element signature="e#9741#9806#0" expanded="false" />
+            <element signature="e#10953#11107#0" expanded="false" />
+            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#13717#13748#0" expanded="false" />
-            <element signature="e#13804#13837#0" expanded="false" />
-            <element signature="e#13895#13931#0" expanded="false" />
+            <element signature="e#15283#15314#0" expanded="false" />
+            <element signature="e#15370#15403#0" expanded="false" />
+            <element signature="e#15461#15497#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -874,7 +921,7 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#9504#10153#0" expanded="false" />
+            <element signature="e#10034#10683#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -892,16 +939,16 @@
         <state relative-caret-position="1440">
           <caret line="96" column="23" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
           <folding>
-            <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="e#8711#8776#0" expanded="false" />
-            <element signature="n#!!block;n#imageupload#0" expanded="false" />
-            <element signature="e#9923#10077#0" expanded="false" />
+            <element signature="n#!!block;n#placemarker#0" expanded="false" />
+            <element signature="e#9741#9806#0" expanded="false" />
+            <element signature="e#10953#11107#0" expanded="false" />
+            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#13717#13748#0" expanded="false" />
-            <element signature="e#13804#13837#0" expanded="false" />
-            <element signature="e#13895#13931#0" expanded="false" />
+            <element signature="e#15283#15314#0" expanded="false" />
+            <element signature="e#15370#15403#0" expanded="false" />
+            <element signature="e#15461#15497#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -941,7 +988,7 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#9504#10153#0" expanded="false" />
+            <element signature="e#10034#10683#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -959,16 +1006,16 @@
         <state relative-caret-position="1440">
           <caret line="96" column="23" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
           <folding>
-            <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="e#8711#8776#0" expanded="false" />
-            <element signature="n#!!block;n#imageupload#0" expanded="false" />
-            <element signature="e#9923#10077#0" expanded="false" />
+            <element signature="n#!!block;n#placemarker#0" expanded="false" />
+            <element signature="e#9741#9806#0" expanded="false" />
+            <element signature="e#10953#11107#0" expanded="false" />
+            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#13717#13748#0" expanded="false" />
-            <element signature="e#13804#13837#0" expanded="false" />
-            <element signature="e#13895#13931#0" expanded="false" />
+            <element signature="e#15283#15314#0" expanded="false" />
+            <element signature="e#15370#15403#0" expanded="false" />
+            <element signature="e#15461#15497#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1008,7 +1055,7 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#9504#10153#0" expanded="false" />
+            <element signature="e#10034#10683#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1026,16 +1073,16 @@
         <state relative-caret-position="150">
           <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
           <folding>
-            <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="e#8711#8776#0" expanded="false" />
-            <element signature="n#!!block;n#imageupload#0" expanded="false" />
-            <element signature="e#9923#10077#0" expanded="false" />
+            <element signature="n#!!block;n#placemarker#0" expanded="false" />
+            <element signature="e#9741#9806#0" expanded="false" />
+            <element signature="e#10953#11107#0" expanded="false" />
+            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#13717#13748#0" expanded="false" />
-            <element signature="e#13804#13837#0" expanded="false" />
-            <element signature="e#13895#13931#0" expanded="false" />
+            <element signature="e#15283#15314#0" expanded="false" />
+            <element signature="e#15370#15403#0" expanded="false" />
+            <element signature="e#15461#15497#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1053,16 +1100,16 @@
         <state relative-caret-position="150">
           <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
           <folding>
-            <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="e#8711#8776#0" expanded="false" />
-            <element signature="n#!!block;n#imageupload#0" expanded="false" />
-            <element signature="e#9923#10077#0" expanded="false" />
+            <element signature="n#!!block;n#placemarker#0" expanded="false" />
+            <element signature="e#9741#9806#0" expanded="false" />
+            <element signature="e#10953#11107#0" expanded="false" />
+            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#13717#13748#0" expanded="false" />
-            <element signature="e#13804#13837#0" expanded="false" />
-            <element signature="e#13895#13931#0" expanded="false" />
+            <element signature="e#15283#15314#0" expanded="false" />
+            <element signature="e#15370#15403#0" expanded="false" />
+            <element signature="e#15461#15497#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1081,7 +1128,7 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#9504#10153#0" expanded="false" />
+            <element signature="e#10034#10683#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1100,16 +1147,16 @@
         <state relative-caret-position="1800">
           <caret line="120" column="37" selection-start-line="120" selection-start-column="20" selection-end-line="120" selection-end-column="37" />
           <folding>
-            <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="e#8711#8776#0" expanded="false" />
-            <element signature="n#!!block;n#imageupload#0" expanded="false" />
-            <element signature="e#9923#10077#0" expanded="false" />
+            <element signature="n#!!block;n#placemarker#0" expanded="false" />
+            <element signature="e#9741#9806#0" expanded="false" />
+            <element signature="e#10953#11107#0" expanded="false" />
+            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#13717#13748#0" expanded="false" />
-            <element signature="e#13804#13837#0" expanded="false" />
-            <element signature="e#13895#13931#0" expanded="false" />
+            <element signature="e#15283#15314#0" expanded="false" />
+            <element signature="e#15370#15403#0" expanded="false" />
+            <element signature="e#15461#15497#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1128,7 +1175,7 @@
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#9504#10153#0" expanded="false" />
+            <element signature="e#10034#10683#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1176,22 +1223,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="41" column="36" selection-start-line="41" selection-start-column="24" selection-end-line="41" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="65" selection-start-line="7" selection-start-column="65" selection-end-line="7" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/home.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -1200,14 +1231,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="393">
+          <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3840">
-          <caret line="382" column="30" selection-start-line="382" selection-start-column="19" selection-end-line="382" selection-end-column="30" />
+        <state relative-caret-position="-1455">
+          <caret line="142" column="18" selection-start-line="142" selection-start-column="4" selection-end-line="142" selection-end-column="18" />
           <folding>
             <element signature="e#2461#4232#0" expanded="false" />
             <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#9504#10153#0" expanded="false" />
+            <element signature="e#10034#10683#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1228,10 +1267,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-255">
+          <caret line="7" column="65" selection-start-line="7" selection-start-column="65" selection-end-line="7" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/imagegallery.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="23" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="63" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="63" />
+        <state relative-caret-position="345">
+          <caret line="38" column="86" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="86" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#!!top" expanded="true" />
           </folding>
@@ -1240,28 +1295,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/FrontEnd/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="387">
-          <caret line="412" column="83" selection-start-line="412" selection-start-column="83" selection-end-line="412" selection-end-column="83" />
+        <state relative-caret-position="330">
+          <caret line="423" column="33" selection-start-line="423" selection-start-column="33" selection-end-line="423" selection-end-column="33" />
           <folding>
-            <element signature="n#!!block;n#homeinit#0" expanded="false" />
             <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="e#8711#8776#0" expanded="false" />
-            <element signature="n#!!block;n#imageupload#0" expanded="false" />
-            <element signature="e#9923#10077#0" expanded="false" />
+            <element signature="n#!!block;n#placemarker#0" expanded="false" />
+            <element signature="e#9741#9806#0" expanded="false" />
+            <element signature="e#10953#11107#0" expanded="false" />
+            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#13717#13748#0" expanded="false" />
-            <element signature="e#13804#13837#0" expanded="false" />
-            <element signature="e#13895#13931#0" expanded="false" />
+            <element signature="e#15283#15314#0" expanded="false" />
+            <element signature="e#15370#15403#0" expanded="false" />
+            <element signature="e#15461#15497#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/imagegallery.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="10" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
