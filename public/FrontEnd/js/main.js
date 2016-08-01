@@ -85,6 +85,8 @@ function imagecontroller(){
   var markercollec=[];
   var markerobj={};
   var markers=[];
+  var picobj={};
+  var maps={};
   console.log("User logged in as" + userid);
   initialize();
   $(document).ready(function(){
@@ -107,6 +109,7 @@ function imagecontroller(){
             var filetmp=fileemenet[i];
             form.append('uploads[]',filetmp,filetmp.name);
             filename.push(filetmp.name);
+            picobj=filetmp.name;
           }
         }
           $.ajax({
@@ -169,9 +172,8 @@ function imagecontroller(){
     $('#savemap').click(function(evt){
       evt.preventDefault();
       if(userid == "guest")
-      {
-        //save the guest map
-        var maps={};
+      { //save the guest map
+
         maps.name="guestmap";
         maps.id=userid;
         console.log("Map coordinates "+ markerobj);
@@ -219,13 +221,18 @@ function imagecontroller(){
           else {
             lat = (lat[0] + lat[1] / 60 + lat[2] / 3600) * (latRef == "N" ? 1 : -1);
             lon = (lon[0] + lon[1] / 60 + lon[2] / 3600) * (lonRef == "W" ? -1 : 1);
-
+            var date=new Date();
+            var tim=date.getMilliseconds();
             console.log("Latitide : " + lat);
             console.log("Longitude : " + lon);
             socket.emit('Latitude', lat);
             socket.emit('Longitude', lon);
             markerobj.lat=lat;
             markerobj.lon=lon;
+            markerobj.id=userid+tim;
+            markerobj.filename="sea.jpg"; //fix this
+            //********* input name *****************
+
             markercollec.push(markerobj);
             myCenter = new google.maps.LatLng(lat, lon);
             var marker = new google.maps.Marker({
@@ -380,6 +387,38 @@ function imageupload() {
 
   }
 
+//Controller for Image gallery page
+function imagegallerycontroller(){
+  $(document).ready(function(){
+    $('#image').magnificPopup({
+      type:'image',
+      closeOnContentClick: true,
+    });
+    console.log("User is logged as"+ userid);
+    if(userid =="guest")
+    {
+      var mapid="guestmap";
+    }
+
+    socket.emit("ImageGall",{userid: userid, mapid:mapid});
+    socket.on("imagereturn", function(mssg){
+      console.log(mssg);
+      console.log(mssg.picname);
+      console.log(mssg.picpath);
+      if(userid=="guest"){
+        var mapid="guestmap";
+        var loc="uploads/"+mssg.picname;
+      }
+      if(mssg.picname != undefined) {
+        $('#image').append('<img class="images" src="'+loc+'" height="75" width="75">');
+      }
+
+
+    });
+
+  });
+}
+
 function airplanehandler(){
   var startpos,startend;
   var path;
@@ -445,7 +484,12 @@ tripapp.config(function($routeProvider) {
   .when('/ViewImages',{
     templateUrl:'/FrontEnd/partials/map.html',
     controller: 'mapcontroller'
-  });
+  })
+
+    .when('/imagegallery',{
+      templateUrl:'/FrontEnd/partials/imagegallery.html',
+      controller: 'imagegallerycontroller'
+    });
 
 
 });
@@ -472,6 +516,10 @@ $scope.init=imagecontroller();
 
 });
 
+tripapp.controller('imagegallerycontroller', function($scope){
+  $scope.init=imagegallerycontroller();
+  $scope.message="Image rendered here";
+});
 
 
 

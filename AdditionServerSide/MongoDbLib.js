@@ -54,6 +54,25 @@ module.exports= {
     });
   },
 
+  getPictures:function(connectionstring, userid,mapid, callback){
+    if(callback)
+      callback();
+    console.log("UserID"+userid);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection('picturescollection').find({"userid":userid});
+        cursor.each(function(err,doc){
+          if(doc!=null)
+          {
+            console.log(doc);
+            callback(doc.picname,doc.picpath,doc.mapid);
+          }
+        });
+
+      }
+    });
+  },
+
   verifyusers:function (connectionstring, databasename, queryby, queryval, callback) {
     console.log('queryby  '+queryby);
     console.log('password  '+queryval);
@@ -66,12 +85,12 @@ module.exports= {
             cursor.each(function (err, doc) {
               if (doc != null) {
                 if(doc.password == queryval) {
-                  callback("success");
-                  return;
+                  return callback("success");
+
                 }
                 else {
-                  callback("fail");
-                  return;
+                  return callback("fail");
+
                 }
               }
 
@@ -111,19 +130,16 @@ module.exports= {
 },
 
   storeImages: function (connectionstring, mapdataversionid, userid,mapid, markerid,picname,picpath,callback) {
-
-
     if (callback) {
       callback();
     }
     mongodb.connect(connectionstring, function (err, db) {
-      var collec = db.collection(databasename);
+      var collec = db.collection('picturescollection');
       if (collec != null) {
         db.collection('picturescollection').insert({
           "_mapdataversionid": mapdataversionid,
           "mapid": mapid,
           "userid": userid,
-          "userid":userid,
           "markerid":markerid,
           "picname":picname,
           "picpath":picpath
@@ -131,10 +147,15 @@ module.exports= {
 
           if (records != null) {
             console.log("Map Data Version Record added");
+            callback("yes");
             db.close();
           }
-          else
+          else{
+
             console.log("Map Data Version Cannot add");
+            callback("no");
+          }
+
         });
 
       }
@@ -203,7 +224,7 @@ addmapversion: function (connectionstring, databasename,_mapdataversionid, _user
   });
 },
 
-addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid, callback) {
+addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid,filename, callback) {
   if (callback) {
     callback();
   }
@@ -217,7 +238,8 @@ addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,La
         "userid": userid,
         "mapid": mapid,
         "Lat": Latid,
-        "Lng": Lngid
+        "Lng": Lngid,
+        "filename":filename
      }, {w: 1}, function (err, records) {
 
         if (records != null) {
@@ -272,17 +294,17 @@ addvalues: function (connectionstring,mapdataversionid, imagename, imagepath,use
       }
     });
   },
-retrievevalues: function ( connectionstring, databasename, _mapdataversionid, _markerid,_imagename, _imagepath,_userid,_mapid, callback) {
+retrievevalues: function ( connectionstring, databasename, mapdataversionid, markerid,_imagename, _imagepath,_userid,_mapid, callback) {
       if (callback) {
         callback();
       }
       mongodb.connect(connectionstring, function (err, db) {
 
-        var collec = db.collection(databasename);
+        var collec = db.collection('picturescollection');
         if (collec != null) {
-          db.collection('storedimages').find({
-            "mapdataversionid": _mapdataversionid,
-            "markerid": _markerid,
+          db.collection('picturescollection').find({
+            "mapdataversionid": mapdataversionid,
+            "markerid": markerid,
             "imagename": _imagename,
             "imagepath": _imagepath,
             "userid": _userid,
@@ -302,6 +324,9 @@ retrievevalues: function ( connectionstring, databasename, _mapdataversionid, _m
         }
       });
     }
+
+
+
 }
 
 

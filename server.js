@@ -206,7 +206,6 @@ app.post('/photos',function(req,res){
 });
 
 var uploadguest= multer({dest:__dirname+'/uploads'});
-
 /* Guest Log in */
 app.post('/guestlogin', function(req,res){
   console.log("In guest handler");
@@ -226,32 +225,30 @@ app.post('/guestlogin', function(req,res){
   });
 
   form.parse(req);
- 
+
 });
 
 app.post('/guestdetailssave',function(req,res){
+  var filename=req.body.filename;
   console.log("In guest details handler");
   console.log(req.body);
   console.log("User id "+req.body.userid);
- 
+  for(var i=0;i<filename.length;i++)
+  {
+    if(req.body.userid == 'guest') {
+      var mapid = 'guestmap';
+      var pathid='/uploads';
+      var mapversionid="something";
+    }
+    connect.storeImages('mongodb://localhost:27017/testimages',mapversionid,req.body.userid,mapid,"markerid",filename[i],pathid,function(message){
+      console.log("Message"+message);
+      if(message == "yes")
+        return res.end("yes");
+      else
+        return res.end("no");
+    })
+  }
 });
-
-/* var flag=true;
- if(userid=="guest") {
-
- connect.addvalues('mongodb://localhost:27017/testimages', 'someversion', req.files[0].filename, req.files[0].destination,"guest","guestmap",function(mssg){
- if(mssg=="yes"){
- flag=true;
- }
- else
- flag=false;
- });
- }
-
- if(err)
- return res.end("no");
-
- return res.end("yes");*/
 
 //** upload and save map coordinates
 app.post('/mapupload', function(req,res){
@@ -276,8 +273,8 @@ app.post('/mapupload', function(req,res){
     for(i=0;i<marker.length;i++)
     {
       var markerid=req.body.id+i+currenthours;
-      console.log("Data  "+ marker[i].lat);
-      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",markerid,req.body.id,req.body.name,marker[i].lat,marker[i].lon, function(mssg){
+      console.log(marker[i]);
+      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",marker[i].id,req.body.id,req.body.name,marker[i].lat,marker[i].lon, marker[i].filename,function(mssg){
       console.log(mssg);
         if(mssg!=undefined) {
           if (mssg == "yes")
@@ -375,6 +372,15 @@ socket.on('connection',function(socket){
         console.log("Retrived   " + lat + "  " + lng);
         socket.emit("drawmarkers", {lat: lat, lng: lng});
       }
+    });
+
+  });
+
+  socket.on('ImageGall', function(msg){
+    console.log("Message received"+msg.userid + msg.mapid);
+    connect.getPictures("mongodb://localhost:27017/testimages", msg.userid, msg.mapid,function(picname, picpath, mapid){
+      console.log(picname+"  "+picpath+"   "+mapid);
+      socket.emit("imagereturn", {picname:picname,picpath:picpath,mapid:mapid});
     });
 
   });
