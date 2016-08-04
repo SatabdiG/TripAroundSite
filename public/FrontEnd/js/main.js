@@ -366,6 +366,7 @@ function placemarker(location){
   var marker=new google.maps.Marker({
     position:location,
   });
+  markers.push(marker);
   marker.setMap(map);
   marker.addListener('click',function () {
     console.log(src);
@@ -388,6 +389,7 @@ $("#menu-toggle").click(function(e){
 /** Controller for Map Page **/
 function imageupload() {
   $(document).ready(function(){
+    console.log("Markers  "+markers);
     //Get markers and initialize them on map
     console.log("User logged in as "+userid);
     initialize();
@@ -403,8 +405,27 @@ function imageupload() {
 
   $('#something').hide();
   //Fetch images from Server using socketio
-  socket.emit("LoadImage", "yes");
+  if(userid =="guest")
+  {
+    var mapid="guestmap";
+  }
 
+  socket.emit("ImageGall",{userid: userid, mapid:mapid});
+  socket.on("imagereturn", function(mssg) {
+    console.log(mssg);
+    console.log(mssg.picname);
+    console.log(mssg.picpath);
+    if (userid == "guest") {
+      var mapid = "guestmap";
+      var loc = "uploads/" + mssg.picname;
+    }
+    console.log("Location  "+loc);
+    if($("#thumbnail li").length == 0)
+      $("#thumbnail").append('<li><img src="uploads/'+mssg.picname+'" class="img-thumbnail" alt="Cinque Terre" ></li>');
+  });
+  //socket.emit("LoadImage", "yes");
+
+  /*
   var list=socket.on('ImageUploads',function(msg){
     var firstbreak=msg.split(",");
     var filename=firstbreak[0];
@@ -416,7 +437,7 @@ function imageupload() {
       $("#thumbnail").append('<li><img src="'+locations+'/'+filename+'"class="img-thumbnail" alt="Cinque Terre" ></li>');
 
     //$("#thumbnail").append('<li id="dragged">Hell There</li>')
-    });
+    });*/
 
     var temp=document.getElementById("thumbnail");
     $('#thumbnail').on('click','li',function(){
@@ -444,7 +465,7 @@ function imageupload() {
   {
     //request markers
     socket.emit("LoadMarker", {id:userid,mapid:"guestmap"});
-    markers =[];
+
     var paths=[];
     socket.on("drawmarkers",function(msg){
       console.log(msg.lat+"    "+msg.lng);
@@ -470,9 +491,6 @@ function imageupload() {
       path.setMap(map);
 
     });
-
-
-    //connect the markers
 
   }
 

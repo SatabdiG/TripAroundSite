@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0152ce83-d44d-4376-a704-348c55ff3d1b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/js/main.js" afterPath="$PROJECT_DIR$/public/FrontEnd/js/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
     </list>
     <ignored path="TripAroundSite.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,19 +29,16 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/FrontEnd/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="457" column="19" selection-start-line="457" selection-start-column="19" selection-end-line="457" selection-end-column="19" />
+            <state relative-caret-position="194">
+              <caret line="423" column="66" selection-start-line="423" selection-start-column="66" selection-end-line="423" selection-end-column="66" />
               <folding>
                 <element signature="n#!!block;n#homeinit#0" expanded="false" />
-                <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
                 <element signature="e#3726#4733#0" expanded="false" />
                 <element signature="n#!!block;n#initialize#0" expanded="false" />
-                <element signature="n#!!block;n#placemarker#0" expanded="false" />
-                <element signature="e#10947#11012#0" expanded="false" />
-                <element signature="e#12204#12358#0" expanded="false" />
-                <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+                <element signature="e#10971#11036#0" expanded="false" />
                 <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-                <element signature="e#16513#16544#0" expanded="false" />
+                <element signature="e#17094#17125#0" expanded="false" />
+                <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -60,7 +59,7 @@
       <file leaf-file-name="MongoDbLib.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="479">
+            <state relative-caret-position="1244">
               <caret line="123" column="8" selection-start-line="123" selection-start-column="8" selection-end-line="123" selection-end-column="8" />
               <folding>
                 <element signature="e#500#972#0" expanded="false" />
@@ -107,8 +106,8 @@
       <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="333" column="33" selection-start-line="333" selection-start-column="33" selection-end-line="333" selection-end-column="33" />
+            <state relative-caret-position="-61">
+              <caret line="405" column="28" selection-start-line="405" selection-start-column="28" selection-end-line="405" selection-end-column="28" />
               <folding>
                 <element signature="e#2461#4232#0" expanded="false" />
                 <element signature="e#4773#6727#0" expanded="false" />
@@ -164,9 +163,9 @@
         <option value="$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js" />
         <option value="$PROJECT_DIR$/public/FrontEnd/partials/home.html" />
         <option value="$PROJECT_DIR$/public/FrontEnd/partials/map.html" />
-        <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/public/FrontEnd/partials/imageupload.html" />
         <option value="$PROJECT_DIR$/public/FrontEnd/css/main.css" />
+        <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/public/FrontEnd/js/main.js" />
       </list>
     </option>
@@ -488,7 +487,7 @@
       <workItem from="1469896755643" duration="590000" />
       <workItem from="1470036122217" duration="11487000" />
       <workItem from="1470049669946" duration="12811000" />
-      <workItem from="1470299927618" duration="20626000" />
+      <workItem from="1470299927618" duration="22029000" />
     </task>
     <task id="LOCAL-00001" summary="testWebStorm">
       <created>1467934430388</created>
@@ -735,11 +734,18 @@
       <option name="project" value="LOCAL" />
       <updated>1470320813303</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Account Creation&#10;Automatic Polyline&#10;">
+      <created>1470320950852</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1470320950852</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="241688000" />
+    <option name="totallyTimeSpent" value="243091000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -752,14 +758,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="768" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24816984" sideWeight="0.35853976" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12255541" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283582" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3283582" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32537314" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.4947994" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4033675" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985657" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -851,15 +857,12 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
-            <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="e#3726#4733#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="n#!!block;n#placemarker#0" expanded="false" />
-            <element signature="e#10947#11012#0" expanded="false" />
-            <element signature="e#12204#12358#0" expanded="false" />
-            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+            <element signature="e#10971#11036#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#16513#16544#0" expanded="false" />
+            <element signature="e#17094#17125#0" expanded="false" />
+            <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -898,15 +901,12 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
-            <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="e#3726#4733#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="n#!!block;n#placemarker#0" expanded="false" />
-            <element signature="e#10947#11012#0" expanded="false" />
-            <element signature="e#12204#12358#0" expanded="false" />
-            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+            <element signature="e#10971#11036#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#16513#16544#0" expanded="false" />
+            <element signature="e#17094#17125#0" expanded="false" />
+            <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -953,15 +953,12 @@
           <caret line="96" column="23" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
-            <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="e#3726#4733#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="n#!!block;n#placemarker#0" expanded="false" />
-            <element signature="e#10947#11012#0" expanded="false" />
-            <element signature="e#12204#12358#0" expanded="false" />
-            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+            <element signature="e#10971#11036#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#16513#16544#0" expanded="false" />
+            <element signature="e#17094#17125#0" expanded="false" />
+            <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1022,15 +1019,12 @@
           <caret line="96" column="23" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
-            <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="e#3726#4733#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="n#!!block;n#placemarker#0" expanded="false" />
-            <element signature="e#10947#11012#0" expanded="false" />
-            <element signature="e#12204#12358#0" expanded="false" />
-            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+            <element signature="e#10971#11036#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#16513#16544#0" expanded="false" />
+            <element signature="e#17094#17125#0" expanded="false" />
+            <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1091,15 +1085,12 @@
           <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
-            <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="e#3726#4733#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="n#!!block;n#placemarker#0" expanded="false" />
-            <element signature="e#10947#11012#0" expanded="false" />
-            <element signature="e#12204#12358#0" expanded="false" />
-            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+            <element signature="e#10971#11036#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#16513#16544#0" expanded="false" />
+            <element signature="e#17094#17125#0" expanded="false" />
+            <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1118,15 +1109,12 @@
           <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
-            <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="e#3726#4733#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="n#!!block;n#placemarker#0" expanded="false" />
-            <element signature="e#10947#11012#0" expanded="false" />
-            <element signature="e#12204#12358#0" expanded="false" />
-            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+            <element signature="e#10971#11036#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#16513#16544#0" expanded="false" />
+            <element signature="e#17094#17125#0" expanded="false" />
+            <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1167,15 +1155,12 @@
           <caret line="120" column="37" selection-start-line="120" selection-start-column="20" selection-end-line="120" selection-end-column="37" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
-            <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="e#3726#4733#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="n#!!block;n#placemarker#0" expanded="false" />
-            <element signature="e#10947#11012#0" expanded="false" />
-            <element signature="e#12204#12358#0" expanded="false" />
-            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+            <element signature="e#10971#11036#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#16513#16544#0" expanded="false" />
+            <element signature="e#17094#17125#0" expanded="false" />
+            <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1252,48 +1237,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="20" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="333" column="33" selection-start-line="333" selection-start-column="33" selection-end-line="333" selection-end-column="33" />
-          <folding>
-            <element signature="e#2461#4232#0" expanded="false" />
-            <element signature="e#4773#6727#0" expanded="false" />
-            <element signature="e#7589#8310#0" expanded="false" />
-            <element signature="e#8360#8982#0" expanded="false" />
-            <element signature="e#9063#10239#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/home.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="990">
           <caret line="66" column="23" selection-start-line="66" selection-start-column="19" selection-end-line="66" selection-end-column="23" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="123" column="8" selection-start-line="123" selection-start-column="8" selection-end-line="123" selection-end-column="8" />
-          <folding>
-            <element signature="e#500#972#0" expanded="false" />
-            <element signature="e#4274#5126#0" expanded="false" />
-            <element signature="e#5190#5813#0" expanded="false" />
-            <element signature="e#5917#6564#0" expanded="false" />
-            <element signature="e#7567#8365#0" expanded="false" />
-            <element signature="e#8502#9326#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1315,21 +1263,55 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-61">
+          <caret line="405" column="28" selection-start-line="405" selection-start-column="28" selection-end-line="405" selection-end-column="28" />
+          <folding>
+            <element signature="e#2461#4232#0" expanded="false" />
+            <element signature="e#4773#6727#0" expanded="false" />
+            <element signature="e#7589#8310#0" expanded="false" />
+            <element signature="e#8360#8982#0" expanded="false" />
+            <element signature="e#9063#10239#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AdditionServerSide/MongoDbLib.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1244">
+          <caret line="123" column="8" selection-start-line="123" selection-start-column="8" selection-end-line="123" selection-end-column="8" />
+          <folding>
+            <element signature="e#500#972#0" expanded="false" />
+            <element signature="e#4274#5126#0" expanded="false" />
+            <element signature="e#5190#5813#0" expanded="false" />
+            <element signature="e#5917#6564#0" expanded="false" />
+            <element signature="e#7567#8365#0" expanded="false" />
+            <element signature="e#8502#9326#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/FrontEnd/partials/map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="20" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/FrontEnd/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="457" column="19" selection-start-line="457" selection-start-column="19" selection-end-line="457" selection-end-column="19" />
+        <state relative-caret-position="194">
+          <caret line="423" column="66" selection-start-line="423" selection-start-column="66" selection-end-line="423" selection-end-column="66" />
           <folding>
             <element signature="n#!!block;n#homeinit#0" expanded="false" />
-            <element signature="n#!!block;n#imagecontroller#0" expanded="false" />
             <element signature="e#3726#4733#0" expanded="false" />
             <element signature="n#!!block;n#initialize#0" expanded="false" />
-            <element signature="n#!!block;n#placemarker#0" expanded="false" />
-            <element signature="e#10947#11012#0" expanded="false" />
-            <element signature="e#12204#12358#0" expanded="false" />
-            <element signature="n#!!block;n#imagegallerycontroller#0" expanded="false" />
+            <element signature="e#10971#11036#0" expanded="false" />
             <element signature="n#!!block;n#airplanehandler#0" expanded="false" />
-            <element signature="e#16513#16544#0" expanded="false" />
+            <element signature="e#17094#17125#0" expanded="false" />
+            <marker date="1470322323432" expanded="false" signature="3433:10095" ph="{...}" />
           </folding>
         </state>
       </provider>

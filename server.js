@@ -331,7 +331,7 @@ app.post('/mapupload', function(req,res){
 });
 //Handler for drag and drop
 app.post('/dragdrop', function(req,res){
-  console.log("In drag and drop  "+req.body.userid);
+  console.log("In drag and drop"+req.body.userid);
   var form=new formidable.IncomingForm();
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
@@ -403,6 +403,7 @@ socket.on('connection',function(socket){
     console.log("Socket  "+msg);
   });
 
+  /****outdated Function***/
   //Request from page to load images
   socket.on("LoadImage",function(msg){
     //Connect to data base and extract images
