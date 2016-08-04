@@ -227,6 +227,38 @@ app.post('/guestlogin', function(req,res){
 
 });
 
+//Register New users
+
+app.post('/registeruser', function(req,res){
+  var userid=req.body.username;
+  var username=req.body.name;
+  var password=req.body.password;
+  var email=req.body.email;
+  console.log("Email  "+ email);
+
+  //Access Mongodb See is user is there
+  connect.userPresent('mongodb://localhost:27017/testimages', userid, function(msg){
+    if(msg!=undefined){
+      console.log("Returned data"+msg);
+      if(msg =='present'){
+        return res.end(msg);
+      }
+      else
+      {
+          connect.addusers('mongodb://localhost:27017/testimages', userid, username, password, function (mssg) {
+            if (mssg != undefined) {
+              console.log("Returned data" + mssg);
+              return res.end(mssg);
+            }
+          });
+
+      }
+    }
+
+  });
+
+});
+
 app.post('/guestdetailssave',function(req,res){
   var filename=req.body.filename;
   console.log("In guest details handler");
@@ -299,13 +331,12 @@ app.post('/mapupload', function(req,res){
 });
 //Handler for drag and drop
 app.post('/dragdrop', function(req,res){
-  console.log("In drag and drop handler");
+  console.log("In drag and drop  "+req.body.userid);
   var form=new formidable.IncomingForm();
-  
   form.multiple=true;
-  if(userid == "guest")
-    form.uploadDir=path.join(__dirname,'/uploads');
+  form.uploadDir=path.join(__dirname,'/uploads');
   form.on('file',function(field,file){
+    console.log("File Name"+file.name);
     fs.rename(file.path,path.join(form.uploadDir,file.name));
   });
   form.on('error',function(err){

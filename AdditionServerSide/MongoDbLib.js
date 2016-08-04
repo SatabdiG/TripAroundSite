@@ -74,17 +74,18 @@ module.exports= {
   },
 
   verifyusers:function (connectionstring, databasename, queryby, queryval, callback) {
-    console.log('queryby  '+queryby);
-    console.log('password  '+queryval);
+
     mongodb.connect(connectionstring, function (err, db) {
       if (callback) {
         callback();
       }
       if (!err) {
-        var cursor = db.collection(databasename).find({"username": queryby});
+        var cursor = db.collection(databasename).find({"userid": queryby});
             cursor.each(function (err, doc) {
               if (doc != null) {
-                if(doc.password == queryval) {
+                console.log("Password  "+doc.userpassword);
+                if(doc.userpassword == queryval) {
+
                   return callback("success");
 
                 }
@@ -101,31 +102,64 @@ module.exports= {
     });
 
   },
+  //First check to see if user is already present
+  userPresent:function(connectionstring,userid, callback){
+    if (callback) {
+      callback();
+    }
 
-  addusers: function (connectionstring, databasename,_userid, _username, _userpassword, callback) {
+    mongodb.connect(connectionstring, function (err, db) {
+      var collec = db.collection('usercollection');
+       if (collec != null) {
+        var tempsur = db.collection('usercollection').count({userid: userid}, function(err, count){
+          if(!err){
+            console.log("User present "+ count);
+            if(count>0){
+              return callback("present");
+            }
+            else
+              return callback("nothing");
+          }
+        });
+        
+      }
+    });
+
+  },
+  //Add users to database
+  addusers: function (connectionstring,userid, username, userpassword, callback) {
   if (callback) {
     callback();
   }
+
   mongodb.connect(connectionstring, function (err, db) {
-    var collec = db.collection(databasename);
+    var collec = db.collection('usercollection');
+    var flag=0;
     if (collec != null) {
+      console.log("Flag " + flag);
       db.collection('usercollection').insert({
-        "userid": _userid,
-        "username": _username,
-        "userpassword": _userpassword
+        "userid": userid,
+        "username": username,
+        "userpassword": userpassword
       }, {w: 1}, function (err, records) {
 
         if (records != null) {
+          return callback("add");
           console.log("User Record added");
           db.close();
         }
-        else
+        else {
+
           console.log("User Cannot add");
+          return callback('err');
+        }
       });
-    }
-    else {
-      console.log("Database not found! error");
-    }
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+
   });
 },
 

@@ -16,6 +16,12 @@ var markers=[];
 
 /*** Home page initializer **/
 function homeinit(){
+  //Reset Modal
+  $('#myModal').on('show.bs.modal', function(){
+    $('#registerusr')[0].reset();
+    $('#info').text('');
+  });
+
   userid="";
   password="";
   $(document).ready(function(){
@@ -31,7 +37,7 @@ function homeinit(){
       data.name = $('#usr').val();
       data.password = $('#pass').val();
       console.log(data);
-
+      username= $('#usr').val();
       $.ajax({
         url: '/login',
         type: 'POST',
@@ -42,7 +48,7 @@ function homeinit(){
         if(data != "fail")
         {
           console.log("Successful Login");
-          userid=data.name;
+          userid=username;
           password=data.password;
           window.location.href="#UploadImages";
         }
@@ -57,16 +63,54 @@ function homeinit(){
         }
       });
     });
-    /*
-    $("#nextpagebutton").hover(function(){
-      $("#nextpagebutton span").text("");
-    }, function(){
-      $("#nextpagebutton span").text(">");
-    });
 
-    $("#nextpagebutton").click(function(){
-      window.location.href="#UploadImages";
-    });*/
+    $('#register').on('click',function(){
+      var clientobj={};
+      if($('#username').val() != '' || $('#password').val() != '' || $('#email').val() != ''){
+        clientobj.username=$('#username').val();
+        clientobj.password=$("#password").val();
+        clientobj.email=$('#email').val();
+        clientobj.name=$('#name').val();
+        console.log(clientobj);
+
+        $.ajax({
+          url:'registeruser',
+          type:'POST',
+          data:JSON.stringify(clientobj),
+          contentType:'application/json'
+        }).done(function(msg){
+          console.log("Returned message "+msg);
+          if(msg == 'present'){
+            //already present
+            $('#info').text('User Id is already present. Please choose another');
+            $('#info').css('color', 'red');
+            //Reset All fields
+            $('#registerusr')[0].reset();
+
+          }
+          else if(msg =='add'){
+            //Added Successfully
+            $('#myModal').modal('hide');
+            $('#usertext').text("User added. Please Login");
+            $('#usertext').css('color','green');
+
+          }else
+          {
+            //Error Happed
+            $('#myModal').modal('hide');
+            $('#usertext').text("Error happened. Please try again later");
+            $('#usertext').css('color','red');
+
+          }
+
+        });
+      }
+      else
+      {
+        $('usertext').text("Please enter value of Username/Password/Email");
+      }
+
+    });
 
     $("#header").hover(function(){
       $("#header").fadeOut(500, function(){
@@ -91,14 +135,18 @@ function imagecontroller(){
   console.log("User logged in as" + userid);
   initialize();
   $(document).ready(function(){
-    //Dropzone parameter change
+    Dropzone.autoDiscover=false;
+    $('#dropzonePreview').dropzone({
+      url:"/dragdrop"
+    });
+
+    /*
     var mydropzone=new Dropzone("div#someid", {url: "/dragdrop"});
     $('input#dragdropbutton').click(function(evt){
       evt.preventDefault();
       var filename=[];
-      var formelement=$('input[name=file]')[0];
-      console.log(formelement);
-      var fileemenet=formelement.files;
+      var fileemenet=$('input[name=file]')[0].files;
+      console.log(fileemenet);
       if(fileemenet.length>0)
       {
         for(var i=0;i<fileemenet.length;i++)
@@ -109,7 +157,6 @@ function imagecontroller(){
           picobj=filetmp.name;
         }
       }
-
       $.ajax({
         url:"/dragdrop",
         type:"POST",
@@ -126,9 +173,10 @@ function imagecontroller(){
         else
           $("#uploadstatus").text("File has not been uploaded");
       });
-    });
+    });*/
 
     $('input#submitbutton').click(function(event){
+
       event.preventDefault();
       if(userid == "guest") {
         var form=new FormData();
@@ -146,7 +194,6 @@ function imagecontroller(){
             picobj=filetmp.name;
           }
         }
-
         $.ajax({
           url:"/guestlogin",
           type:"POST",
@@ -159,6 +206,10 @@ function imagecontroller(){
               $("#uploadstatus").text("File has been uploaded");
               $("#uploadstatus").css({"color":"green"});
               $("#uploadForm2")[0].reset();
+              $('#dropzonePreview').on('complete',function(file){
+                console.log("Finally!!");
+                $('#dropzonePreview').removeAllFiles(true);
+              });
             }
             else
               $("#uploadstatus").text("File has not been uploaded");
@@ -188,20 +239,7 @@ function imagecontroller(){
           var data = {};
           data.file = $("#userphoto")[0].files;
           data.filename = $("#userphoto").val().split('\\').pop();
-          if (userid == "guest") {
-            /*
-             $.ajax({
-             url:'/guestlogin',
-             type:'POST',
-             data:JSON.stringify(data),
-             contentType: false,
-             processData: false,
-             }).done(function(data){
-             console.log(data);
-             });*/
-            $('#uploadForm2').attr('action', 'guestlogin');
-            $('#uploadForm2').submit();
-        }
+          console.log("For registered Users");
       }
     });
 
@@ -351,7 +389,7 @@ $("#menu-toggle").click(function(e){
 function imageupload() {
   $(document).ready(function(){
     //Get markers and initialize them on map
-
+    console.log("User logged in as "+userid);
     initialize();
     $("#beforepagebutton").hover(function(){
       $("#beforepagebutton span").text("");
@@ -417,22 +455,25 @@ function imageupload() {
         position: myCenter
       });
       map.setCenter(marker.getPosition());
-      map.setZoom(4);
+      map.setZoom(2);
       marker.setMap(map);
       markers.push(marker);
+
+      var path=new google.maps.Polyline({
+        path:paths,
+        geodesic:true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      });
+
+      path.setMap(map);
+
     });
-    console.log("Markers  "+paths);
+
 
     //connect the markers
-    var path=new google.maps.Polyline({
-      path:paths,
-      geodesic:true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1.0,
-      strokeWeight: 2
-    });
 
-    path.setMap(map);
   }
 
   }
@@ -538,11 +579,10 @@ tripapp.config(function($routeProvider) {
     controller: 'mapcontroller'
   })
 
-    .when('/imagegallery',{
+  .when('/imagegallery',{
       templateUrl:'/FrontEnd/partials/imagegallery.html',
       controller: 'imagegallerycontroller'
-    });
-
+  });
 
 });
 
@@ -558,13 +598,14 @@ tripapp.controller('productcontroller', function($scope){
 });
 
 tripapp.controller('mapcontroller', function($scope){
+  $scope.username=userid;
   $scope.init=imageupload();
 
 });
 
 tripapp.controller('imagecontroller', function($scope){
-$scope.init=imagecontroller();
-
+  $scope.username=userid;
+  $scope.init=imagecontroller();
 
 });
 
