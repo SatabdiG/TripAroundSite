@@ -13,6 +13,7 @@ var src;
 var userid;
 var password;
 var markers=[];
+var loc1=[];
 
 /*** Home page initializer **/
 function homeinit(){
@@ -479,7 +480,6 @@ function imageupload() {
       map.setZoom(2);
       marker.setMap(map);
       markers.push(marker);
-
       var path=new google.maps.Polyline({
         path:paths,
         geodesic:true,
@@ -499,9 +499,30 @@ function imageupload() {
 //Controller for Image gallery page
 function imagegallerycontroller(){
   $(document).ready(function(){
-    $('#image').magnificPopup({
-      type:'image',
+     $("#imagegall").slick();
+     $('#imagegall').magnificPopup({
+        delegate:'a',
+        type:'image',
+        image:{
+          verticalFit:true
+        },
+       gallery:{
+         enabled:true
+       },
+       callbacks:{
+         open:function(){
+          var current=$("#imagegall").slick('slickCurrentSlide');
+           $("#imagegall").magnificPopup('goTo', current);
+
+         },
+         beforeClose:function () {
+           $("#imagegall").slick('slickGoTo', parseInt(this.index));
+         }
+       }
       });
+
+    //$('.blueberry').blueberry();
+
     console.log("User is logged as"+ userid);
     if(userid =="guest")
     {
@@ -518,15 +539,19 @@ function imagegallerycontroller(){
         var loc="uploads/"+mssg.picname;
       }
       if(mssg.picname != undefined) {
-        //create an image element
-        var image=document.createElement('img');
-        var append=document.getElementById('image');
-        append.appendChild(image);
-        $('#image').attr('href', loc);
-        $('#image').append('<img class="images" src="'+loc+'" height="75" width="75">');
+        loc1.push(loc);
+       //create an image element
+       // var image=document.createElement('img');
+      //  var append=document.getElementById('image');
+     //   append.appendChild(image);
+      //  $('#image').attr('href', loc);
+      //  $('#image').append('<img class="images" src="'+loc+'" height="75" width="75">')
+        $('#imagegall').append('<a href="'+loc+'" id="image"><img class="images" src="'+loc+'" height="75" width="75"></a>');
+       // $('#slides').append('<li><img src="'+loc+'"/></li>');
+
       }
     });
-
+    console.log("Loc  "+loc1);
   });
 }
 
