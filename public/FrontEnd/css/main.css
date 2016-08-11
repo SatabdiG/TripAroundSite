@@ -332,3 +332,36 @@ html, body {
   position: relative;
   padding:30px;
 }
+
+#menudashboard{
+  position: fixed;
+  padding:45px;
+}
+
+
+#save{
+  position: relative;
+  padding: 45px;
+  background-color: #dddddd;
+  border-style: solid;
+  border-color: #3F3F3F;
+  border-radius: 0.5%;
+  border-spacing: 56px;
+}
+
+#view{
+  position: relative;
+  padding: 45px;
+  background-color: #dddddd;
+  border-style: solid;
+  border-color: #3F3F3F;
+  border-radius: 0.5%;
+  border-spacing: 56px;
+}
+
+#viewmapregion{
+  position: fixed;
+  padding: 50px;
+  top:300px;
+
+}

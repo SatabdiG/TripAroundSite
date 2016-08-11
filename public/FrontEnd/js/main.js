@@ -30,7 +30,7 @@ function homeinit(){
       console.log("Guest link click");
       event.preventDefault();
       userid="guest";
-      window.location.href="#UploadImages";
+      window.location.href="#dashboard";
     });
     $('input#usersub').click(function(event) {
       event.preventDefault();
@@ -51,7 +51,7 @@ function homeinit(){
           console.log("Successful Login");
           userid=username;
           password=data.password;
-          window.location.href="#UploadImages";
+          window.location.href="#dashboard";
         }
         else
         {
@@ -124,6 +124,159 @@ function homeinit(){
     }, function(){});
 
   });
+}
+
+/** User's Dashboard **/
+function dashboardfunction(){
+  $('#viewmapregion').empty();
+  console.log("User logged in as "+userid);
+  //Initialize the custom dialogue boxes
+  //1. The user is guest
+  $("#dialog").dialog({
+    autoOpen:false,
+    show:{
+      effect:"blind",
+      duration:100
+    },
+    hide:{
+      effect:'explode',
+      duration:1000
+    },
+    modal:true
+  });
+
+  //Save maps user
+
+  $('#formcontainer').dialog({
+    autoOpen:false,
+    show:{
+      effect:"blind",
+      duration:1000
+    },
+    hide:{
+      effect:'explode',
+      duration:1000
+    },
+    modal:true
+  });
+
+
+  $('#savebutt').on('click', function(){
+    console.log("Clicked on savebutton option");
+    //Launch form
+    if(userid =="guest"){
+      $('#dialog').dialog("open");
+
+    }else
+    {
+      //Launch form
+     $('#myModal').modal('show');
+
+      $("#submit").on('click', function(){
+        console.log("User clicked submit!");
+        if($('#mapname').val()=='')
+        {
+          $('#infofrm').text('please enter some map name to start');
+          $('#infofrm').css('color', 'red');
+          return;
+        }
+        else {
+          //Create ajax data and send it to the server to save the map
+          var dat={};
+          dat.name=$('#mapname').val();
+          dat.description=$('#descriptiontext').val();
+          dat.userid=userid;
+
+          $.ajax({
+            url:'/mapsave',
+            method:'POST',
+            data:JSON.stringify(dat),
+            contentType:'application/JSON'
+          }).done(function(msg){
+            console.log('Done');
+            if(msg == 'yes') {
+              $('#infofrm').text('Map is Saved');
+              $('#infofrm').css('color', 'green');
+              map=dat.name;
+              window.location.href="#imagegallery";
+            }
+            else
+            {
+              $('#infofrm').text('Map cannot be Saved. Try again later');
+              $('#infofrm').css('color', 'red');
+            }
+            //Close this form and launch a new popup/modal/magnific popup and proceed to save images.
+            $('#myModal').modal('hide');
+          });
+
+        }
+      });
+
+    }
+
+  });
+  //View Button
+  $('#viewbutt').on('click', function(){
+    console.log("Clicked on the view saved button options");
+    if(userid =="guest"){
+      $('#dialog').dialog("open");
+
+    }else
+    {
+      //get map data from serverjs and store in div region : viewmapregion
+      var getmap={};
+      getmap.name=userid;
+      $.ajax({
+        url:'/viewmap',
+        method:'POST',
+        data:JSON.stringify(getmap),
+        contentType:'application/JSON'
+      }).done(function(msg){
+        console.log("Returned message is "+msg);
+        if(msg =="no"){
+          $('#viewmapregion').text('You Have No Saved Maps. Please create one to start');
+          $('#viewmapregion').css('color','green');
+        }
+        else
+        {
+          //call socket function
+          console.log("In yes function");
+          socket.emit('getmaps', {userid:userid});
+          socket.on('viewmaps', function(msg){
+          console.log(msg.name);
+
+          $('#viewmapregion').append('<div maps><a id="'+msg.name+'" class="button">'+msg.name+'</a></div>');
+          $('#viewmapregion').css('color','green');
+          });
+
+        }
+      });
+    }
+    $('#viewmapregion').empty();
+
+  });
+
+
+  $("#beforepagebutton").hover(function(){
+    $("#beforepagebutton span").text("");
+  }, function(){
+    $("#beforepagebutton span").text("<");
+  });
+  $("#beforepagebutton").click(function(){
+    window.location.href="#";
+  });
+
+
+  $("#nextpagebutton").hover(function(){
+    $("#nextpagebutton span").text("");
+  }, function(){
+    $("#nextpagebutton span").text(">");
+  });
+  $("#nextpagebutton").click(function(){
+    window.location.href="#UploadImages";
+  });
+
+
 }
 
 /** Image upload Controller function **/
@@ -340,7 +493,7 @@ function imagecontroller(){
     });
 
     $("#beforepagebutton").click(function(){
-      window.location.href="#";
+      window.location.href="#dashboard";
     });
   });
 
@@ -394,6 +547,7 @@ function imageupload() {
     //Get markers and initialize them on map
     console.log("User logged in as "+userid);
     initialize();
+
     $("#beforepagebutton").hover(function(){
       $("#beforepagebutton span").text("");
     }, function(){
@@ -402,6 +556,8 @@ function imageupload() {
     $("#beforepagebutton").click(function(){
       window.location.href="#UploadImages";
     });
+
+
   });
 
   $('#something').hide();
@@ -499,9 +655,9 @@ function imageupload() {
 //Controller for Image gallery page
 function imagegallerycontroller(){
   $(document).ready(function(){
-     $("#imagegall").slick();
+
      $('#imagegall').magnificPopup({
-        delegate:'a',
+        delegate:'a:not(.slick-cloned)',
         type:'image',
         image:{
           verticalFit:true
@@ -511,12 +667,11 @@ function imagegallerycontroller(){
        },
        callbacks:{
          open:function(){
-          var current=$("#imagegall").slick('slickCurrentSlide');
-           $("#imagegall").magnificPopup('goTo', current);
+
 
          },
          beforeClose:function () {
-           $("#imagegall").slick('slickGoTo', parseInt(this.index));
+
          }
        }
       });
@@ -553,6 +708,8 @@ function imagegallerycontroller(){
     });
     console.log("Loc  "+loc1);
   });
+
+
 }
 
 function airplanehandler(){
@@ -625,6 +782,11 @@ tripapp.config(function($routeProvider) {
   .when('/imagegallery',{
       templateUrl:'/FrontEnd/partials/imagegallery.html',
       controller: 'imagegallerycontroller'
+  })
+
+  .when('/dashboard',{
+    templateUrl:'/FrontEnd/partials/dashboard.html',
+    controller:'dashboardcontroller'
   });
 
 });
@@ -655,6 +817,12 @@ tripapp.controller('imagecontroller', function($scope){
 tripapp.controller('imagegallerycontroller', function($scope){
   $scope.init=imagegallerycontroller();
   $scope.message="Image rendered here";
+});
+
+tripapp.controller('dashboardcontroller', function($scope){
+  $scope.userid=userid;
+  $scope.init=dashboardfunction();
+
 });
 
 

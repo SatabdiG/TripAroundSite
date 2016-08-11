@@ -73,8 +73,26 @@ module.exports= {
     });
   },
 
-  verifyusers:function (connectionstring, databasename, queryby, queryval, callback) {
+  getMaps:function(connectionstring, userid, callback){
+    if(callback)
+      callback();
+    console.log("UserID"+userid);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection('mapcollection').find({"userid":userid});
+        cursor.each(function(err,doc){
+          if(doc!=null)
+          {
+            console.log(doc);
+            callback(doc.mapname);
+          }
+        });
 
+      }
+    });
+  },
+
+  verifyusers:function (connectionstring, databasename, queryby, queryval, callback) {
     mongodb.connect(connectionstring, function (err, db) {
       if (callback) {
         callback();
@@ -121,10 +139,69 @@ module.exports= {
               return callback("nothing");
           }
         });
-        
+
       }
     });
+  },
 
+  mapPresent:function(connectionstring,userid, callback){
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+      var collec = db.collection('mapcollection');
+      if (collec != null) {
+        var tempsur = db.collection('mapcollection').count({userid: userid}, function(err, count){
+          if(!err){
+            console.log("User present "+ count);
+            if(count>0){
+              return callback("present");
+            }
+            else
+              return callback("nothing");
+          }
+        });
+
+      }
+    });
+  },
+  //Save Maps to database
+  addmaps:function (connectionstring,userid, mapname, mapdescription, callback) {
+
+    if (callback) {
+      callback();
+    }
+
+    mongodb.connect(connectionstring, function (err, db) {
+      var collec = db.collection('usercollection');
+      var flag=0;
+      if (collec != null) {
+        console.log("Flag " + flag);
+        db.collection('mapcollection').insert({
+          "userid": userid,
+          "mapname": mapname,
+          "mapdescription": mapdescription
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Map record added");
+            db.close();
+            return callback("add");
+
+          }
+          else {
+
+            console.log("Mapp Cannot add");
+            return callback('err');
+          }
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+
+    });
   },
   //Add users to database
   addusers: function (connectionstring,userid, username, userpassword, callback) {
@@ -199,33 +276,6 @@ module.exports= {
     });
   },
 
- addmaps: function (connectionstring,mapid,userid, callback) {
-  if (callback) {
-    callback();
-  }
-  mongodb.connect(connectionstring, function (err, db) {
-    var collec = db.collection("mapcollection");
-    if (collec != null) {
-      db.collection('mapcollection').insert({
-        "mapid":mapid,
-        "userid":userid
-              }, {w: 1}, function (err, records) {
-
-        if (records != null) {
-           callback("true");
-           console.log(" Map Record added");
-          db.close();
-        }
-        else
-         callback("false");
-         console.log("Map Cannot add");
-      });
-    }
-    else {
-      console.log("Database not found! error");
-    }
-  });
-},
 
 addmapversion: function (connectionstring, databasename,_mapdataversionid, _userid,_mapid, callback) {
 

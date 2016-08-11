@@ -378,6 +378,41 @@ app.post('/login',function(req,res){
 
 });
 
+app.post('/mapsave', function(req, res){
+  var mapname=req.body.name;
+  var description=req.body.description;
+  console.log("Name is  "+ mapname);
+  var user=req.body.userid;
+  //Call mongodb function and save the map
+  connect.addmaps('mongodb://localhost:27017/testimages',user, mapname, description,function(msg){
+    if(msg!=undefined){
+       if(msg == 'add'){
+         return res.end('yes');
+       }
+      else
+         return res.end('no');
+    }
+
+  });
+});
+
+app.post('/viewmap', function(req,res){
+  var userid=req.body.name;
+  //call database and return
+  connect.mapPresent('mongodb://localhost:27017/testimages',userid, function(msg){
+    if(msg!=undefined){
+      if(msg=="nothing"){
+        return res.end("no");
+      }
+       else 
+      {
+        return res.end("yes");
+      }
+      
+    }
+  });
+});
+
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
@@ -437,6 +472,15 @@ socket.on('connection',function(socket){
       socket.emit("imagereturn", {picname:picname,picpath:picpath,mapid:mapid});
     });
 
+  });
+  
+  socket.on('getmaps', function(msg){
+     console.log('Message received'+msg.userid);
+    connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(msg){
+      if(msg!=undefined){
+        socket.emit('viewmaps', {name:msg});
+      }
+    });
   });
 
 });
