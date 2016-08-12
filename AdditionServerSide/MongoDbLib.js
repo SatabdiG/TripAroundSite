@@ -13,7 +13,6 @@ var mongodb = require('mongodb').MongoClient;
 
 
 module.exports= {
-
   establishConnection: function (connectionstring, databasename, queryby, queryval, callback) {
     var filenames = [];
     var filepaths = [];
@@ -35,7 +34,6 @@ module.exports= {
         console.log("Error happened");
     });
   },
-
   getMarkers:function(connectionstring, userid,mapid, callback){
   if(callback)
     callback();
@@ -109,10 +107,8 @@ module.exports= {
                 }
                 else {
                   return callback("fail");
-
                 }
               }
-
             })
       }
       else

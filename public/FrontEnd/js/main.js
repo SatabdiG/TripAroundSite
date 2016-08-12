@@ -5,15 +5,14 @@
  */
 var mapname;
 var myCenter=new google.maps.LatLng(51.508742,-0.120850);
-var marker;
 var socket=io();
-var renderlist=[];
 var overlay;
 var src;
 var userid;
 var password;
 var markers=[];
 var loc1=[];
+var nomap=0;
 
 /*** Home page initializer **/
 function homeinit(){
@@ -128,6 +127,7 @@ function homeinit(){
 
 /** User's Dashboard **/
 function dashboardfunction(){
+  $(document).ready(function(){
   $('#viewmapregion').empty();
   console.log("User logged in as "+userid);
   //Initialize the custom dialogue boxes
@@ -144,7 +144,12 @@ function dashboardfunction(){
     },
     modal:true
   });
-
+  //User has selected no maps
+  if(nomap==0)
+  {
+    $('#info').text("Please select a Map. Or create a new One");
+    $('#info').css('color', 'green');
+  }
   //Save maps user
 
   $('#formcontainer').dialog({
@@ -282,8 +287,9 @@ function dashboardfunction(){
     window.location.href="#UploadImages";
   });
 
-
-}
+  });
+  //document ready function concludes
+} //dashboard function finishes
 
 /** Image upload Controller function **/
 function imagecontroller(){
@@ -452,9 +458,42 @@ function imagecontroller(){
 
     $('#savemap').click(function(evt){
       evt.preventDefault();
+
       if(userid == "guest")
       { //save the guest map
         maps.name="guestmap";
+        maps.id=userid;
+        console.log("Map coordinates "+ markerobj);
+        maps.markerobj=markercollec;
+        $.ajax({
+          url:"/mapupload",
+          type:'POST',
+          data:JSON.stringify(maps),
+          contentType:'application/json'
+        }).done(function(response){
+          console.log(response);
+          if(response =="yes") {
+            $("#uploadstatus").text("The Map has been saved");
+            $("#uploadstatus").css({"color":"green"});
+            //Reset Map
+            if($.isEmptyObject(markers) == false) {
+              for (i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+              }
+            }
+            map.setCenter(new google.maps.LatLng(51.508742,-0.120850));
+            map.setZoom(3);
+          }
+          else
+          {
+            $("#uploadstatus").text("The Map has not been saved");
+            $("#uploadstatus").css({"color":"red"});
+          }
+        });
+      }
+      else {
+        //For registered users
+        maps.name=mapname;
         maps.id=userid;
         console.log("Map coordinates "+ markerobj);
         maps.markerobj=markercollec;
@@ -609,7 +648,6 @@ function imageupload() {
       window.location.href="#UploadImages";
     });
 
-
   });
 
   $('#something').hide();
@@ -617,6 +655,17 @@ function imageupload() {
   if(userid =="guest")
   {
     var mapid="guestmap";
+  }
+  {
+    if(mapname==0)
+    {
+      window.location.href="#UploadImage";
+    }
+    else
+    {
+      mapname=1;
+    }
+    var mapid=mapname;
   }
 
   socket.emit("ImageGall",{userid: userid, mapid:mapid});
@@ -627,6 +676,11 @@ function imageupload() {
     if (userid == "guest") {
       var mapid = "guestmap";
       var loc = "uploads/" + mssg.picname;
+    }
+    else
+    {
+      var mapid=mapname;
+      var loc="uploads/" + mssg.picname;
     }
     console.log("Location  "+loc);
     if($("#thumbnail li").length == 0)
@@ -695,21 +749,50 @@ function imageupload() {
         strokeOpacity: 1.0,
         strokeWeight: 2
       });
-
       path.setMap(map);
-
     });
-
   }
+  else
+  {
+    //registered users
+    socket.emit("LoadMarker", {id:userid,mapid:mapname});
 
+    var paths=[];
+    socket.on("drawmarkers",function(msg){
+      console.log(msg.lat+"    "+msg.lng);
+      //draw markers on map
+      paths.push({lat: msg.lat, lng:msg.lng});
+      var myCenter = new google.maps.LatLng(msg.lat, msg.lng);
+      var marker = new google.maps.Marker({
+        position: myCenter
+      });
+      map.setCenter(marker.getPosition());
+      map.setZoom(2);
+      marker.setMap(map);
+      markers.push(marker);
+      var path=new google.maps.Polyline({
+        path:paths,
+        geodesic:true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      });
+      path.setMap(map);
+    });
+  }
   }
 
 //Controller for Image gallery page
 function imagegallerycontroller(){
+  if(mapname == undefined){
+    //User has not chosen a map
+    window.location.href="#dashboard";
+  }
+  else
+    nomap=1;
   $(document).ready(function(){
-
      $('#imagegall').magnificPopup({
-        delegate:'a:not(.slick-cloned)',
+        delegate:'a',
         type:'image',
         image:{
           verticalFit:true
@@ -720,10 +803,8 @@ function imagegallerycontroller(){
        callbacks:{
          open:function(){
 
-
          },
-         beforeClose:function () {
-
+         beforeClose:function (){
          }
        }
       });
@@ -735,6 +816,9 @@ function imagegallerycontroller(){
     {
       var mapid="guestmap";
     }
+    else {
+      var mapid=mapname;
+    }
 
     socket.emit("ImageGall",{userid: userid, mapid:mapid});
     socket.on("imagereturn", function(mssg){
@@ -745,7 +829,12 @@ function imagegallerycontroller(){
         var mapid="guestmap";
         var loc="uploads/"+mssg.picname;
       }
-      if(mssg.picname != undefined) {
+      else
+      {
+        var loc=mssg.picpath+"/"+mssg.picname;
+      }
+      if(mssg.picname != undefined || mssg.picpath!=undefined) {
+        console.log("loc"+loc);
         loc1.push(loc);
        //create an image element
        // var image=document.createElement('img');
@@ -856,6 +945,7 @@ tripapp.controller('productcontroller', function($scope){
 
 tripapp.controller('mapcontroller', function($scope){
   $scope.username=userid;
+  $scope.mapname=mapname;
   $scope.init=imageupload();
 
 });
@@ -868,8 +958,10 @@ tripapp.controller('imagecontroller', function($scope){
 });
 
 tripapp.controller('imagegallerycontroller', function($scope){
+  $scope.username=userid;
+  $scope.map=mapname;
   $scope.init=imagegallerycontroller();
-  $scope.message="Image rendered here";
+
 });
 
 tripapp.controller('dashboardcontroller', function($scope){
