@@ -404,13 +404,96 @@ app.post('/viewmap', function(req,res){
       if(msg=="nothing"){
         return res.end("no");
       }
-       else 
+       else
       {
         return res.end("yes");
       }
-      
+
     }
   });
+});
+
+//Save Images of registered users
+
+app.post('/userimageupload', function(req,res){
+  console.log("In registered user handler");
+  var form=new formidable.IncomingForm();
+  var mapname;
+  var dir;
+  form.multiple=true;
+  form.on('field',function(name,value){
+    console.log("Response  "+name+":"+value);
+    if(name == "mapname") {
+      var obj=JSON.parse(value);
+      console.log(obj['name']);
+      var dir = __dirname + '/uploads/'+obj['user'];
+      var actual=__dirname+'/uploads/'+obj['user']+'/'+obj['name'];
+      if (!fs.existsSync(dir)) {      
+       fs.mkdirSync(dir);
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }        
+      }
+      else 
+      {
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }
+      }
+      //form.uploadDir=path.join(__dirname,'/uploads');
+      form.uploadDir = actual;
+    }else
+    {
+      if(name=="userobj"){
+        //call data base to update mappings
+        var obj=JSON.parse(value);
+        var filenames=obj['filename'];
+        var mapname=obj['mapname'];
+        var userid=obj['id'];
+        var uploadpath='/uploads/'+userid+'/' + mapname;
+        var mapversion="something";
+        console.log("The value of object user"+JSON.parse(value));
+        console.log("The value of user pictures are"+obj['id']);
+        //call database and update the database
+        for(var i=0;i<filenames.length;i++)
+        {
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,function(msg){
+            if(msg!=undefined)
+            {
+              if(msg == "yes"){
+                console.log("Yay "+msg);
+              }else
+              {
+                console.log("Could add to user database. Check");
+              }
+            }
+          });
+        }
+      }
+    }
+
+  });
+
+  form.on('file',function(field,file){
+    fs.rename(file.path,path.join(form.uploadDir,file.name));
+  });
+  form.on('error',function(err){
+    console.log("Error has ocurred");
+    return res.end("no");
+  });
+
+  form.on('end',function(){
+    res.send("yes");
+  });
+
+  form.parse(req);
+});
+//Save registered user details
+app.post('/userdetailssave', function(req, res){
+  console.log("Resgistered user details"+req.body);
+  return res.end("yes");
+
+
 });
 
 //******** Socket Function to receive data *********
@@ -433,9 +516,11 @@ socket.on('connection',function(socket){
 
 
   socket.on('UserData',function(msg){
-    userid=msg.id;
-    filename=msg.file;
-    console.log("Socket  "+msg);
+    console.log("In user data function");
+    user=msg.id;
+    map=msg.mapid;
+    console.log("The user is"+user+"  "+map);
+
   });
 
   /****outdated Function***/
@@ -473,7 +558,7 @@ socket.on('connection',function(socket){
     });
 
   });
-  
+
   socket.on('getmaps', function(msg){
      console.log('Message received'+msg.userid);
     connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(msg){

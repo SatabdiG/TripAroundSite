@@ -248,25 +248,22 @@ module.exports= {
       var collec = db.collection('picturescollection');
       if (collec != null) {
         db.collection('picturescollection').insert({
-          "_mapdataversionid": mapdataversionid,
+          "mapdataversionid": mapdataversionid,
           "mapid": mapid,
           "userid": userid,
           "markerid":markerid,
           "picname":picname,
           "picpath":picpath
         }, {w: 1}, function (err, records) {
-
           if (records != null) {
             console.log("Map Data Version Record added");
             callback("yes");
             db.close();
           }
           else{
-
             console.log("Map Data Version Cannot add");
             callback("no");
           }
-
         });
 
       }

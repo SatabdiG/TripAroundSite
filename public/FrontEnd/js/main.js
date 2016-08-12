@@ -3,7 +3,7 @@
  * Description :  Code for interactive maps
  *
  */
-var map;
+var mapname;
 var myCenter=new google.maps.LatLng(51.508742,-0.120850);
 var marker;
 var socket=io();
@@ -197,8 +197,8 @@ function dashboardfunction(){
             if(msg == 'yes') {
               $('#infofrm').text('Map is Saved');
               $('#infofrm').css('color', 'green');
-              map=dat.name;
-              window.location.href="#imagegallery";
+              mapname=dat.name;
+              window.location.href="#UploadImages";
             }
             else
             {
@@ -244,7 +244,6 @@ function dashboardfunction(){
           socket.emit('getmaps', {userid:userid});
           socket.on('viewmaps', function(msg){
           console.log(msg.name);
-
           $('#viewmapregion').append('<div maps><a id="'+msg.name+'" class="button">'+msg.name+'</a></div>');
           $('#viewmapregion').css('color','green');
           });
@@ -256,6 +255,13 @@ function dashboardfunction(){
 
   });
 
+  $('#viewmapregion').on('click','a', function(event){
+    console.log("Link clicked");
+    console.log("Event id is"+event.target.id);
+    mapname=event.target.id;
+    window.location.href="#UploadImages";
+
+  });
 
   $("#beforepagebutton").hover(function(){
     $("#beforepagebutton span").text("");
@@ -287,6 +293,7 @@ function imagecontroller(){
   var picobj={};
   var maps={};
   console.log("User logged in as" + userid);
+  console.log("The map id is as"+ mapname);
   initialize();
   $(document).ready(function(){
     Dropzone.autoDiscover=false;
@@ -330,7 +337,6 @@ function imagecontroller(){
     });*/
 
     $('input#submitbutton').click(function(event){
-
       event.preventDefault();
       if(userid == "guest") {
         var form=new FormData();
@@ -385,15 +391,62 @@ function imagecontroller(){
 
         var filename=$("#userphoto").val().split('\\').pop();
         console.log("Filename   "+filename);
-        socket.emit('UserData',{id:userid,file:filename});
+        socket.emit('UserData',{id:userid,file:filename, mapid:"guestmap"});
       }
       else {
-          event.preventDefault();
-          //For registered users
-          var data = {};
-          data.file = $("#userphoto")[0].files;
-          data.filename = $("#userphoto").val().split('\\').pop();
-          console.log("For registered Users");
+        //For registered users
+        var form=new FormData();
+        var dragdropfrm=new FormData();
+        var filename=[];
+        var formelement=document.getElementById('userphoto');
+        var fileemenet=formelement.files;
+        if(fileemenet.length>0)
+        {
+          for(var i=0;i<fileemenet.length;i++)
+          {
+            var filetmp=fileemenet[i];
+            form.append('uploads[]',filetmp,filetmp.name);
+            filename.push(filetmp.name);
+            picobj=filetmp.name;
+          }
+        }
+        var userpic={};
+        userpic.filename=filename;
+        userpic.id=userid;
+        userpic.mapname=mapname;
+        var mapnameobj={};
+        mapnameobj.user=userid;
+        mapnameobj.name=mapname;
+        form.append('userobj',JSON.stringify(userpic));
+        form.append('mapname',JSON.stringify(mapnameobj));
+        console.log("Map name"+mapname);
+        $.ajax({
+          url:"/userimageupload",
+          type:"POST",
+          data:form,
+          processData:false,
+          contentType:false
+        }).done(function(msg){
+          console.log(msg);
+          if(msg == "yes") {
+
+            $("#uploadstatus").text("File has been uploaded");
+            $("#uploadstatus").css({"color":"green"});
+            $("#uploadForm2")[0].reset();
+            $('#dropzonePreview').on('complete',function(file){
+              console.log("Finally!!");
+              $('#dropzonePreview').removeAllFiles(true);
+            });
+          }
+          else
+            $("#uploadstatus").text("File has not been uploaded");
+        });
+
+        console.log("Names  "+filename);
+        var filename=$("#userphoto").val().split('\\').pop();
+        console.log("Filename   "+filename);
+        //Socket was here
+
       }
     });
 
@@ -401,7 +454,6 @@ function imagecontroller(){
       evt.preventDefault();
       if(userid == "guest")
       { //save the guest map
-
         maps.name="guestmap";
         maps.id=userid;
         console.log("Map coordinates "+ markerobj);
@@ -810,6 +862,7 @@ tripapp.controller('mapcontroller', function($scope){
 
 tripapp.controller('imagecontroller', function($scope){
   $scope.username=userid;
+  $scope.map=mapname;
   $scope.init=imagecontroller();
 
 });
