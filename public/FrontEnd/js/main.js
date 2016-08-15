@@ -527,9 +527,10 @@ function imagecontroller(){
     $("#userphoto").on('change', function (event) {
       console.log("changed");
       var input=$("#userphoto").get(0).files;
+      var markerlist = [];
       for(var i=0;i<input.length;i++)
       {
-        EXIF.getData(input[0], function(){
+        EXIF.getData(input[i], function(){
 
           var lat=EXIF.getTag(this,"GPSLatitude");
           var lon=EXIF.getTag(this,"GPSLongitude");
@@ -557,13 +558,25 @@ function imagecontroller(){
             var marker = new google.maps.Marker({
               position: myCenter
             });
-            map.setCenter(marker.getPosition());
+
+	    /*map.setCenter(marker.getPosition());
             map.setZoom(4);
-            marker.setMap(map);
+            marker.setMap(map);*/
+
             markers.push(marker);
+	    markerlist.push([lat, lon, "sea.jpg"]);
           }
         });
       }
+	var cluster_markers = L.markerClusterGroup({ chunkedLoading: true });
+
+	for (var i = 0; i < markerlist.length; i++) {
+		var marker = L.marker(L.latLng(markerlist[i][0], markerlist[i][1]), { title: markerlist[i][2] });
+		marker.bindPopup(title);
+		cluster_markers.addLayer(marker);
+	}
+
+	map.addLayer(cluster_markers);
     });
 
 
@@ -592,16 +605,18 @@ function imagecontroller(){
 
 function initialize(){
   var mapProp = {
-    center:new google.maps.LatLng(51.508742,-0.120850),
-    zoom:5,
+    center:new google.maps.LatLng(0,0),
+    zoom:2,
     mapTypeId:google.maps.MapTypeId.ROADMAP
   };
 
   map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+  //map = new L.Map('map', {center: new L.Latlng(0,0), zoom: 1});
+  //map.addLayer(new L.Google('ROADMAP'));
 
-  overlay = new google.maps.OverlayView();
+  /**/overlay = new google.maps.OverlayView();
   overlay.draw = function() {};
-  overlay.setMap(map);
+  overlay.setMap(map);/**/
 
 }
 
