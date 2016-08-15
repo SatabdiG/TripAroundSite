@@ -1,6 +1,11 @@
 {
-  "name": "file_upload",
+  "name": "trip-around",
   "version": "0.0.1",
+  "description": "Trip around",
+  "main": "server.js",
+  "scripts": {
+    "test": "eater"
+  },
   "dependencies": {
     "body-parser": "^1.14.2",
     "express": "4.13.3",
@@ -20,6 +25,7 @@
     "leaflet.markercluster":"1.0.0-rc.1.0 "
   },
   "devDependencies": {
+    "eater": "^1.7.0",
     "should": "~7.1.0",
     "mocha": "~2.3.3",
     "supertest": "~1.1.0"
