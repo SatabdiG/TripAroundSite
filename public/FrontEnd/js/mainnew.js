@@ -527,6 +527,7 @@ function imagecontroller(){
     $("#userphoto").on('change', function (event) {
       console.log("changed");
       var input=$("#userphoto").get(0).files;
+      var markerlist = [];
       for(var i=0;i<input.length;i++)
       {
         EXIF.getData(input[i], function(){
@@ -540,36 +541,6 @@ function imagecontroller(){
           else {
             lat = (lat[0] + lat[1] / 60 + lat[2] / 3600) * (latRef == "N" ? 1 : -1);
             lon = (lon[0] + lon[1] / 60 + lon[2] / 3600) * (lonRef == "W" ? -1 : 1);
-
-
-/*Drawing a straight line between two markers
-var x=new google.maps.LatLng(52.395715,4.888916);
-var stavanger=new google.maps.LatLng(0.2323,-0.2323);
-var amsterdam=new google.maps.LatLng(45.531419416666665,-98.4128916388889);
-
-
-var mapProp = {
-  center:x,
-  zoom:4,
-  mapTypeId:google.maps.MapTypeId.ROADMAP
-  };
-  
-var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-
-var myTrip=[stavanger,amsterdam];
-var flightPath=new google.maps.Polyline({
-  path:myTrip,
-  strokeColor:"#0000FF",
-  strokeOpacity:0.8,
-  strokeWeight:2
-  });
-
-flightPath.setMap(map);
-
-
-google.maps.event.addDomListener(window, 'load', initialize);
-End of drawing a straight line between two markers*/
-
 
 
 
@@ -590,16 +561,29 @@ End of drawing a straight line between two markers*/
             var marker = new google.maps.Marker({
               position: myCenter
             });
-            map.setCenter(marker.getPosition());
+
+	    /*map.setCenter(marker.getPosition());
             map.setZoom(4);
-            marker.setMap(map);
-            markers.push(marker);
+            marker.setMap(map);*/
+
+            //markers.push(marker);
+	    //markerlist.push([lat, lon, "sea.jpg"]);
           }
         });
       }
+/*
+	var cluster_markers = L.markerClusterGroup({ chunkedLoading: true });
+
+	for (var i = 0; i < markerlist.length; i++) {
+		var marker = L.marker(L.latLng(markerlist[i][0], markerlist[i][1]), { title: markerlist[i][2] });
+		marker.bindPopup(title);
+		cluster_markers.addLayer(marker);
+	}
+
+	map.addLayer(cluster_markers);
     });
 
-
+*/
     $("#nextpagebutton").hover(function(){
       $("#nextpagebutton span").text("");
     }, function(){
@@ -631,10 +615,12 @@ function initialize(){
   };
 
   map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+  //map = new L.Map('map', {center: new L.Latlng(0,0), zoom: 1});
+  //map.addLayer(new L.Google('ROADMAP'));
 
-  overlay = new google.maps.OverlayView();
+  /**/overlay = new google.maps.OverlayView();
   overlay.draw = function() {};
-  overlay.setMap(map);
+  overlay.setMap(map);/**/
 
 }
 
