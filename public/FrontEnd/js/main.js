@@ -542,7 +542,7 @@ function imagecontroller(){
             lon = (lon[0] + lon[1] / 60 + lon[2] / 3600) * (lonRef == "W" ? -1 : 1);
 
 
-/*Drawing a straight line between two markers
+/*Drawing a straight line between two markers*/
 var x=new google.maps.LatLng(52.395715,4.888916);
 var stavanger=new google.maps.LatLng(0.2323,-0.2323);
 var amsterdam=new google.maps.LatLng(45.531419416666665,-98.4128916388889);
@@ -568,7 +568,7 @@ flightPath.setMap(map);
 
 
 google.maps.event.addDomListener(window, 'load', initialize);
-End of drawing a straight line between two markers*/
+/*End of drawing a straight line between two markers*/
 
 
 
