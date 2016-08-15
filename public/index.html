@@ -8,6 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>TripAround</title>
     <!-- Vendor - Bootstrap stylesheet go here -->
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
       <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
       <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" >
       <link rel="stylesheet" href="/FrontEnd/css/dropzone.css"/>
@@ -15,6 +16,8 @@
       <link href="https://fonts.googleapis.com/css?family=Merienda+One|Pacifico" rel="stylesheet">
       <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
       <link rel="stylesheet" href="/FrontEnd/css/main.css">
+      <link rel="stylesheet" href="/FrontEnd/css/magnific-popup.css">
+      <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
   </head>
 
   <body class="container fluid" id="maincontainerpanel">
@@ -37,6 +40,11 @@
                 View Maps
               </a>
             </li>
+            <li>
+              <a href="#imagegallery">
+                Browse Image Gallery
+              </a>
+            </li>
           </ul>
         </div>
         <div id="page-content-wrapper">
@@ -56,16 +64,19 @@
       <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
       <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.js"></script>
       <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-      <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+
       <!-- Vendor JS: Angular JS, exif, dropzone, binaryajax -->
       <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.js"></script>
       <script src="/FrontEnd/js/socket.io.js"></script>
-      <sript src="/FrontEnd/js/dropzone.js"></sript>
+      <script src="/FrontEnd/js/dropzone.js"></script>
       <script src="/FrontEnd/js/exif.js"></script>
+      <script src="/FrontEnd/js/jquery.magnific-popup.min.js"></script>
+      <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+
       <script src="/FrontEnd/js/binaryajax.js"></script>
       <script src="/FrontEnd/js/uploadImage.js"></script>
-
+      <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
       <!--Map API frame work-->
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBX3rpSwtuzsvOykF3C25s-rT0a2AqugfU"></script>
       <!--Our Main javascript  file -->

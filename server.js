@@ -5,7 +5,7 @@ var multer	=	require('multer');
 var multerdragdrop = require('multer');
 var multerguest=require('multer');
 var path=require('path');
-var app	=	express();
+var app	= express();
 var fs=require('fs');
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
@@ -206,11 +206,9 @@ app.post('/photos',function(req,res){
 });
 
 var uploadguest= multer({dest:__dirname+'/uploads'});
-
 /* Guest Log in */
 app.post('/guestlogin', function(req,res){
   console.log("In guest handler");
-  console.log()
   var form=new formidable.IncomingForm();
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
@@ -226,32 +224,62 @@ app.post('/guestlogin', function(req,res){
   });
 
   form.parse(req);
- 
+
+});
+
+//Register New users
+
+app.post('/registeruser', function(req,res){
+  var userid=req.body.username;
+  var username=req.body.name;
+  var password=req.body.password;
+  var email=req.body.email;
+  console.log("Email  "+ email);
+
+  //Access Mongodb See is user is there
+  connect.userPresent('mongodb://localhost:27017/testimages', userid, function(msg){
+    if(msg!=undefined){
+      console.log("Returned data"+msg);
+      if(msg =='present'){
+        return res.end(msg);
+      }
+      else
+      {
+          connect.addusers('mongodb://localhost:27017/testimages', userid, username, password, function (mssg) {
+            if (mssg != undefined) {
+              console.log("Returned data" + mssg);
+              return res.end(mssg);
+            }
+          });
+
+      }
+    }
+
+  });
+
 });
 
 app.post('/guestdetailssave',function(req,res){
+  var filename=req.body.filename;
   console.log("In guest details handler");
   console.log(req.body);
   console.log("User id "+req.body.userid);
- 
+  for(var i=0;i<filename.length;i++)
+  {
+    if(req.body.userid == 'guest') {
+      var mapid = 'guestmap';
+      var pathid='/uploads';
+      var mapversionid="something";
+    }
+    connect.storeImages('mongodb://localhost:27017/testimages',mapversionid,req.body.userid,mapid,"markerid",filename[i],pathid,function(message){
+      console.log("Message"+message);
+      if(message == "yes")
+        return res.end("yes");
+      else
+        return res.end("no");
+    })
+  }
 });
-
-/* var flag=true;
- if(userid=="guest") {
-
- connect.addvalues('mongodb://localhost:27017/testimages', 'someversion', req.files[0].filename, req.files[0].destination,"guest","guestmap",function(mssg){
- if(mssg=="yes"){
- flag=true;
- }
- else
- flag=false;
- });
- }
-
- if(err)
- return res.end("no");
-
- return res.end("yes");*/
 
 //** upload and save map coordinates
 app.post('/mapupload', function(req,res){
@@ -276,8 +304,8 @@ app.post('/mapupload', function(req,res){
     for(i=0;i<marker.length;i++)
     {
       var markerid=req.body.id+i+currenthours;
-      console.log("Data  "+ marker[i].lat);
-      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",markerid,req.body.id,req.body.name,marker[i].lat,marker[i].lon, function(mssg){
+      console.log(marker[i]);
+      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",marker[i].id,req.body.id,req.body.name,marker[i].lat,marker[i].lon, marker[i].filename,function(mssg){
       console.log(mssg);
         if(mssg!=undefined) {
           if (mssg == "yes")
@@ -299,6 +327,28 @@ app.post('/mapupload', function(req,res){
     console.log("Empty");
     return res.end("no");
   }
+
+});
+//Handler for drag and drop
+app.post('/dragdrop', function(req,res){
+  console.log("In drag and drop"+req.body.userid);
+  var form=new formidable.IncomingForm();
+  form.multiple=true;
+  form.uploadDir=path.join(__dirname,'/uploads');
+  form.on('file',function(field,file){
+    console.log("File Name"+file.name);
+    fs.rename(file.path,path.join(form.uploadDir,file.name));
+  });
+  form.on('error',function(err){
+    console.log("Error has ocurred");
+    return res.end("no");
+  });
+  form.on('end',function(){
+    res.send("yes");
+  });
+
+  form.parse(req);
+
 
 });
 
@@ -328,6 +378,124 @@ app.post('/login',function(req,res){
 
 });
 
+app.post('/mapsave', function(req, res){
+  var mapname=req.body.name;
+  var description=req.body.description;
+  console.log("Name is  "+ mapname);
+  var user=req.body.userid;
+  //Call mongodb function and save the map
+  connect.addmaps('mongodb://localhost:27017/testimages',user, mapname, description,function(msg){
+    if(msg!=undefined){
+       if(msg == 'add'){
+         return res.end('yes');
+       }
+      else
+         return res.end('no');
+    }
+
+  });
+});
+
+app.post('/viewmap', function(req,res){
+  var userid=req.body.name;
+  //call database and return
+  connect.mapPresent('mongodb://localhost:27017/testimages',userid, function(msg){
+    if(msg!=undefined){
+      if(msg=="nothing"){
+        return res.end("no");
+      }
+       else
+      {
+        return res.end("yes");
+      }
+
+    }
+  });
+});
+
+//Save Images of registered users
+
+app.post('/userimageupload', function(req,res){
+  console.log("In registered user handler");
+  var form=new formidable.IncomingForm();
+  var mapname;
+  var dir;
+  form.multiple=true;
+  form.on('field',function(name,value){
+    console.log("Response  "+name+":"+value);
+    if(name == "mapname") {
+      var obj=JSON.parse(value);
+      console.log(obj['name']);
+      var dir = __dirname + '/uploads/'+obj['user'];
+      var actual=__dirname+'/uploads/'+obj['user']+'/'+obj['name'];
+      if (!fs.existsSync(dir)) {      
+       fs.mkdirSync(dir);
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }        
+      }
+      else 
+      {
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }
+      }
+      //form.uploadDir=path.join(__dirname,'/uploads');
+      form.uploadDir = actual;
+    }else
+    {
+      if(name=="userobj"){
+        //call data base to update mappings
+        var obj=JSON.parse(value);
+        var filenames=obj['filename'];
+        var mapname=obj['mapname'];
+        var userid=obj['id'];
+        var uploadpath='/uploads/'+userid+'/' + mapname;
+        var mapversion="something";
+        console.log("The value of object user"+JSON.parse(value));
+        console.log("The value of user pictures are"+obj['id']);
+        //call database and update the database
+        for(var i=0;i<filenames.length;i++)
+        {
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,function(msg){
+            if(msg!=undefined)
+            {
+              if(msg == "yes"){
+                console.log("Yay "+msg);
+              }else
+              {
+                console.log("Could add to user database. Check");
+              }
+            }
+          });
+        }
+      }
+    }
+
+  });
+
+  form.on('file',function(field,file){
+    fs.rename(file.path,path.join(form.uploadDir,file.name));
+  });
+  form.on('error',function(err){
+    console.log("Error has ocurred");
+    return res.end("no");
+  });
+
+  form.on('end',function(){
+    res.send("yes");
+  });
+
+  form.parse(req);
+});
+//Save registered user details
+app.post('/userdetailssave', function(req, res){
+  console.log("Resgistered user details"+req.body);
+  return res.end("yes");
+
+
+});
+
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
@@ -348,11 +516,14 @@ socket.on('connection',function(socket){
 
 
   socket.on('UserData',function(msg){
-    userid=msg.id;
-    filename=msg.file;
-    console.log("Socket  "+msg);
+    console.log("In user data function");
+    user=msg.id;
+    map=msg.mapid;
+    console.log("The user is"+user+"  "+map);
+
   });
 
+  /****outdated Function***/
   //Request from page to load images
   socket.on("LoadImage",function(msg){
     //Connect to data base and extract images
@@ -379,6 +550,24 @@ socket.on('connection',function(socket){
 
   });
 
+  socket.on('ImageGall', function(msg){
+    console.log("Message received"+msg.userid + msg.mapid);
+    connect.getPictures("mongodb://localhost:27017/testimages", msg.userid, msg.mapid,function(picname, picpath, mapid){
+      console.log(picname+"  "+picpath+"   "+mapid);
+      socket.emit("imagereturn", {picname:picname,picpath:picpath,mapid:mapid});
+    });
+
+  });
+
+  socket.on('getmaps', function(msg){
+     console.log('Message received'+msg.userid);
+    connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(msg){
+      if(msg!=undefined){
+        socket.emit('viewmaps', {name:msg});
+      }
+    });
+  });
+
 });
 
 http.listen(3000,function(){
@@ -395,4 +584,194 @@ process.on('SIGTERM', function(){
 
 
 
+/**
+ * Simple example Node.js application to demonstrate face detection.
+ */
 
+/**
+ * Define the dependencies
+ */
+var express   =   require( 'express' )
+  , httpp       =    require( 'httpp' )
+  , async     =    require( 'async' )
+  , multer    =   require( 'multer' )
+  , upload     =    multer( { dest: 'uploads/' } )
+  , exphbs    =   require( 'express-handlebars' )
+  , easyimg   =    require( 'easyimage' )
+  , _         =    require( 'lodash' )
+  , cv         =   require( 'opencv' );
+
+/**
+ * Create a simple hash of MIME types to file extensions
+ */
+var exts = {
+  'image/jpeg'   :   '.jpg',
+  'image/png'    :   '.png',
+  'image/gif'    :   '.gif'
+}
+
+/**
+ * Note that you may want to change this, depending on your setup.
+ */
+var port = 8080;
+
+/**
+ * Create the express app
+ */
+var app = express();
+
+/**
+ * Set up the public directory
+ */
+app.use(express.static(__dirname + '/public'))
+
+/**
+ * Set up Handlebars templating
+ */
+app.engine('.hbs', exphbs( { extname: '.hbs', defaultLayout: 'default' } ) );
+app.set( 'view engine', '.hbs' );
+
+/**
+ * Default page; simply renders a file upload form
+ */
+app.get('/', function( req, res, next ) {
+
+  return res.render('index');
+
+});
+
+/**
+ * POST callback for the file upload form. This is where the magic happens.
+ */
+app.post('/upload', upload.single('file'), function(req, res, next){
+
+  // Generate a filename; just use the one generated for us, plus the appropriate extension
+  var filename = req.file.filename + exts[req.file.mimetype]
+    // and source and destination filepaths
+    , src = __dirname + '/' + req.file.path
+    , dst = __dirname + '/public/images/' + filename;
+
+  /**
+   * Go through the various steps
+   */
+  async.waterfall(
+    [
+      function( callback ) {
+
+        /**
+         * Check the mimetype to ensure the uploaded file is an image
+         */
+        if (!_.contains(
+          [
+            'image/jpeg',
+            'image/png',
+            'image/gif'
+          ],
+          req.file.mimetype
+        ) ) {
+
+          return callback( new Error( 'Invalid file - please upload an image (.jpg, .png, .gif).' ) )
+
+        }
+
+        return callback();
+
+      },
+      function( callback ) {
+
+        /**
+         * Get some information about the uploaded file
+         */
+        easyimg.info( src ).then(
+
+          function(file) {
+
+            /**
+             * Check that the image is suitably large
+             */
+            if ( ( file.width < 960 ) || ( file.height < 300 ) ) {
+
+              return callback( new Error( 'Image must be at least 640 x 300 pixels' ) );
+
+            }
+
+            return callback();
+          }
+        );
+      },
+      function( callback ) {
+
+        /**
+         * Resize the image to a sensible size
+         */
+        easyimg.resize(
+          {
+            width      :   960,
+            src        :   src,
+            dst        :   dst
+          }
+        ).then(function(image) {
+
+          return callback();
+
+        });
+
+      },
+      function( callback ) {
+
+        /**
+         * Use OpenCV to read the (resized) image
+         */
+        cv.readImage( dst, callback );
+
+      },
+      function( im, callback ) {
+
+        /**
+         * Run the face detection algorithm
+         */
+        im.detectObject( cv.FACE_CASCADE, {}, callback );
+
+      }
+
+    ],
+    function( err, faces ) {
+
+      /**
+       * If an error occurred somewhere along the way, render the
+       * error page.
+       */
+      if ( err ) {
+
+        return res.render(
+          'error',
+          {
+            message : err.message
+          }
+        );
+      }
+
+      /**
+       * We're all good; render the result page.
+       */
+      return res.render(
+        'result',
+        {
+          filename   :   filename,
+          faces     :   faces
+        }
+      );
+
+    }
+  );
+
+});
+
+/**
+ * Start the server
+ */
+httpp.createServer(
+  app
+).listen( port, function( server ) {
+  console.log( 'Listening on port %d', port );
+});

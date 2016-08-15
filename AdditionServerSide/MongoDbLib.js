@@ -13,7 +13,6 @@ var mongodb = require('mongodb').MongoClient;
 
 
 module.exports= {
-
   establishConnection: function (connectionstring, databasename, queryby, queryval, callback) {
     var filenames = [];
     var filepaths = [];
@@ -35,7 +34,6 @@ module.exports= {
         console.log("Error happened");
     });
   },
-
   getMarkers:function(connectionstring, userid,mapid, callback){
   if(callback)
     callback();
@@ -54,27 +52,63 @@ module.exports= {
     });
   },
 
+  getPictures:function(connectionstring, userid,mapid, callback){
+    if(callback)
+      callback();
+    console.log("UserID"+userid);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection('picturescollection').find({"userid":userid});
+        cursor.each(function(err,doc){
+          if(doc!=null)
+          {
+            console.log(doc);
+            callback(doc.picname,doc.picpath,doc.mapid);
+          }
+        });
+
+      }
+    });
+  },
+
+  getMaps:function(connectionstring, userid, callback){
+    if(callback)
+      callback();
+    console.log("UserID"+userid);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection('mapcollection').find({"userid":userid});
+        cursor.each(function(err,doc){
+          if(doc!=null)
+          {
+            console.log(doc);
+            callback(doc.mapname);
+          }
+        });
+
+      }
+    });
+  },
+
   verifyusers:function (connectionstring, databasename, queryby, queryval, callback) {
-    console.log('queryby  '+queryby);
-    console.log('password  '+queryval);
     mongodb.connect(connectionstring, function (err, db) {
       if (callback) {
         callback();
       }
       if (!err) {
-        var cursor = db.collection(databasename).find({"username": queryby});
+        var cursor = db.collection(databasename).find({"userid": queryby});
             cursor.each(function (err, doc) {
               if (doc != null) {
-                if(doc.password == queryval) {
-                  callback("success");
-                  return;
+                console.log("Password  "+doc.userpassword);
+                if(doc.userpassword == queryval) {
+
+                  return callback("success");
+
                 }
                 else {
-                  callback("fail");
-                  return;
+                  return callback("fail");
                 }
               }
-
             })
       }
       else
@@ -82,59 +116,150 @@ module.exports= {
     });
 
   },
-
-  addusers: function (connectionstring, databasename,_userid, _username, _userpassword, callback) {
-  if (callback) {
-    callback();
-  }
-  mongodb.connect(connectionstring, function (err, db) {
-    var collec = db.collection(databasename);
-    if (collec != null) {
-      db.collection('usercollection').insert({
-        "userid": _userid,
-        "username": _username,
-        "userpassword": _userpassword
-      }, {w: 1}, function (err, records) {
-
-        if (records != null) {
-          console.log("User Record added");
-          db.close();
-        }
-        else
-          console.log("User Cannot add");
-      });
+  //First check to see if user is already present
+  userPresent:function(connectionstring,userid, callback){
+    if (callback) {
+      callback();
     }
-    else {
-      console.log("Database not found! error");
-    }
-  });
-},
 
-  storeImages: function (connectionstring, mapdataversionid, userid,mapid, markerid,picname,picpath,callback) {
+    mongodb.connect(connectionstring, function (err, db) {
+      var collec = db.collection('usercollection');
+       if (collec != null) {
+        var tempsur = db.collection('usercollection').count({userid: userid}, function(err, count){
+          if(!err){
+            console.log("User present "+ count);
+            if(count>0){
+              return callback("present");
+            }
+            else
+              return callback("nothing");
+          }
+        });
 
+      }
+    });
+  },
 
+  mapPresent:function(connectionstring,userid, callback){
     if (callback) {
       callback();
     }
     mongodb.connect(connectionstring, function (err, db) {
-      var collec = db.collection(databasename);
+      var collec = db.collection('mapcollection');
+      if (collec != null) {
+        var tempsur = db.collection('mapcollection').count({userid: userid}, function(err, count){
+          if(!err){
+            console.log("User present "+ count);
+            if(count>0){
+              return callback("present");
+            }
+            else
+              return callback("nothing");
+          }
+        });
+
+      }
+    });
+  },
+  //Save Maps to database
+  addmaps:function (connectionstring,userid, mapname, mapdescription, callback) {
+
+    if (callback) {
+      callback();
+    }
+
+    mongodb.connect(connectionstring, function (err, db) {
+      var collec = db.collection('usercollection');
+      var flag=0;
+      if (collec != null) {
+        console.log("Flag " + flag);
+        db.collection('mapcollection').insert({
+          "userid": userid,
+          "mapname": mapname,
+          "mapdescription": mapdescription
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Map record added");
+            db.close();
+            return callback("add");
+
+          }
+          else {
+
+            console.log("Mapp Cannot add");
+            return callback('err');
+          }
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+
+    });
+  },
+  //Add users to database
+  addusers: function (connectionstring,userid, username, userpassword, callback) {
+  if (callback) {
+    callback();
+  }
+
+  mongodb.connect(connectionstring, function (err, db) {
+    var collec = db.collection('usercollection');
+    var flag=0;
+    if (collec != null) {
+      console.log("Flag " + flag);
+      db.collection('usercollection').insert({
+        "userid": userid,
+        "username": username,
+        "userpassword": userpassword
+      }, {w: 1}, function (err, records) {
+
+        if (records != null) {
+          return callback("add");
+          console.log("User Record added");
+          db.close();
+        }
+        else {
+
+          console.log("User Cannot add");
+          return callback('err');
+        }
+      });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+
+  });
+},
+
+  storeImages: function (connectionstring, mapdataversionid, userid,mapid, markerid,picname,picpath,callback) {
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+      var collec = db.collection('picturescollection');
       if (collec != null) {
         db.collection('picturescollection').insert({
-          "_mapdataversionid": mapdataversionid,
+          "mapdataversionid": mapdataversionid,
           "mapid": mapid,
           "userid": userid,
-          "userid":userid,
           "markerid":markerid,
           "picname":picname,
           "picpath":picpath
         }, {w: 1}, function (err, records) {
-
           if (records != null) {
             console.log("Map Data Version Record added");
+            callback("yes");
             db.close();
           }
-          else
+          else{
             console.log("Map Data Version Cannot add");
+            callback("no");
+          }
         });
 
       }
@@ -144,33 +269,6 @@ module.exports= {
     });
   },
 
- addmaps: function (connectionstring,mapid,userid, callback) {
-  if (callback) {
-    callback();
-  }
-  mongodb.connect(connectionstring, function (err, db) {
-    var collec = db.collection("mapcollection");
-    if (collec != null) {
-      db.collection('mapcollection').insert({
-        "mapid":mapid,
-        "userid":userid
-              }, {w: 1}, function (err, records) {
-
-        if (records != null) {
-           callback("true");
-           console.log(" Map Record added");
-          db.close();
-        }
-        else
-         callback("false");
-         console.log("Map Cannot add");
-      });
-    }
-    else {
-      console.log("Database not found! error");
-    }
-  });
-},
 
 addmapversion: function (connectionstring, databasename,_mapdataversionid, _userid,_mapid, callback) {
 
@@ -203,7 +301,7 @@ addmapversion: function (connectionstring, databasename,_mapdataversionid, _user
   });
 },
 
-addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid, callback) {
+addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid,filename, callback) {
   if (callback) {
     callback();
   }
@@ -217,7 +315,8 @@ addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,La
         "userid": userid,
         "mapid": mapid,
         "Lat": Latid,
-        "Lng": Lngid
+        "Lng": Lngid,
+        "filename":filename
      }, {w: 1}, function (err, records) {
 
         if (records != null) {
@@ -272,17 +371,17 @@ addvalues: function (connectionstring,mapdataversionid, imagename, imagepath,use
       }
     });
   },
-retrievevalues: function ( connectionstring, databasename, _mapdataversionid, _markerid,_imagename, _imagepath,_userid,_mapid, callback) {
+retrievevalues: function ( connectionstring, databasename, mapdataversionid, markerid,_imagename, _imagepath,_userid,_mapid, callback) {
       if (callback) {
         callback();
       }
       mongodb.connect(connectionstring, function (err, db) {
 
-        var collec = db.collection(databasename);
+        var collec = db.collection('picturescollection');
         if (collec != null) {
-          db.collection('storedimages').find({
-            "mapdataversionid": _mapdataversionid,
-            "markerid": _markerid,
+          db.collection('picturescollection').find({
+            "mapdataversionid": mapdataversionid,
+            "markerid": markerid,
             "imagename": _imagename,
             "imagepath": _imagepath,
             "userid": _userid,
@@ -302,6 +401,9 @@ retrievevalues: function ( connectionstring, databasename, _mapdataversionid, _m
         }
       });
     }
+
+
+
 }
 
 

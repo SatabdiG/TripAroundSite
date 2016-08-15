@@ -1,12 +1,18 @@
 <!--Image Upload -->
-<nav  class="navbar navbar-default navbar-top" id="mapnavigation">
+<nav  class="navbar navbar-default navbar-fixed-top" id="mapnavigation">
   <div class="container-fluid">
     <ul class="nav navbar-nav navbar-left" id="maplinks">
+      <li></li>
       <li><a href="#UploadImages">Upload Images</a></li>
       <li><a href="#ViewImages">View Uploaded Images</a></li>
+      <li><a href="#imagegallery">Browse Image gallery</a></li>
     </ul>
   </div>
 </nav>
+
+<h4> Welcome {{username}}</h4>
+<br>
+<h5> You are uploading images to : {{map}}</h5>
 
 <div class="imageupload">
   <div class="container-fluid">
@@ -21,37 +27,42 @@
              <div class="col-sm-6">
                <p> <input type="submit" value="Upload Image" name="submit" id="submitbutton"></p>
              </div>
+             <div id="dropzonePreview" class="dropzone">
+               <div class="dz-default dz-message"> <small class="text-muted">Drag Drop Pictures here </small></div>
+             </div>
           <span id = "status"></span>
         </form>
       </div>
      </div>
   </div>
   <!--finish of uploading forms-->
+    <form id="mapform">
+      <input type="submit" value="Save Map" id="savemap">
+    </form>
 
   <!--Start of Drag and drop form -->
+  <!--
   <div id="dragdrop">
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
-          <form id="uploadForm" enctype="multipart/form-data" action="/photos" method="post" class="dropzone">
-            <input type="file" name="userphoto" id="userphotoid"> Click here </input> <input type="submit" value="Upload Image" name="submit">
-            Drag and drop images here.
+          <form id="uploadForm" action="/dragdrop">
+            <div id="someid" class="dropzone"></div>
+            <input type="submit" value="Upload Image" name="submit" id="dragdropbutton"></p>
           </form>
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <button class="button" id="nextpagebutton"><span> > </span></button>
   <button class="button" id="beforepagebutton"><span> < </span></button>
+
   <!--Start of Google Maps -->
   <div id="googlemapcontainer">
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
           <div id="googleMap"style="height:380px;"></div>
-          <form id="mapform">
-            <input type="submit" value="Save Map" id="savemap">
-          </form>
         </div>
       </div>
     </div>

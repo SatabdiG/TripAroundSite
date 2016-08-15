@@ -1,0 +1,39 @@
+<!-- Image gallery view
+Uses pluginmagnific
+-->
+
+<nav  class="navbar navbar-default navbar-top" id="mapnavigation">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav navbar-left" id="maplinks">
+      <li><a href="#UploadImages">Upload Images</a></li>
+      <li><a href="#ViewImages">View Uploaded Images</a></li>
+      <li><a href="#imagegallery">Browse Image Gallery</a></li>
+    </ul>
+  </div>
+</nav>
+<br>
+Welcome {{username}}
+<br>
+You are viewing images of  {{map}}
+
+<div class="container fluid" id="gallerycontainer">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <ul id="imagegall">
+        <a class="popup"id="image">
+        </a>
+        </ul>
+    </div>
+  </div>
+  <div class="blueberry">
+    <ul class="slides" id="slides"></ul>
+    <ul class="pager"></ul>
+  </div>
+</div>
+
+
+<button class="button" id="nextpagebutton"><span> > </span></button>
+<button class="button" id="beforepagebutton"><span> < </span></button>
+
+

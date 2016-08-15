@@ -1,0 +1,90 @@
+<!-- Upon loggin in the user sees this page first -->
+
+<nav  class="navbar navbar-default navbar-fixed-top" id="mapnavigation">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav navbar-left" id="maplinks">
+      <li></li>
+      <li><a href="#UploadImages">Upload Images</a></li>
+      <li><a href="#ViewImages">View Uploaded Images</a></li>
+      <li><a href="#imagegallery">Browse Image gallery</a></li>
+    </ul>
+  </div>
+</nav>
+
+<br>
+Welcome {{userid}}
+
+<br>
+<div id="info"></div>
+<br>
+<!--Display user's last created Maps -->
+<div class="container-fluid" id="menudashboard">
+  <div class="row">
+    <div class="col-sm-4" id="save">
+     <!-- Create a map -->
+      <a class="button" href="" id="savebutt" data-toggle="modal"><i class="fa fa-map fa-3x"></i> Click here to Add New New Maps </a>
+    </div>
+    <div class="col-sm-4" id="view">
+      <!--View Saved Maps -->
+      <a class="button" href="" id="viewbutt" ><i class="fa fa-map fa-3x"></i> Click here to View Saved Maps </a>
+    </div>
+
+  </div>
+
+</div>
+<!-- User can create a new map -->
+
+
+
+<!-- User can view his other maps -->
+
+<button class="button" id="nextpagebutton"><span> > </span></button>
+<button class="button" id="beforepagebutton"><span> < </span></button>
+
+
+<div id="dialog">
+  Please log/register in to save or view maps.
+</div>
+
+<div id="formcontainer">
+  Place holder for the form
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create New Map</h4>
+      </div>
+      <div class="modal-body">
+        <form id="createform">
+          <div id="infofrm"></div>
+          <div class="form-group">
+            <label for="mapname">Enter Map Name</label>
+            <input type="text" id="mapname" class="form-control" aria-describedby="maphelp" placeholder="myparistrip">
+            <small id="maphelp" class="form-text text-muted">Enter a name for your map</small>
+          </div>
+          <div class="form-group">
+            <label for="descriptiontext">Enter some description</label>
+            <input id="descriptiontext" type="text-area" class="form-control" rows="3" placeholder="Enter some optional description">
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submit">Submit Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="viewmapregion">
+
+</div>
+
+
