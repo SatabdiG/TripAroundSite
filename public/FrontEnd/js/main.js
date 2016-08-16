@@ -151,7 +151,6 @@ function dashboardfunction(){
     $('#info').css('color', 'green');
   }
   //Save maps user
-
   $('#formcontainer').dialog({
     autoOpen:false,
     show:{
@@ -187,6 +186,7 @@ function dashboardfunction(){
         }
         else {
           //Create ajax data and send it to the server to save the map
+
           var dat={};
           dat.name=$('#mapname').val();
           dat.description=$('#descriptiontext').val();
@@ -200,6 +200,7 @@ function dashboardfunction(){
           }).done(function(msg){
             console.log('Done');
             if(msg == 'yes') {
+
               $('#infofrm').text('Map is Saved');
               $('#infofrm').css('color', 'green');
               mapname=dat.name;
@@ -207,13 +208,15 @@ function dashboardfunction(){
             }
             else
             {
+              //Close this form and launch a new popup/modal/magnific popup and proceed to save images.
+
               $('#infofrm').text('Map cannot be Saved. Try again later');
               $('#infofrm').css('color', 'red');
             }
-            //Close this form and launch a new popup/modal/magnific popup and proceed to save images.
-            $('#myModal').modal('hide');
-          });
 
+          });
+          $('#myModal').modal('toggle');
+          return false;
         }
       });
 
@@ -304,7 +307,48 @@ function imagecontroller(){
   $(document).ready(function(){
     Dropzone.autoDiscover=false;
     $('#dropzonePreview').dropzone({
-      url:"/dragdrop"
+      url:"/dragdrop",
+      init:function(){
+        this.on('addedfile', function(file){
+          console.log("Added File");
+
+            EXIF.getData(file, function(){
+
+              var lat=EXIF.getTag(this,"GPSLatitude");
+              var lon=EXIF.getTag(this,"GPSLongitude");
+              var latRef = EXIF.GPSLatitudeRef || "N";
+              var lonRef = EXIF.GPSLongitudeRef || "W";
+              if(lat == undefined || lon== undefined)
+                alert("Sorry No Geo Tags present in images");
+              else {
+                lat = (lat[0] + lat[1] / 60 + lat[2] / 3600) * (latRef == "N" ? 1 : -1);
+                lon = (lon[0] + lon[1] / 60 + lon[2] / 3600) * (lonRef == "W" ? -1 : 1);
+                var date=new Date();
+                var tim=date.getMilliseconds();
+                console.log("Latitide : " + lat);
+                console.log("Longitude : " + lon);
+                socket.emit('Latitude', lat);
+                socket.emit('Longitude', lon);
+                markerobj.lat=lat;
+                markerobj.lon=lon;
+                markerobj.id=userid+tim;
+                markerobj.filename=file.filename; //fix this
+                //********* input name *****************
+
+                markercollec.push(markerobj);
+                myCenter = new google.maps.LatLng(lat, lon);
+                var marker = new google.maps.Marker({
+                  position: myCenter
+                });
+                map.setCenter(marker.getPosition());
+                map.setZoom(4);
+                marker.setMap(map);
+                markers.push(marker);
+              }
+            });
+
+        })
+      }
     });
 
     /*
@@ -342,6 +386,8 @@ function imagecontroller(){
       });
     });*/
 
+
+    /*
     $('input#submitbutton').click(function(event){
       event.preventDefault();
       if(userid == "guest") {
@@ -455,9 +501,122 @@ function imagecontroller(){
 
       }
     });
+    */
 
     $('#savemap').click(function(evt){
       evt.preventDefault();
+
+      event.preventDefault();
+      if(userid == "guest") {
+        var form=new FormData();
+        var dragdropfrm=new FormData();
+        var filename=[];
+        var formelement=document.getElementById('userphoto');
+        var fileemenet=formelement.files;
+        if(fileemenet.length>0)
+        {
+          for(var i=0;i<fileemenet.length;i++)
+          {
+            var filetmp=fileemenet[i];
+            form.append('uploads[]',filetmp,filetmp.name);
+            filename.push(filetmp.name);
+            picobj=filetmp.name;
+          }
+        }
+        $.ajax({
+          url:"/guestlogin",
+          type:"POST",
+          data:form,
+          processData:false,
+          contentType:false
+        }).done(function(msg){
+          console.log(msg);
+          if(msg == "yes") {
+            $("#uploadstatus").text("File has been uploaded");
+            $("#uploadstatus").css({"color":"green"});
+            $("#uploadForm2")[0].reset();
+            $('#dropzonePreview').on('complete',function(file){
+              console.log("Finally!!");
+              $('#dropzonePreview').removeAllFiles(true);
+            });
+          }
+          else
+            $("#uploadstatus").text("File has not been uploaded");
+        });
+
+        console.log("Names  "+filename);
+        var userpicinfo={};
+        userpicinfo.userid=userid;
+        userpicinfo.filename=filename;
+
+        $.ajax({
+          url:"/guestdetailssave",
+          type:'POST',
+          data:JSON.stringify(userpicinfo),
+          contentType:'application/json'
+        }).done(function(msg){
+          console.log("Done!!  " +msg);
+        });
+
+        var filename=$("#userphoto").val().split('\\').pop();
+        console.log("Filename   "+filename);
+        socket.emit('UserData',{id:userid,file:filename, mapid:"guestmap"});
+      }
+      else {
+        //For registered users
+        var form=new FormData();
+        var dragdropfrm=new FormData();
+        var filename=[];
+        var formelement=document.getElementById('userphoto');
+        var fileemenet=formelement.files;
+        if(fileemenet.length>0)
+        {
+          for(var i=0;i<fileemenet.length;i++)
+          {
+            var filetmp=fileemenet[i];
+            form.append('uploads[]',filetmp,filetmp.name);
+            filename.push(filetmp.name);
+            picobj=filetmp.name;
+          }
+        }
+        var userpic={};
+        userpic.filename=filename;
+        userpic.id=userid;
+        userpic.mapname=mapname;
+        var mapnameobj={};
+        mapnameobj.user=userid;
+        mapnameobj.name=mapname;
+        form.append('userobj',JSON.stringify(userpic));
+        form.append('mapname',JSON.stringify(mapnameobj));
+        console.log("Map name"+mapname);
+        $.ajax({
+          url:"/userimageupload",
+          type:"POST",
+          data:form,
+          processData:false,
+          contentType:false
+        }).done(function(msg){
+          console.log(msg);
+          if(msg == "yes") {
+
+            $("#uploadstatus").text("File has been uploaded");
+            $("#uploadstatus").css({"color":"green"});
+            $("#uploadForm2")[0].reset();
+            $('#dropzonePreview').on('complete',function(file){
+              console.log("Finally!!");
+              $('#dropzonePreview').removeAllFiles(true);
+            });
+          }
+          else
+            $("#uploadstatus").text("File has not been uploaded");
+        });
+
+        console.log("Names  "+filename);
+        var filename=$("#userphoto").val().split('\\').pop();
+        console.log("Filename   "+filename);
+        //Socket was here
+
+      }
 
       if(userid == "guest")
       { //save the guest map
@@ -634,7 +793,7 @@ $("#menu-toggle").click(function(e){
 /** Controller for Map Page **/
 function imageupload() {
   $(document).ready(function(){
-    console.log("Markers  "+markers);
+
     //Get markers and initialize them on map
     console.log("User logged in as "+userid);
     initialize();
@@ -648,65 +807,49 @@ function imageupload() {
       window.location.href="#UploadImages";
     });
 
-  });
-
-  $('#something').hide();
-  //Fetch images from Server using socketio
-  if(userid =="guest")
-  {
-    var mapid="guestmap";
-  }
-  {
-    if(mapname==0)
+    $('#something').hide();
+    //Fetch images from Server using socketio
+    if(userid =="guest")
     {
-      window.location.href="#UploadImage";
-    }
-    else
+      var mapid="guestmap";
+    }else
     {
-      mapname=1;
-    }
-    var mapid=mapname;
-  }
-
-  socket.emit("ImageGall",{userid: userid, mapid:mapid});
-  socket.on("imagereturn", function(mssg) {
-    console.log(mssg);
-    console.log(mssg.picname);
-    console.log(mssg.picpath);
-    if (userid == "guest") {
-      var mapid = "guestmap";
-      var loc = "uploads/" + mssg.picname;
-    }
-    else
-    {
+      console.log("The user logged in as"+mapname);
+      if(mapname==0)
+      {
+        window.location.href="#UploadImage";
+      }
+      else
+      {
+        mapname=1;
+      }
       var mapid=mapname;
-      var loc="uploads/" + mssg.picname;
     }
-    console.log("Location  "+loc);
-    if($("#thumbnail li").length == 0)
-      $("#thumbnail").append('<li><img src="uploads/'+mssg.picname+'" class="img-thumbnail" alt="Cinque Terre" ></li>');
-  });
-  //socket.emit("LoadImage", "yes");
 
-  /*
-  var list=socket.on('ImageUploads',function(msg){
-    var firstbreak=msg.split(",");
-    var filename=firstbreak[0];
-    var filepath=firstbreak[1];
-    var currentdir=firstbreak[2];
-    var locations=filepath.substr(currentdir.length,filepath.length);
-    src=locations+'/'+filename;
-    if($("#thumbnail li").length == 0)
-      $("#thumbnail").append('<li><img src="'+locations+'/'+filename+'"class="img-thumbnail" alt="Cinque Terre" ></li>');
+    socket.emit("ImageGall",{userid: userid, mapid:mapid});
+    socket.on("imagereturn", function(mssg) {
+      console.log(mssg.userid);
+      console.log(mssg.mapid);
+      if (userid == "guest") {
+        var mapid = "guestmap";
+        var loc = "uploads/" + mssg.picname;
+      }
+      else
+      {
+        var mapid=mapname;
+        var loc="uploads/" + mssg.picname;
+      }
+      console.log("Location  "+loc);
+      if($("#thumbnail li").length == 0)
+        $("#thumbnail").append('<li><img src="uploads/'+mssg.userid+'/'+mssg.mapid+'/'+mssg.picname+'" class="img-thumbnail" alt="Cinque Terre" ></li>');
+    });
 
-    //$("#thumbnail").append('<li id="dragged">Hell There</li>')
-    });*/
 
     var temp=document.getElementById("thumbnail");
     $('#thumbnail').on('click','li',function(){
-       console.log("Clicked");
+      console.log("Clicked");
       if($('#something').is(':visible'))
-       $('#something').hide();
+        $('#something').hide();
       else
         $('#something').show();
 
@@ -724,62 +867,68 @@ function imageupload() {
       placemarker(ll);
     });
 
-  if(userid="guest")
-  {
-    //request markers
-    socket.emit("LoadMarker", {id:userid,mapid:"guestmap"});
 
-    var paths=[];
-    socket.on("drawmarkers",function(msg){
-      console.log(msg.lat+"    "+msg.lng);
-      //draw markers on map
-      paths.push({lat: msg.lat, lng:msg.lng});
-      var myCenter = new google.maps.LatLng(msg.lat, msg.lng);
-      var marker = new google.maps.Marker({
-        position: myCenter
-      });
-      map.setCenter(marker.getPosition());
-      map.setZoom(2);
-      marker.setMap(map);
-      markers.push(marker);
-      var path=new google.maps.Polyline({
-        path:paths,
-        geodesic:true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 2
-      });
-      path.setMap(map);
-    });
-  }
-  else
-  {
-    //registered users
-    socket.emit("LoadMarker", {id:userid,mapid:mapname});
 
-    var paths=[];
-    socket.on("drawmarkers",function(msg){
-      console.log(msg.lat+"    "+msg.lng);
-      //draw markers on map
-      paths.push({lat: msg.lat, lng:msg.lng});
-      var myCenter = new google.maps.LatLng(msg.lat, msg.lng);
-      var marker = new google.maps.Marker({
-        position: myCenter
+    if(userid =="guest")
+    {
+      //request markers
+      socket.emit("LoadMarker", {id:userid,mapid:"guestmap"});
+
+      var paths=[];
+      socket.on("drawmarkers",function(msg){
+        console.log(msg.lat+"    "+msg.lng);
+        //draw markers on map
+        paths.push({lat: msg.lat, lng:msg.lng});
+        var myCenter = new google.maps.LatLng(msg.lat, msg.lng);
+        var marker = new google.maps.Marker({
+          position: myCenter
+        });
+        map.setCenter(marker.getPosition());
+        map.setZoom(2);
+        marker.setMap(map);
+        markers.push(marker);
+        var path=new google.maps.Polyline({
+          path:paths,
+          geodesic:true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        path.setMap(map);
       });
-      map.setCenter(marker.getPosition());
-      map.setZoom(2);
-      marker.setMap(map);
-      markers.push(marker);
-      var path=new google.maps.Polyline({
-        path:paths,
-        geodesic:true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 2
+    }
+    else
+    {
+      //registered users
+      console.log("Loading Markers for registered users");
+      socket.emit("LoadMarker", {id:userid,mapid:mapname});
+
+      var paths=[];
+      socket.on("drawmarkers",function(msg){
+        console.log(msg.lat+"    "+msg.lng);
+        //draw markers on map
+        paths.push({lat: msg.lat, lng:msg.lng});
+        var myCenter = new google.maps.LatLng(msg.lat, msg.lng);
+        var marker = new google.maps.Marker({
+          position: myCenter
+        });
+        map.setCenter(marker.getPosition());
+        map.setZoom(2);
+        marker.setMap(map);
+        markers.push(marker);
+        var path=new google.maps.Polyline({
+          path:paths,
+          geodesic:true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        path.setMap(map);
       });
-      path.setMap(map);
-    });
-  }
+    }
+
+  });
+
   }
 
 //Controller for Image gallery page

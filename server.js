@@ -291,7 +291,9 @@ app.post('/mapupload', function(req,res){
     console.log(eve);
     marker.push(eve);
   });
+
   if(marker.length>0) {
+    /*
     connect.addmaps("mongodb://localhost:27017/testimages", req.body.name, req.body.id, function (mssg) {
       console.log("Fetched data  " + mssg);
       if (mssg != undefined) {
@@ -300,7 +302,7 @@ app.post('/mapupload', function(req,res){
         else
           flag=false;
       }
-    });
+    });*/
     for(i=0;i<marker.length;i++)
     {
       var markerid=req.body.id+i+currenthours;
@@ -386,7 +388,8 @@ app.post('/mapsave', function(req, res){
   //Call mongodb function and save the map
   connect.addmaps('mongodb://localhost:27017/testimages',user, mapname, description,function(msg){
     if(msg!=undefined){
-       if(msg == 'add'){
+      console.log("Map returned "+msg);
+       if(msg == "add"){
          return res.end('yes');
        }
       else
@@ -428,13 +431,13 @@ app.post('/userimageupload', function(req,res){
       console.log(obj['name']);
       var dir = __dirname + '/uploads/'+obj['user'];
       var actual=__dirname+'/uploads/'+obj['user']+'/'+obj['name'];
-      if (!fs.existsSync(dir)) {      
+      if (!fs.existsSync(dir)) {
        fs.mkdirSync(dir);
         if(!fs.existsSync(actual)){
           fs.mkdirSync(actual);
-        }        
+        }
       }
-      else 
+      else
       {
         if(!fs.existsSync(actual)){
           fs.mkdirSync(actual);
@@ -553,8 +556,10 @@ socket.on('connection',function(socket){
   socket.on('ImageGall', function(msg){
     console.log("Message received"+msg.userid + msg.mapid);
     connect.getPictures("mongodb://localhost:27017/testimages", msg.userid, msg.mapid,function(picname, picpath, mapid){
-      console.log(picname+"  "+picpath+"   "+mapid);
-      socket.emit("imagereturn", {picname:picname,picpath:picpath,mapid:mapid});
+      if(picname!=undefined && picpath!= undefined && mapid!= undefined) {
+        console.log(picname + "  " + picpath + "   " + mapid);
+        socket.emit("imagereturn", {picname: picname, picpath: picpath, mapid: mapid, userid:msg.userid});
+      }
     });
 
   });
