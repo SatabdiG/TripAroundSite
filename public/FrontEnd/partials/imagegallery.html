@@ -2,7 +2,7 @@
 Uses pluginmagnific
 -->
 
-<nav  class="navbar navbar-default navbar-top" id="mapnavigation">
+<nav  class="navbar navbar-default navbar-fixed-top" id="mapnavigation">
   <div class="container-fluid">
     <ul class="nav navbar-nav navbar-left" id="maplinks">
       <li><a href="#UploadImages">Upload Images</a></li>
@@ -13,12 +13,13 @@ Uses pluginmagnific
   </div>
 </nav>
 <br>
-Welcome {{username}}
+<h3 id="dashboard">Welcome {{userid}} </h3>
 <br>
-You are viewing images of  {{map}}
-
+<br>
+<div id="mapinfo">You are viewing images of  {{map}} </div>
+<br>
+<br>
 <div class="container fluid" id="gallerycontainer">
-
   <div class="row">
     <div class="col-lg-12">
       <ul id="imagegall">

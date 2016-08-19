@@ -307,7 +307,7 @@ app.post('/mapupload', function(req,res){
     {
       var markerid=req.body.id+i+currenthours;
       console.log(marker[i]);
-      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",marker[i].id,req.body.id,req.body.name,marker[i].lat,marker[i].lon, marker[i].filename,function(mssg){
+      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",marker[i].id,req.body.id,req.body.name,marker[i].lat,marker[i].lon, marker[i].time,marker[i].filename,function(mssg){
       console.log(mssg);
         if(mssg!=undefined) {
           if (mssg == "yes")
@@ -333,13 +333,64 @@ app.post('/mapupload', function(req,res){
 });
 //Handler for drag and drop
 app.post('/dragdrop', function(req,res){
-  console.log("In drag and drop"+req.body.userid);
+  console.log("In drag and drop"+userid);
   var form=new formidable.IncomingForm();
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
   form.on('file',function(field,file){
     console.log("File Name"+file.name);
     fs.rename(file.path,path.join(form.uploadDir,file.name));
+  });
+  form.on('field', function(name,value){
+    console.log("In Drag and Drop"+ name +"  "+ value);
+
+    if(name == "mapname") {
+      var obj=JSON.parse(value);
+      console.log(obj['name']);
+      var dir = __dirname + '/uploads/'+obj['user'];
+      var actual=__dirname+'/uploads/'+obj['user']+'/'+obj['name'];
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }
+      }
+      else
+      {
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }
+      }
+      //form.uploadDir=path.join(__dirname,'/uploads');
+      form.uploadDir = actual;
+    }else
+    {
+      if(name=="userobj"){
+        //call data base to update mappings
+        var obj=JSON.parse(value);
+        var filenames=obj['filename'];
+        var mapname=obj['mapname'];
+        var userid=obj['id'];
+        var uploadpath='/uploads/'+userid+'/' + mapname;
+        var mapversion="something";
+        console.log("The value of object user"+JSON.parse(value));
+        console.log("The value of user pictures are"+obj['id']);
+        //call database and update the database
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames,uploadpath,function(msg){
+            if(msg!=undefined)
+            {
+              if(msg == "yes"){
+                console.log("Yay "+msg);
+              }else
+              {
+                console.log("Could add to user database. Check");
+              }
+            }
+          });
+        }
+
+    }
+
   });
   form.on('error',function(err){
     console.log("Error has ocurred");
@@ -544,17 +595,17 @@ socket.on('connection',function(socket){
   //Access database and retrive markers
     var userid=msg.id;
     var maps=msg.mapid;
-    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng){
-      if(lat != undefined || lng != undefined) {
+    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng,time,filename, mapid){
+      if(lat != undefined && lng != undefined) {
         console.log("Retrived   " + lat + "  " + lng);
-        socket.emit("drawmarkers", {lat: lat, lng: lng});
+        socket.emit("drawmarkers", {lat: lat, lng: lng, time:time, filename:filename, map:mapid});
       }
     });
 
   });
 
   socket.on('ImageGall', function(msg){
-    console.log("Message received"+msg.userid + msg.mapid);
+    console.log("Message received"+ msg.mapid);
     connect.getPictures("mongodb://localhost:27017/testimages", msg.userid, msg.mapid,function(picname, picpath, mapid){
       if(picname!=undefined && picpath!= undefined && mapid!= undefined) {
         console.log(picname + "  " + picpath + "   " + mapid);
@@ -566,9 +617,10 @@ socket.on('connection',function(socket){
 
   socket.on('getmaps', function(msg){
      console.log('Message received'+msg.userid);
-    connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(msg){
-      if(msg!=undefined){
-        socket.emit('viewmaps', {name:msg});
+    connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(mapname, mapdescription){
+      if(mapname!=undefined && mapdescription!=undefined){
+        console.log("Map description"+mapdescription);
+        socket.emit('viewmaps', {name:mapname, description:mapdescription});
       }
     });
   });

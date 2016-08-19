@@ -40,11 +40,11 @@ module.exports= {
     console.log("UserID"+userid);
     mongodb.connect(connectionstring,function(err,db){
       if(!err){
-        var cursor=db.collection('markercollection').find({"userid":userid});
+        var cursor=db.collection('markercollection').find({"userid":userid, "mapid":mapid});
         cursor.each(function(err,doc){
           if(doc!=null)
           {
-            callback(doc.Lat,doc.Lng);
+            callback(doc.Lat,doc.Lng,doc.time,doc.filename, doc.mapid);
           }
         });
 
@@ -55,14 +55,14 @@ module.exports= {
   getPictures:function(connectionstring, userid,mapid, callback){
     if(callback)
       callback();
-    console.log("UserID"+userid);
+    console.log("UserID"+userid+"MapId"+mapid);
     mongodb.connect(connectionstring,function(err,db){
       if(!err){
-        var cursor=db.collection('picturescollection').find({"userid":userid});
+        var cursor=db.collection('picturescollection').find({"userid":userid, "mapid":mapid});
         cursor.each(function(err,doc){
           if(doc!=null)
           {
-            console.log(doc);
+            console.log("Document"+doc);
             callback(doc.picname,doc.picpath,doc.mapid);
           }
         });
@@ -82,7 +82,7 @@ module.exports= {
           if(doc!=null)
           {
             console.log(doc);
-            callback(doc.mapname);
+            callback(doc.mapname, doc.mapdescription);
           }
         });
 
@@ -301,7 +301,7 @@ addmapversion: function (connectionstring, databasename,_mapdataversionid, _user
   });
 },
 
-addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid,filename, callback) {
+addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid,time,filename, callback) {
   if (callback) {
     callback();
   }
@@ -316,6 +316,7 @@ addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,La
         "mapid": mapid,
         "Lat": Latid,
         "Lng": Lngid,
+        "time":time,
         "filename":filename
      }, {w: 1}, function (err, records) {
 
