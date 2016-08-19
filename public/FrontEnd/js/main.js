@@ -19,6 +19,9 @@ var map;
 var usermarkers=[];
 var paths=[];
 
+//For user added paths
+var userpaths=[];
+
 
 /*** Home page initializer **/
 function homeinit(){
@@ -781,10 +784,8 @@ function imageupload() {
           bounds.extend(place.geometry.location);
         }
       });
-      map.fitBounds(bounds);
+       map.fitBounds(bounds);
     });
-
-
 
     $("#beforepagebutton").hover(function(){
       $("#beforepagebutton span").text("");
@@ -983,18 +984,11 @@ function imageupload() {
                 break loop1;
               }
            }
-
         });
-
       });
-
     }
-
   });
-
   }
-
-
 
 //Controller for Image gallery page
 function imagegallerycontroller(){
@@ -1005,6 +999,7 @@ function imagegallerycontroller(){
   else
     nomap=1;
   $(document).ready(function(){
+
      $('#imagegall').magnificPopup({
         delegate:'a',
         type:'image',
@@ -1022,9 +1017,7 @@ function imagegallerycontroller(){
          }
        }
       });
-
     //$('.blueberry').blueberry();
-
     console.log("User is logged as"+ userid);
     if(userid =="guest")
     {
@@ -1053,16 +1046,22 @@ function imagegallerycontroller(){
         var temp=document.getElementById(mssg.picname);
         if(temp == undefined)
           $('#imagegall').append('<a href="'+loc+'" id="image"><img class="images" src="'+loc+'" height="75" width="75"id="'+mssg.picname+'"></a>');
-       // $('#slides').append('<li><img src="'+loc+'"/></li>');
+
       }
     });
-    console.log("Loc  "+loc1);
+
   });
 }
 
 function airplanehandler(){
   var startpos,startend;
   var path;
+  var dashedline={
+    path: 'M 0,-1 0,1',
+    strokeOpacity: 1,
+    strokeColor:'#393',
+    scale: 5
+  };
   console.log("In airplane loop");
   var flightPlanCoordinates = [
     {lat: 37.772, lng: -122.214},
@@ -1087,21 +1086,148 @@ function airplanehandler(){
      path=new google.maps.Polyline({
       path:obj,
       editable:true,
-      map:map
+      map:map,
+       icons:[{
+        icon:dashedline,
+         offset:'0',
+         repeat:'50px'
+       }],
+       strokeColor:'#0000FF'
     });
     if(path!=undefined) {
       path.addListener("click", function (event) {
         console.log("Dragging");
       });
     }
+    airplanehandler.userpath=path;
+    userpaths.push(path);
   });
 
   map.setOptions({draggable: true});
 
 }
 
+function trainhandler(){
+  var startpos,startend;
+  var path;
+  var dashedline={
+    path: 'M 0,-1 0,1',
+    strokeOpacity: 1,
+    strokeColor:'#393',
+    scale: 5
+  };
+  console.log("In airplane loop");
+  var flightPlanCoordinates = [
+    {lat: 37.772, lng: -122.214},
+    {lat: 21.291, lng: -157.821},
+    {lat: -18.142, lng: 178.431},
+    {lat: -27.467, lng: 153.027}
+  ];
+
+  map.addListener("click",function(event){
+    var obj=[];
+    map.setOptions({draggable: false});
+    console.log(event.latLng);
+    startpos=event.latLng.lat();
+    startend=event.latLng.lng();
+    var coors=new google.maps.LatLng(startpos,startend);
+    var coorssum=new google.maps.LatLng(startpos+5,startend+5);
+    map.panTo(coors);
+    var tempobj= {lat: 37.772, lng: -122.214};
+    obj.push(coors);
+    obj.push(coorssum);
+    console.log("obj"+obj);
+    var path=new google.maps.Polyline({
+      path:obj,
+      editable:true,
+      map:map,
+      icons:[{
+        icon:dashedline,
+        offset:'0',
+        repeat:'30px'
+      }],
+      strokeColor:'#000000'
+    });
+    if(path!=undefined) {
+      path.addListener("click", function (event) {
+        console.log("Dragging");
+      });
+    }
+    trainhandler.userpath=path;
+    userpaths.push(path);
+  });
+
+  map.setOptions({draggable: true});
+
+
+}
+
+
+function bushandler()
+{
+  var startpos,startend;
+  var path;
+  var dashedline={
+    path: 'M 0,-1 0,1',
+    strokeOpacity: 1,
+    strokeColor:'#393',
+    scale: 5
+  };
+
+  console.log("In airplane loop");
+  var flightPlanCoordinates = [
+    {lat: 37.772, lng: -122.214},
+    {lat: 21.291, lng: -157.821},
+    {lat: -18.142, lng: 178.431},
+    {lat: -27.467, lng: 153.027}
+  ];
+
+  map.addListener("click",function(event){
+    var obj=[];
+    map.setOptions({draggable: false});
+    console.log(event.latLng);
+    startpos=event.latLng.lat();
+    startend=event.latLng.lng();
+    var coors=new google.maps.LatLng(startpos,startend);
+    var coorssum=new google.maps.LatLng(startpos+5,startend+5);
+    map.panTo(coors);
+    var tempobj= {lat: 37.772, lng: -122.214};
+    obj.push(coors);
+    obj.push(coorssum);
+    console.log("obj"+obj);
+    path=new google.maps.Polyline({
+      path:obj,
+      editable:true,
+      map:map,
+      icons:[{
+        icon:dashedline,
+        offset:'0',
+        repeat:'30px'
+      }],
+      strokeColor:'#4d7859'
+    });
+    if(path!=undefined) {
+      path.addListener("click", function (event) {
+        console.log("Dragging");
+      });
+    }
+    bushandler.userpath=path;
+    userpaths.push(path);
+  });
+
+  map.setOptions({draggable: true});
+
+}
 //end of the code for product html
 
+function ResetAll()
+{
+
+  for( var i=0; i< userpaths.length;i++)
+  {
+    userpaths[i].setMap(null);
+  }
+}
 //Angular js and Routing
 
 var tripapp= angular.module('tripapp', ['ngRoute']);

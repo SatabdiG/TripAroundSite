@@ -371,6 +371,7 @@ html, body {
   position: fixed;
   padding-top: 50px;
   border-left:15px;
+  padding:20px;
 }
 
 
@@ -386,6 +387,7 @@ html, body {
   position: relative;
   top:5px;
   left:20px;
+  padding:20px;
 }
 
 #cancel
@@ -399,3 +401,7 @@ html, body {
   height: 10px;
 }
 
+#maptext{
+  position: relative;
+  padding:20px;
+}

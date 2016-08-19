@@ -14,8 +14,8 @@
 <h3 id="dashboard">Welcome {{userid}} </h3>
 <br>
   <br>
-  You are viewing : {{mapname}}
-  <br>
+  <div id="mapinfo"> You are viewing : {{mapname}} </div>
+
   <br>
   <div id="manualtag" class="container-fluid">
     <div class="row">
@@ -60,8 +60,9 @@
       <tbody>
       <tr>
         <td><button type="button" class="btn btn-primary" onclick="airplanehandler()">Airplane</button></td>
-        <td><button type="button" class="btn btn-primary">Bus</button></td>
-        <td><button type="button" class="btn btn-primary">Train</button></td>
+        <td><button type="button" class="btn btn-primary" onclick="bushandler()">Bus</button></td>
+        <td><button type="button" class="btn btn-primary" onclick="trainhandler()">Train</button></td>
+        <td><button type="button" class="btn btn-primary" onclick="ResetAll()">Reset All</button></td>
       </tr>
       </tbody>
     </table>
