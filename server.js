@@ -547,7 +547,6 @@ app.post('/userdetailssave', function(req, res){
   console.log("Resgistered user details"+req.body);
   return res.end("yes");
 
-
 });
 
 //******** Socket Function to receive data *********
