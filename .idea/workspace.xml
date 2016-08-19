@@ -784,11 +784,18 @@
       <option name="project" value="LOCAL" />
       <updated>1471595428012</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Search places. &#10;Place Marker&#10;Route according to vehicles.&#10;">
+      <created>1471619634065</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1471619634065</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="374337000" />
+    <option name="totallyTimeSpent" value="374466000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
