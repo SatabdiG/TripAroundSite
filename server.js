@@ -331,6 +331,49 @@ app.post('/mapupload', function(req,res){
   }
 
 });
+
+//Handler for Map description edit
+app.post('/mapdescriptionedit', function(req, res){
+  var username=req.body.userid;
+  var mapid=req.body.mapid;
+  var newdes=req.body.text;
+  console.log("Map description"+mapid);
+  //Call MongoDb server
+  connect.updateDescription("mongodb://localhost:27017/testimages",username, mapid,newdes,function(msg){
+    if(msg!=undefined)
+    {
+      console.log("Retrived Message"+msg);
+      if(msg == "done")
+        return res.end("yes");
+      else
+        return res.end("no");
+    }
+  });
+
+});
+
+//Delete Map
+app.post("/detelemap", function(req, res){
+
+  var username=req.body.userid;
+  var delmap=req.body.mapid;
+
+  //Call mongodb delete all referneces to mongodb
+  connect.deleteallmap("mongodb://localhost:27017/testimages", username, delmap, function(msg){
+    if(msg!=undefined) {
+      console.log("Retrived message" + msg);
+      if(msg =="done")
+      {
+        return res.end("yes");
+      }
+      else
+        return res.end("no");
+    }
+  });
+
+
+});
+
 //Handler for drag and drop
 app.post('/dragdrop', function(req,res){
   console.log("In drag and drop"+userid);

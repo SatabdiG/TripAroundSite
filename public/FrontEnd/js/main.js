@@ -22,7 +22,7 @@ var paths=[];
 //For user added paths
 var userpaths=[];
 
-
+var deletemapid;
 /*** Home page initializer **/
 function homeinit(){
   //Reset Modal
@@ -80,8 +80,6 @@ function homeinit(){
         clientobj.password=$("#password").val();
         clientobj.email=$('#email').val();
         clientobj.name=$('#name').val();
-        console.log(clientobj);
-
         $.ajax({
           url:'registeruser',
           type:'POST',
@@ -212,9 +210,11 @@ function dashboardfunction(){
 
               $('#infofrm').text('Map is Saved');
               $('#infofrm').css('color', 'green');
+              $('#myModal').modal('hide');
+              $('#myModal').modal('toggle');
               window.location.href="#UploadImages";
               mapname=dat.name;
-              $('#myModal').modal('toggle');
+              //$('#myModal').modal('toggle');
               return false;
             }
             else
@@ -232,6 +232,44 @@ function dashboardfunction(){
     }
 
   });
+   //Intialize close dialog
+    var deleteflag=0;
+    $('#confirmdeletion').dialog({
+      resizeable:false,
+      height:"auto",
+      width:400,
+      modal:true,
+      buttons: {
+       "I want to delete this map":function(){
+         console.log("Clicked"+deletemapid);
+         //Send a post request to server delete all references to map and refresh page.
+         var deletedata={};
+         deletedata.userid=userid;
+         deletedata.mapid=deletemapid;
+         $.ajax({
+           url:"/detelemap",
+           type:"POST",
+           data:JSON.stringify(deletedata),
+           contentType:"application/JSON"
+
+         }).done(function(msg){
+           console.log("Message is "+msg)
+           if(msg == "yes")
+           {
+             $(this).dialog("close");
+             //Refresh the Page
+             window.location.href="#dashboard";
+           }
+         });
+       },
+        "I want to keep this map":function(){
+         $(this).dialog("close");
+        }
+
+      }
+
+      });
+    $('#confirmdeletion').dialog("close");
   //View Button
   $('#viewbutt').on('click', function(){
     console.log("Clicked on the view saved button options");
@@ -259,13 +297,62 @@ function dashboardfunction(){
           //call socket function
           socket.emit('getmaps', {userid:userid});
           socket.on('viewmaps', function(msg){
-            console.log(msg.description);
-          //Clear view map region
+           //Clear view map region
             var obj=document.getElementById(msg.name);
             if(obj == null) {
-              $('#viewmapregion').append('<div id="maps"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info">'+msg.description+'</div></div> ');
+              $('#viewmapregion').append('<div id="maps"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit Description</button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');
               $('#viewmapregion').css('color', 'green');
-              $("#cancel").hide();
+              $("#editbutton"+msg.name).on("click", function (event) {
+                if(mapname == undefined)
+                {
+                  mapname = msg.name;
+                }
+                //Make the Description editable
+                $("#EditDescription")[0].reset();
+                $("#DescriptionEdit").modal("show");
+
+                $("#descriptionsub").on("click", function(evt){
+                  evt.preventDefault();
+                  var text=$("#description").val();
+                  if(text =="")
+                  {
+                    $("#infodescrip").text("Please enter a modified description for your map");
+                    $("#infodescrip").css("color", "red");
+                  }
+                  else
+                  {
+                    var data={};
+                    data.userid=userid;
+                    data.mapid=mapname;
+                    data.text=text;
+                    $.ajax({
+                      url:"/mapdescriptionedit",
+                      type:"POST",
+                      data:JSON.stringify(data),
+                      contentType:"application/JSON",
+                    }).done(function (msg) {
+                      console.log("Msg  "+msg);
+                      if(msg == "yes")
+                      {
+                        //Update The description
+                        $("#DescriptionEdit").modal('toggle');
+                        $("#info"+msg.picname).text(text);
+                      }
+                    });
+                  }
+                });
+
+              });
+              //Code for Remove Map
+              $("#removebutton"+msg.name).on("click", function(evt){
+                if(mapname == undefined)
+                {
+                  mapname = msg.name;
+                }
+                evt.preventDefault();
+                $("#confirmdeletion").dialog("open");
+                deletemapid=msg.name;
+              });
             }
           });
         }

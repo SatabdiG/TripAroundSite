@@ -51,6 +51,50 @@ module.exports= {
       }
     });
   },
+  //Delete all references of the map
+  deleteallmap:function(connectionstring, userid, mapid, callback)
+  {
+    if(callback)
+      callback();
+
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+
+        //Delete from Mapcollection
+        db.collection("mapcollection").removeMany({"userid":userid, "mapname":mapid});
+        db.collection("markercollection").removeMany({"userid":userid, "mapid":mapid});
+        db.collection("picturescollection").removeMany({"userid":userid, "mapid":mapid});
+        return callback("done");
+      }
+    });
+
+
+  },
+
+  updateDescription:function(connectionstring, userid, mapid,usertext, callback){
+    if(callback)
+      callback();
+    //find the description
+    console.log("In update Description"+mapid);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection("mapcollection").find({"userid":userid, "mapname":mapid});
+        cursor.each(function(err,doc){
+          console.log("Update Description"+doc);
+          if(doc!=null)
+          {
+            console.log("Document ID"+doc._id+"  "+usertext);
+            var docid=doc._id;
+            db.collection("mapcollection").update({_id:docid},{$set:{"mapdescription":usertext}});
+            return callback("done");
+
+          }
+        });
+
+      }
+    });
+
+  },
 
   getPictures:function(connectionstring, userid,mapid, callback){
     if(callback)
