@@ -520,12 +520,6 @@ const detector = new SmileFaceDetector({
 
 
 app.post('/facesmiledetection',function(req,res){
-  console.log(JSON.stringify(req.body));
-  console.log(JSON.stringify(req.body.files.context.location));
-  console.log(JSON.stringify(req.body.userid));
-  console.log(JSON.stringify(req.body.filename));
-  console.log("User id"+__userid);
-  console.log(filedata);
     upload(req,res,function(err) {
       var _userid = req.body.userid;
       var _mapid= req.body.mapid;
