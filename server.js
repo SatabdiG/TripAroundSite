@@ -502,7 +502,6 @@ app.post('/userdetailssave', function(req, res){
 //******** Face Smile Detection *********
 //******** Face Smile Detection *********
 
-
 const SmileFaceDetector = require('./computerVision/SmileFaceDetector');
 //const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 10});
 
@@ -541,6 +540,12 @@ app.post('/facesmiledetection',function(req,res){
       }
       if(__userid != "guest") {
         connect.retrievevalues('mongodb://localhost:27017/testimages', 'usercollection', _mapdataversionid, _markerid,_imagename, _imagepath,_userid,_mapid, function(message){
+      var _userid = message.body.userid;
+      var _mapid= message.body.mapid;
+      var _mapdataversionid =  message.body.mapdataversionid;
+      var _markerid = message.body.markerid;
+      var _imagename= message.body.filename;
+      var _imagepath= message.body.pathid;
 
 
 /// start detecting faces for each image.
@@ -603,6 +608,38 @@ detector.load(path.join(_imagepath,_imagename)).then((image) => {
 
     });
 });
+
+
+//******** Socket Function to receive face and smile data *********
+
+//*** Receive face data ****
+  socket.on("loadFaces",function(msg){
+  //Access database and retrive markers
+    var userid=msg.id;
+    var maps=msg.mapid;
+    connect.getFaces("mongodb://localhost:27017/testimages",userid,maps,function(face){
+      if(face != undefined) {
+        console.log("Retrived   " + face);
+        socket.emit("faces", {face: face});
+      }
+    });
+
+  });
+
+//*** Receive face data ****
+  socket.on("LoadSmiles",function(msg){
+  //Access database and retrive markers
+    var userid=msg.id;
+    var maps=msg.mapid;
+    connect.getSmiles("mongodb://localhost:27017/testimages",userid,maps,function(smile){
+      if(smile != undefined) {
+        console.log("Retrived   " + smile);
+        socket.emit("smiles", {smile: smile});
+      }
+    });
+
+  });
+
 
 //******** Socket Function to receive data *********
 

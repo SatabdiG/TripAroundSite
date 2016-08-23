@@ -540,36 +540,6 @@ retrievevalues: function ( connectionstring, databasename, mapdataversionid, mar
           console.log("Database not found! error");
         }
       });
-
-retrievevalues: function ( connectionstring, databasename, mapdataversionid, markerid,_imagename, _imagepath,_userid,_mapid, callback) {
-      if (callback) {
-        callback();
-      }
-      mongodb.connect(connectionstring, function (err, db) {
-
-        var collec = db.collection('picturescollection');
-        if (collec != null) {
-          db.collection('picturescollection').find({
-            "mapdataversionid": mapdataversionid,
-            "markerid": markerid,
-            "imagename": _imagename,
-            "imagepath": _imagepath,
-            "userid": _userid,
-            "mapid": _mapid
-          },{w:1},function(err,records){
-            if(records!=null) {
-              console.log("Image Record retrieved");
-              db.close();
-            }
-            else
-              console.log("Image Cannot retrieve");
-          });
-
-        }
-        else {
-          console.log("Database not found! error");
-        }
-      });
     }
 
 
