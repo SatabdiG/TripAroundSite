@@ -572,9 +572,9 @@ detector.on('smile', (smiles, face, image) => {
   console.log(smiles);
   smiles.forEach((smile) => {
     console.log("found smile!")
-    smilevar[i]=1;
+    smilevar=1;
   });
-    connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,smilevar[i],function(message){
+    connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,smilevar,function(message){
       console.log("Message"+message);
       if(message == "yes")
         return res.end("yes");
