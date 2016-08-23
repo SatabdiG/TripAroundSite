@@ -371,6 +371,125 @@ addvalues: function (connectionstring,mapdataversionid, imagename, imagepath,use
       }
     });
   },
+
+
+//add face variable to the column of face for each image
+addface: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,facevar, callback) {
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+
+      var collec = db.collection('storedimages');
+      if (collec != null) {
+        db.collection('storedimages').insert({
+          "mapdataversionid": mapdataversionid,
+          "imagename": imagename,
+          "imagepath": imagepath,
+          "userid": userid,
+          "mapid": mapid,
+	  "face" : facevar
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Face Record added");
+            callback("yes");
+            db.close();
+          }
+          else {
+            callback("no");
+            console.log("Face Cannot add");
+          }
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+    });
+  },
+
+
+//add smile variable to the column of smile for each image
+addsmile: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,smilvar, callback) {
+
+
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+
+      var collec = db.collection('storedimages');
+      if (collec != null) {
+        db.collection('storedimages').insert({
+          "mapdataversionid": mapdataversionid,
+          "imagename": imagename,
+          "imagepath": imagepath,
+          "userid": userid,
+          "mapid": mapid,
+	  "smile" : smilevar
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Smile Record added");
+            callback("yes");
+            db.close();
+          }
+          else {
+            callback("no");
+            console.log("Smile Cannot add");
+          }
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+    });
+  },
+
+
+//retrieve face images
+getFaces: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,facevar, callback) {
+    if(callback)
+      callback();
+    console.log("UserID"+userid);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection('storedimages').find({"face":facevar});
+        cursor.each(function(err,doc){
+          if(doc!=null)
+          {
+            console.log(doc);
+            callback(doc.picname,doc.picpath,doc.mapid);
+          }
+        });
+
+      }
+    });
+  },
+
+//retrieve smile images
+addSmiles: function (connectionstring,mapdataversionid,imagename,imagepath,userid,mapid,smilevar,callback) {
+    if(callback)
+      callback();
+    console.log("UserID"+userid);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection('storeimages').find({"smile":smilevar});
+        cursor.each(function(err,doc){
+          if(doc!=null)
+          {
+            console.log(doc);
+            callback(doc.picname,doc.picpath,doc.mapid);
+          }
+        });
+
+      }
+    });
+  },
+
+
 retrievevalues: function ( connectionstring, databasename, mapdataversionid, markerid,_imagename, _imagepath,_userid,_mapid, callback) {
       if (callback) {
         callback();
