@@ -75,12 +75,12 @@ module.exports= {
     if(callback)
       callback();
     //find the description
-    console.log("In update Description"+mapid);
+     console.log("In Update Description");
     mongodb.connect(connectionstring,function(err,db){
       if(!err){
         var cursor=db.collection("mapcollection").find({"userid":userid, "mapname":mapid});
         cursor.each(function(err,doc){
-          console.log("Update Description"+doc);
+          console.log("In doc"+userid+"  "+mapid);
           if(doc!=null)
           {
             console.log("Document ID"+doc._id+"  "+usertext);

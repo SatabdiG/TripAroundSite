@@ -334,10 +334,11 @@ app.post('/mapupload', function(req,res){
 
 //Handler for Map description edit
 app.post('/mapdescriptionedit', function(req, res){
+  console.log(req.body);
   var username=req.body.userid;
   var mapid=req.body.mapid;
   var newdes=req.body.text;
-  console.log("Map description"+mapid);
+  console.log("In map description edit"+username+"  "+mapid);
   //Call MongoDb server
   connect.updateDescription("mongodb://localhost:27017/testimages",username, mapid,newdes,function(msg){
     if(msg!=undefined)

@@ -207,15 +207,12 @@ function dashboardfunction(){
           }).done(function(msg){
             console.log('Done');
             if(msg == 'yes') {
-
+              $('#myModal').modal('hide');
               $('#infofrm').text('Map is Saved');
               $('#infofrm').css('color', 'green');
-              $('#myModal').modal('hide');
-              $('#myModal').modal('toggle');
-              window.location.href="#UploadImages";
               mapname=dat.name;
-              //$('#myModal').modal('toggle');
-              return false;
+
+              //return false;
             }
             else
             {
@@ -256,9 +253,12 @@ function dashboardfunction(){
            console.log("Message is "+msg)
            if(msg == "yes")
            {
-             $(this).dialog("close");
+             console.log("Yes returned"+msg.name);
              //Refresh the Page
-             window.location.href="#dashboard";
+             if($('#confirmdeletion').dialog("isOpen"))
+               $('#confirmdeletion').dialog("close");
+
+             $('#maps'+deletemapid).remove();
            }
          });
        },
@@ -269,7 +269,8 @@ function dashboardfunction(){
       }
 
       });
-    $('#confirmdeletion').dialog("close");
+    if($('#confirmdeletion').dialog("isOpen"))
+      $('#confirmdeletion').dialog("close");
   //View Button
   $('#viewbutt').on('click', function(){
     console.log("Clicked on the view saved button options");
@@ -297,62 +298,67 @@ function dashboardfunction(){
           //call socket function
           socket.emit('getmaps', {userid:userid});
           socket.on('viewmaps', function(msg){
-           //Clear view map region
+            console.log(msg.description);
+          //Clear view map region
             var obj=document.getElementById(msg.name);
             if(obj == null) {
-              $('#viewmapregion').append('<div id="maps"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit Description</button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');
+              $('#viewmapregion').append('<div id="maps'+msg.name+'"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit </button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');
               $('#viewmapregion').css('color', 'green');
-              $("#editbutton"+msg.name).on("click", function (event) {
-                if(mapname == undefined)
-                {
-                  mapname = msg.name;
-                }
-                //Make the Description editable
-                $("#EditDescription")[0].reset();
+              var editbutt=document.getElementById("editbutton"+msg.name);
+              editbutt.addEventListener("click", function(evt){
+                console.log("Hello");
+                //launch modal
                 $("#DescriptionEdit").modal("show");
-
                 $("#descriptionsub").on("click", function(evt){
                   evt.preventDefault();
-                  var text=$("#description").val();
-                  if(text =="")
+                  console.log("Hello");
+                  var data={};
+                  if($('#description').val() == '')
                   {
-                    $("#infodescrip").text("Please enter a modified description for your map");
+                    $('#infodescrip').text("Please enter a description");
                     $("#infodescrip").css("color", "red");
-                  }
-                  else
+                  }else
                   {
                     var data={};
                     data.userid=userid;
-                    data.mapid=mapname;
-                    data.text=text;
+                    if(mapname == undefined) {
+                      data.mapid = msg.name;
+                    }else
+                      data.mapid=mapname;
+                    data.text=$('#description').val();
+                    console.log("Data  "+data.userid+"  "+data.mapid);
+                    //make a form submission
                     $.ajax({
-                      url:"/mapdescriptionedit",
-                      type:"POST",
+                      url:'/mapdescriptionedit',
+                      type:'POST',
                       data:JSON.stringify(data),
-                      contentType:"application/JSON",
-                    }).done(function (msg) {
-                      console.log("Msg  "+msg);
-                      if(msg == "yes")
+                      contentType:'application/JSON'
+                    }).done(function(msg){
+                      console.log("Returned  "+msg);
+                      if(msg=="yes")
                       {
-                        //Update The description
-                        $("#DescriptionEdit").modal('toggle');
-                        $("#info"+msg.picname).text(text);
+                        $("#DescriptionEdit").modal("hide");
+                        $('#info'+msg.info).text("Description :"+data.text);
+
                       }
                     });
                   }
                 });
 
               });
-              //Code for Remove Map
-              $("#removebutton"+msg.name).on("click", function(evt){
-                if(mapname == undefined)
-                {
-                  mapname = msg.name;
-                }
+
+
+              var removebutt=document.getElementById("removebutton"+msg.name);
+              removebutt.addEventListener("click", function(evt){
                 evt.preventDefault();
-                $("#confirmdeletion").dialog("open");
-                deletemapid=msg.name;
+                console.log("Remove clicked");
+                if(mapname == undefined) {
+                  deletemapid = msg.name;
+                }else
+                  deletemapid=mapname;
+                $('#confirmdeletion').dialog("open");
               });
+
             }
           });
         }
