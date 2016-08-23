@@ -1,5 +1,7 @@
 
 var path=require('path');
+var connect=require('./AdditionServerSide/MongoDbLib');
+
 
 const SmileFaceDetector = require('./computerVision/SmileFaceDetector');
 //const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 10});
