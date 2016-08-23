@@ -412,8 +412,6 @@ addface: function (connectionstring,mapdataversionid, imagename, imagepath,useri
 
 //add smile variable to the column of smile for each image
 addsmile: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,smilvar, callback) {
-
-
     if (callback) {
       callback();
     }
@@ -450,45 +448,98 @@ addsmile: function (connectionstring,mapdataversionid, imagename, imagepath,user
 
 
 //retrieve face images
-getFaces: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,facevar, callback) {
+getFaces: function (connectionstring,mapdataversionid, markerid, _imagename, _imagepath,_userid,_mapid,facevar, callback) {
     if(callback)
       callback();
     console.log("UserID"+userid);
-    mongodb.connect(connectionstring,function(err,db){
-      if(!err){
-        var cursor=db.collection('storedimages').find({"face":facevar});
-        cursor.each(function(err,doc){
-          if(doc!=null)
-          {
-            console.log(doc);
-            callback(doc.picname,doc.picpath,doc.mapid);
-          }
-        });
+      mongodb.connect(connectionstring, function (err, db) {
+        var collec = db.collection('storeimages');
+        if (collec != null) {
+          db.collection('storeimages').find({
+            "mapdataversionid": mapdataversionid,
+            "markerid": markerid,
+            "imagename": _imagename,
+            "imagepath": _imagepath,
+            "userid": _userid,
+            "mapid": _mapid,
+	    "face":facevar
+          },{w:1},function(err,records){
+            if(records!=null) {
+              console.log("Smile Record retrieved");
+              db.close();
+            }
+            else
+              console.log("Smile Cannot retrieve");
+          });
 
-      }
-    });
+        }
+        else {
+          console.log("Database not found! error");
+        }
+      });
   },
 
 //retrieve smile images
-addSmiles: function (connectionstring,mapdataversionid,imagename,imagepath,userid,mapid,smilevar,callback) {
+getSmiles: function (connectionstring,mapdataversionid, markerid, _imagename, _imagepath,_userid,_mapid,smilevar, callback) {
     if(callback)
       callback();
     console.log("UserID"+userid);
-    mongodb.connect(connectionstring,function(err,db){
-      if(!err){
-        var cursor=db.collection('storeimages').find({"smile":smilevar});
-        cursor.each(function(err,doc){
-          if(doc!=null)
-          {
-            console.log(doc);
-            callback(doc.picname,doc.picpath,doc.mapid);
-          }
-        });
+      mongodb.connect(connectionstring, function (err, db) {
+        var collec = db.collection('storeimages');
+        if (collec != null) {
+          db.collection('storeimages').find({
+            "mapdataversionid": mapdataversionid,
+            "markerid": markerid,
+            "imagename": _imagename,
+            "imagepath": _imagepath,
+            "userid": _userid,
+            "mapid": _mapid,
+	    "smile":smilevar
+          },{w:1},function(err,records){
+            if(records!=null) {
+              console.log("Smile Record retrieved");
+              db.close();
+            }
+            else
+              console.log("Smile Cannot retrieve");
+          });
 
-      }
-    });
+        }
+        else {
+          console.log("Database not found! error");
+        }
+      });
   },
 
+retrievevalues: function ( connectionstring, databasename, mapdataversionid, markerid,_imagename, _imagepath,_userid,_mapid, callback) {
+      if (callback) {
+        callback();
+      }
+      mongodb.connect(connectionstring, function (err, db) {
+
+        var collec = db.collection('picturescollection');
+        if (collec != null) {
+          db.collection('picturescollection').find({
+            "mapdataversionid": mapdataversionid,
+            "markerid": markerid,
+            "imagename": _imagename,
+            "imagepath": _imagepath,
+            "userid": _userid,
+            "mapid": _mapid
+          },{w:1},function(err,records){
+            if(records!=null) {
+              console.log("Image Record retrieved");
+              db.close();
+            }
+            else
+              console.log("Image Cannot retrieve");
+          });
+
+        }
+        else {
+          console.log("Database not found! error");
+        }
+      });
 
 retrievevalues: function ( connectionstring, databasename, mapdataversionid, markerid,_imagename, _imagepath,_userid,_mapid, callback) {
       if (callback) {
