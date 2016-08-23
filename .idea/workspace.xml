@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0152ce83-d44d-4376-a704-348c55ff3d1b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/css/main.css" afterPath="$PROJECT_DIR$/public/FrontEnd/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/js/main.js" afterPath="$PROJECT_DIR$/public/FrontEnd/js/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/FrontEnd/partials/map.html" afterPath="$PROJECT_DIR$/public/FrontEnd/partials/map.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
     </list>
     <ignored path="TripAroundSite.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -493,14 +489,7 @@
       <workItem from="1471511165632" duration="22844000" />
       <workItem from="1471594922614" duration="45000" />
       <workItem from="1471857092520" duration="14414000" />
-      <workItem from="1471948656587" duration="9594000" />
-    </task>
-    <task id="LOCAL-00004" summary="Fixed Drag and Drop form control">
-      <created>1467970140087</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1467970140087</updated>
+      <workItem from="1471948656587" duration="9766000" />
     </task>
     <task id="LOCAL-00005" summary="Db name and db file save">
       <created>1467971057345</created>
@@ -838,11 +827,18 @@
       <option name="project" value="LOCAL" />
       <updated>1471954717806</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Edit Description of Maps&#10;Remove Maps&#10;">
+      <created>1471958586631</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1471958586631</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="404609000" />
+    <option name="totallyTimeSpent" value="404781000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
