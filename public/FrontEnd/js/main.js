@@ -236,6 +236,7 @@ function dashboardfunction(){
       height:"auto",
       width:400,
       modal:true,
+      autoOpen:false,
       buttons: {
        "I want to delete this map":function(){
          console.log("Clicked"+deletemapid);
@@ -567,18 +568,7 @@ function imagecontroller(){
         var filename=[];
         var formelement=document.getElementById('userphoto');
         var fileemenet=formelement.files;
-        if(fileemenet.length>0)
-        {
-          for(var i=0;i<fileemenet.length;i++)
-          {
-            var filetmp=fileemenet[i];
-            form.append('uploads[]',filetmp,filetmp.name);
-            filename.push(filetmp.name);
-            picobj=filetmp.name;
-            var time=EXIF.getTag(filetmp,"DateTime");
-            console.log("Date Time"+time);
-          }
-        }
+        console.log("Length  "+fileemenet.length);
         var userpic={};
         userpic.filename=filename;
         userpic.id=userid;
@@ -589,6 +579,19 @@ function imagecontroller(){
         form.append('userobj',JSON.stringify(userpic));
         form.append('mapname',JSON.stringify(mapnameobj));
         console.log("Map name"+mapname);
+        if(fileemenet.length>0)
+        {
+          for(var i=0;i<fileemenet.length;i++)
+          {
+            var filetmp=fileemenet[i];
+            console.log("File name"+filetmp.name);
+            form.append('uploads[]',filetmp,filetmp.name);
+            filename.push(filetmp.name);
+            picobj=filetmp.name;
+            var time=EXIF.getTag(filetmp,"DateTime");
+            console.log("Date Time"+time);
+          }
+        }
         $.ajax({
           url:"/userimageupload",
           type:"POST",
@@ -959,7 +962,9 @@ function imageupload() {
           console.log("Image Source"+src);
           $('#image-container').append('<img class="imageholder" src="uploads/'+userid+'/'+msg.filename+'"</img>');
           $('#myModal').modal('show');
-
+          $("#imagedescriptionsub").on("click", function(evt){
+            console.log("Submit button Clicked");
+          });
         });
         markerarray.push(marker);
         var linesymbol={

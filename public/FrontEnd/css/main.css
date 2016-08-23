@@ -361,7 +361,7 @@ html, body {
 }
 
 #viewmapregion{
-  position: absolute;
+  position: fixed;
   padding: 50px;
   top:300px;
 

@@ -518,6 +518,8 @@ app.post('/userimageupload', function(req,res){
   var form=new formidable.IncomingForm();
   var mapname;
   var dir;
+  var filenames;
+  var uploaddir;
   form.multiple=true;
   form.on('field',function(name,value){
     console.log("Response  "+name+":"+value);
@@ -545,7 +547,7 @@ app.post('/userimageupload', function(req,res){
       if(name=="userobj"){
         //call data base to update mappings
         var obj=JSON.parse(value);
-        var filenames=obj['filename'];
+        filenames=obj['filename'];
         var mapname=obj['mapname'];
         var userid=obj['id'];
         var uploadpath='/uploads/'+userid+'/' + mapname;
@@ -573,6 +575,7 @@ app.post('/userimageupload', function(req,res){
   });
 
   form.on('file',function(field,file){
+    console.log("File name"+file.path+"  "+path.join(form.uploadDir,file.name));
     fs.rename(file.path,path.join(form.uploadDir,file.name));
   });
   form.on('error',function(err){

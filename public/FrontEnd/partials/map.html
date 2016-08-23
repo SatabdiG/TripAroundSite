@@ -1,6 +1,6 @@
 <!-- Description : User can drag drop images to images -->
 
-  <nav  class="navbar navbar-default navbar-fixed-top" id="mapnavigation">
+<nav  class="navbar navbar-default navbar-fixed-top" id="mapnavigation">
     <div class="container-fluid">
       <ul class="nav navbar-nav navbar-left" id="maplinks">
         <li><a href="#UploadImages">Upload Images</a></li>
@@ -46,9 +46,13 @@
         </div>
         <div class="modal-body">
          <div id="image-container"></div>
+          <form id="imagedescription">
+            <input type="text" placeholder=" Enter Description" id="imageinfo">
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" id="imagedescriptionsub">Submit</button>
         </div>
       </div>
     </div>
