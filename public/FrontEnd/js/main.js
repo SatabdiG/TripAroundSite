@@ -1084,6 +1084,7 @@ function imageupload() {
            }
         });
       });
+
     }
   });
   }
@@ -1097,6 +1098,39 @@ function imagegallerycontroller(){
   else
     nomap=1;
   $(document).ready(function(){
+     //Launch Filters modal
+
+    $('#filters').on("click", function(evt){
+      console.log("Filters modal opened");
+      //display the filters
+      $('#filtermodal').modal("show");
+      //smile check function
+      $('#smilecheck').on("click", function (evt) {
+        evt.preventDefault();
+        $('#smilecheck').attr("checked", true);
+        console.log("Smile checked clicked");
+        //call the server function
+        var data={};
+        data.userid=userid;
+        data.mapid=mapname;
+        $.ajax({
+          url:'/facesmiledetection',
+          data:JSON.stringify(data),
+          method:'POST',
+          contentType:'application/JSON'
+        }).done(function(msg){
+          console.log("Message Returned"+msg);
+        });
+
+      });
+      //face check  function
+      $('#facecheck').on("click", function(evt){
+        evt.preventDefault();
+        console.log("Face check detected");
+
+      });
+
+    });
 
      $('#imagegall').magnificPopup({
         delegate:'a',
@@ -1144,6 +1178,8 @@ function imagegallerycontroller(){
         var temp=document.getElementById(mssg.picname);
         if(temp == undefined)
           $('#imagegall').append('<a href="'+loc+'" id="image"><img class="images" src="'+loc+'" height="75" width="75"id="'+mssg.picname+'"></a>');
+
+
 
       }
     });

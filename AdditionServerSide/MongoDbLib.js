@@ -205,6 +205,79 @@ module.exports= {
       }
     });
   },
+
+  //add face to database
+  //add face variable to the column of face for each image
+  addface: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,facevar, callback) {
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+
+      var collec = db.collection('storedimages');
+      if (collec != null) {
+        db.collection('storedimages').insert({
+          "mapdataversionid": mapdataversionid,
+          "imagename": imagename,
+          "imagepath": imagepath,
+          "userid": userid,
+          "mapid": mapid,
+          "face" : facevar
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Face Record added");
+            callback("yes");
+            db.close();
+          }
+          else {
+            callback("no");
+            console.log("Face Cannot add");
+          }
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+    });
+  },
+  //add smile to database
+  //add smile variable to the column of smile for each image
+  addsmile: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,smilvar, callback) {
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+
+      var collec = db.collection('storedimages');
+      if (collec != null) {
+        db.collection('storedimages').insert({
+          "mapdataversionid": mapdataversionid,
+          "imagename": imagename,
+          "imagepath": imagepath,
+          "userid": userid,
+          "mapid": mapid,
+          "smile" : smilevar
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Smile Record added");
+            callback("yes");
+            db.close();
+          }
+          else {
+            callback("no");
+            console.log("Smile Cannot add");
+          }
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+    });
+  },
   //Save Maps to database
   addmaps:function (connectionstring,userid, mapname, mapdescription, callback) {
 

@@ -18,6 +18,7 @@ Uses pluginmagnific
 <br>
 <div id="mapinfo">You are viewing images of  {{map}} </div>
 <br>
+
 <br>
 <div class="container fluid" id="gallerycontainer">
   <div class="row">
@@ -39,3 +40,30 @@ Uses pluginmagnific
 <button class="button" id="beforepagebutton"><span> < </span></button>
 
 
+<!-- Filter Modal For Face Detection-->
+
+<div class="modal fade" id="filtermodal" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Tagged Image</h4>
+      </div>
+      <div class="modal-body">
+        <form id="filterform">
+          <div class="checkbox">
+            <label><input type="checkbox" id="smilecheck" value="">Check for Smiles</label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" id="facecheck" value="">Check for face</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button id="filters">Apply filters</button>
