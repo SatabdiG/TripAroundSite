@@ -134,7 +134,6 @@ html, body {
   position: relative;
   width: 100%;
   padding: 20px;
-  height:1000px;
 }
 
 .lists{
@@ -326,7 +325,8 @@ html, body {
 
 #savemap{
   position: relative;
-  padding: 30px;
+  padding: 10px;
+
 }
 
 .label{
@@ -364,5 +364,49 @@ html, body {
   position: fixed;
   padding: 50px;
   top:300px;
+
+}
+
+#dashboard{
+  position: fixed;
+  padding-top: 50px;
+  border-left:15px;
+  padding:20px;
+}
+
+
+#imagegall
+{
+  position: fixed;
+  padding-top:50px ;
+  top:90px;
+  left:20px;
+}
+
+#mapinfo{
+  position: relative;
+  top:5px;
+  left:20px;
+  padding:20px;
+}
+
+#cancel
+{
+  position: relative;
+  padding-right: 15px;
+}
+
+#optionsfooter{
+  position: relative;
+  height: 10px;
+}
+
+#maptext{
+  position: relative;
+  padding:20px;
+}
+
+#editbutton{
+  position: relative;
 
 }

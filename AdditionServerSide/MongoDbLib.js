@@ -40,29 +40,73 @@ module.exports= {
     console.log("UserID"+userid);
     mongodb.connect(connectionstring,function(err,db){
       if(!err){
-        var cursor=db.collection('markercollection').find({"userid":userid});
+        var cursor=db.collection('markercollection').find({"userid":userid, "mapid":mapid});
         cursor.each(function(err,doc){
           if(doc!=null)
           {
-            callback(doc.Lat,doc.Lng);
+            callback(doc.Lat,doc.Lng,doc.time,doc.filename, doc.mapid);
           }
         });
 
       }
     });
   },
+  //Delete all references of the map
+  deleteallmap:function(connectionstring, userid, mapid, callback)
+  {
+    if(callback)
+      callback();
+
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+
+        //Delete from Mapcollection
+        db.collection("mapcollection").removeMany({"userid":userid, "mapname":mapid});
+        db.collection("markercollection").removeMany({"userid":userid, "mapid":mapid});
+        db.collection("picturescollection").removeMany({"userid":userid, "mapid":mapid});
+        return callback("done");
+      }
+    });
+
+
+  },
+
+  updateDescription:function(connectionstring, userid, mapid,usertext, callback){
+    if(callback)
+      callback();
+    //find the description
+     console.log("In Update Description");
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection("mapcollection").find({"userid":userid, "mapname":mapid});
+        cursor.each(function(err,doc){
+          console.log("In doc"+userid+"  "+mapid);
+          if(doc!=null)
+          {
+            console.log("Document ID"+doc._id+"  "+usertext);
+            var docid=doc._id;
+            db.collection("mapcollection").update({_id:docid},{$set:{"mapdescription":usertext}});
+            return callback("done");
+
+          }
+        });
+
+      }
+    });
+
+  },
 
   getPictures:function(connectionstring, userid,mapid, callback){
     if(callback)
       callback();
-    console.log("UserID"+userid);
+    console.log("UserID"+userid+"MapId"+mapid);
     mongodb.connect(connectionstring,function(err,db){
       if(!err){
-        var cursor=db.collection('picturescollection').find({"userid":userid});
+        var cursor=db.collection('picturescollection').find({"userid":userid, "mapid":mapid});
         cursor.each(function(err,doc){
           if(doc!=null)
           {
-            console.log(doc);
+            console.log("Document"+doc);
             callback(doc.picname,doc.picpath,doc.mapid);
           }
         });
@@ -82,7 +126,7 @@ module.exports= {
           if(doc!=null)
           {
             console.log(doc);
-            callback(doc.mapname);
+            callback(doc.mapname, doc.mapdescription);
           }
         });
 
@@ -158,6 +202,79 @@ module.exports= {
           }
         });
 
+      }
+    });
+  },
+
+  //add face to database
+  //add face variable to the column of face for each image
+  addface: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,facevar, callback) {
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+
+      var collec = db.collection('storedimages');
+      if (collec != null) {
+        db.collection('storedimages').insert({
+          "mapdataversionid": mapdataversionid,
+          "imagename": imagename,
+          "imagepath": imagepath,
+          "userid": userid,
+          "mapid": mapid,
+          "face" : facevar
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Face Record added");
+            callback("yes");
+            db.close();
+          }
+          else {
+            callback("no");
+            console.log("Face Cannot add");
+          }
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
+      }
+    });
+  },
+  //add smile to database
+  //add smile variable to the column of smile for each image
+  addsmile: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,smilvar, callback) {
+    if (callback) {
+      callback();
+    }
+    mongodb.connect(connectionstring, function (err, db) {
+
+      var collec = db.collection('storedimages');
+      if (collec != null) {
+        db.collection('storedimages').insert({
+          "mapdataversionid": mapdataversionid,
+          "imagename": imagename,
+          "imagepath": imagepath,
+          "userid": userid,
+          "mapid": mapid,
+          "smile" : smilevar
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Smile Record added");
+            callback("yes");
+            db.close();
+          }
+          else {
+            callback("no");
+            console.log("Smile Cannot add");
+          }
+        });
+
+      }
+      else {
+        console.log("Database not found! error");
       }
     });
   },
@@ -240,9 +357,11 @@ module.exports= {
     if (callback) {
       callback();
     }
+
     mongodb.connect(connectionstring, function (err, db) {
       var collec = db.collection('picturescollection');
       if (collec != null) {
+        console.log("In store Images");
         db.collection('picturescollection').insert({
           "mapdataversionid": mapdataversionid,
           "mapid": mapid,
@@ -301,7 +420,7 @@ addmapversion: function (connectionstring, databasename,_mapdataversionid, _user
   });
 },
 
-addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid,filename, callback) {
+addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,Latid,Lngid,time,filename, callback) {
   if (callback) {
     callback();
   }
@@ -316,6 +435,7 @@ addmarkers: function (connectionstring,mapdataversionid,markerid,userid,mapid,La
         "mapid": mapid,
         "Lat": Latid,
         "Lng": Lngid,
+        "time":time,
         "filename":filename
      }, {w: 1}, function (err, records) {
 
@@ -371,146 +491,6 @@ addvalues: function (connectionstring,mapdataversionid, imagename, imagepath,use
       }
     });
   },
-
-
-//add face variable to the column of face for each image
-addface: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,facevar, callback) {
-    if (callback) {
-      callback();
-    }
-    mongodb.connect(connectionstring, function (err, db) {
-
-      var collec = db.collection('storedimages');
-      if (collec != null) {
-        db.collection('storedimages').insert({
-          "mapdataversionid": mapdataversionid,
-          "imagename": imagename,
-          "imagepath": imagepath,
-          "userid": userid,
-          "mapid": mapid,
-	  "face" : facevar
-        }, {w: 1}, function (err, records) {
-
-          if (records != null) {
-            console.log("Face Record added");
-            callback("yes");
-            db.close();
-          }
-          else {
-            callback("no");
-            console.log("Face Cannot add");
-          }
-        });
-
-      }
-      else {
-        console.log("Database not found! error");
-      }
-    });
-  },
-
-
-//add smile variable to the column of smile for each image
-addsmile: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,smilvar, callback) {
-    if (callback) {
-      callback();
-    }
-    mongodb.connect(connectionstring, function (err, db) {
-
-      var collec = db.collection('storedimages');
-      if (collec != null) {
-        db.collection('storedimages').insert({
-          "mapdataversionid": mapdataversionid,
-          "imagename": imagename,
-          "imagepath": imagepath,
-          "userid": userid,
-          "mapid": mapid,
-	  "smile" : smilevar
-        }, {w: 1}, function (err, records) {
-
-          if (records != null) {
-            console.log("Smile Record added");
-            callback("yes");
-            db.close();
-          }
-          else {
-            callback("no");
-            console.log("Smile Cannot add");
-          }
-        });
-
-      }
-      else {
-        console.log("Database not found! error");
-      }
-    });
-  },
-
-
-//retrieve face images
-getFaces: function (connectionstring,mapdataversionid, markerid, _imagename, _imagepath,_userid,_mapid,facevar, callback) {
-    if(callback)
-      callback();
-    console.log("UserID"+userid);
-      mongodb.connect(connectionstring, function (err, db) {
-        var collec = db.collection('storeimages');
-        if (collec != null) {
-          db.collection('storeimages').find({
-            "mapdataversionid": mapdataversionid,
-            "markerid": markerid,
-            "imagename": _imagename,
-            "imagepath": _imagepath,
-            "userid": _userid,
-            "mapid": _mapid,
-	    "face":facevar
-          },{w:1},function(err,records){
-            if(records!=null) {
-              console.log("Smile Record retrieved");
-              db.close();
-            }
-            else
-              console.log("Smile Cannot retrieve");
-          });
-
-        }
-        else {
-          console.log("Database not found! error");
-        }
-      });
-  },
-
-//retrieve smile images
-getSmiles: function (connectionstring,mapdataversionid, markerid, _imagename, _imagepath,_userid,_mapid,smilevar, callback) {
-    if(callback)
-      callback();
-    console.log("UserID"+userid);
-      mongodb.connect(connectionstring, function (err, db) {
-        var collec = db.collection('storeimages');
-        if (collec != null) {
-          db.collection('storeimages').find({
-            "mapdataversionid": mapdataversionid,
-            "markerid": markerid,
-            "imagename": _imagename,
-            "imagepath": _imagepath,
-            "userid": _userid,
-            "mapid": _mapid,
-	    "smile":smilevar
-          },{w:1},function(err,records){
-            if(records!=null) {
-              console.log("Smile Record retrieved");
-              db.close();
-            }
-            else
-              console.log("Smile Cannot retrieve");
-          });
-
-        }
-        else {
-          console.log("Database not found! error");
-        }
-      });
-  },
-
 retrievevalues: function ( connectionstring, databasename, mapdataversionid, markerid,_imagename, _imagepath,_userid,_mapid, callback) {
       if (callback) {
         callback();

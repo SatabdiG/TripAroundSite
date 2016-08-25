@@ -12,8 +12,7 @@
 </nav>
 
 <br>
-Welcome {{userid}}
-
+<h3 id="dashboard">Welcome {{userid}} </h3>
 <br>
 <div id="info"></div>
 <br>
@@ -28,9 +27,7 @@ Welcome {{userid}}
       <!--View Saved Maps -->
       <a class="button" href="" id="viewbutt" ><i class="fa fa-map fa-3x"></i> Click here to View Saved Maps </a>
     </div>
-
   </div>
-
 </div>
 <!-- User can create a new map -->
 
@@ -87,4 +84,34 @@ Welcome {{userid}}
 
 </div>
 
+<!-- Modal for Editing the description -->
 
+<div id="DescriptionEdit" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create New Map</h4>
+      </div>
+      <div class="modal-body">
+        <form id="EditDescription">
+          <div id="infodescrip"></div>
+          <div class="form-group">
+            <label for="description">Enter Suitable description</label>
+            <input type="text" id="description" class="form-control" placeholder="Enter another description">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="descriptionsub">Submit Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="confirmdeletion" title="Delete the Map">
+  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>This map will be permanently deleted and cannot be recovered. Are you sure?</p>
+</div>

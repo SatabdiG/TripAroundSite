@@ -6,13 +6,15 @@
       <li><a href="#UploadImages">Upload Images</a></li>
       <li><a href="#ViewImages">View Uploaded Images</a></li>
       <li><a href="#imagegallery">Browse Image gallery</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
     </ul>
   </div>
 </nav>
-
-<h4> Welcome {{username}}</h4>
 <br>
-<h5> You are uploading images to : {{map}}</h5>
+<h3 id="dashboard">Welcome {{userid}} </h3>
+<br>
+<br>
+<h5><div id="maptext"> You are uploading images to : {{map}}</div></h5>
 
 <div class="imageupload">
   <div class="container-fluid">
@@ -24,9 +26,10 @@
              <div class="col-sm-6">
                <p> <input type="file" name="userPhoto" multiple id="userphoto" /> </p>
              </div>
+          <!--
              <div class="col-sm-6">
                <p> <input type="submit" value="Upload Image" name="submit" id="submitbutton"></p>
-             </div>
+             </div> -->
              <div id="dropzonePreview" class="dropzone">
                <div class="dz-default dz-message"> <small class="text-muted">Drag Drop Pictures here </small></div>
              </div>

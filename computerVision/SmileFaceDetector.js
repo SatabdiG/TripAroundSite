@@ -10,11 +10,18 @@ const redColor = [0, 0, 255];
 const rectThickness = 2;
 const faceClassifier = new opencv.CascadeClassifier(opencv.FACE_CASCADE);
 const smileClassifier = new opencv.CascadeClassifier(path.join(__dirname, './data/haarcascade_smile.xml'));
+
+
 const defaultFaceScale = 1.05;
 const defaultFaceNeighbor = 8;
 const defaultSmileScale = 1.7;
 const defaultSmileNeighbor = 22;
 
+
+const defaultkissScale = 1.7;
+const defaultkissNeighbor = 22;
+
+this.lefteyeScale, this.lefteyeNeighbor
 class SmileFaceDetector extends EventEmitter {
 
   constructor(obj) {
@@ -24,11 +31,18 @@ class SmileFaceDetector extends EventEmitter {
     this.faceNeighbor = obj.faceNeighbor || defaultFaceNeighbor;
     this.smileScale = obj.smileScale || defaultSmileScale;
     this.smileNeighbor = obj.smileNeighbor || defaultSmileNeighbor;
+
+
+
   }
 
   load(image) {
     return new Promise((resolve, reject) => {
       opencv.readImage(image, (err, image) => {
+        if (image.width() < 1 || image.height() < 1) throw new Error('Image has no size');
+	image.resize(600, 500, function(err, image){
+		if (err) throw err;
+	});
         if (err) return reject(err);
         resolve(image);
       });

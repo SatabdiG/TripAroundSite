@@ -1,11 +1,6 @@
 {
-  "name": "trip-around",
+  "name": "file_upload",
   "version": "0.0.1",
-  "description": "Trip around",
-  "main": "server.js",
-  "scripts": {
-    "test": "eater"
-  },
   "dependencies": {
     "body-parser": "^1.14.2",
     "express": "4.13.3",
@@ -13,19 +8,9 @@
     "mongodb": "^2.1.18",
     "mongoose": "^4.5.3",
     "multer": "1.1.0",
-    "async": "^1.4.2",
-    "busboy": "^0.2.9",
-    "connect-busboy": "0.0.2",
-    "easyimage": "^2.0.3",
-    "express-handlebars": "^2.0.1",
-    "lodash": "^3.10.1",
-    "opencv": "^5.0.0",
-    "socket.io": "^1.4.8",
-    "leaflet":"1.0.0-rc.3",
-    "leaflet.markercluster":"1.0.0-rc.1.0 "
+    "socket.io": "^1.4.8"
   },
   "devDependencies": {
-    "eater": "^1.7.0",
     "should": "~7.1.0",
     "mocha": "~2.3.3",
     "supertest": "~1.1.0"
