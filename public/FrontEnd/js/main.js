@@ -784,15 +784,19 @@ function initialize(){
 function placemarker(location, src){
   var markercoor=[];
   var tempobj={};
-  tempobj.src=src;
+  var filename=src.split('/');
+  var actual=filename[filename.length-1];
+  console.log("actua"+actual+"  "+filename);
+  tempobj.filename=actual;
 
   console.log("In place marker"+src);
   var marker=new google.maps.Marker({
     position:location,
   });
-  tempobj.lat=location.lat;
-  tempobj.lng=location.lng;
-  console.log("The lat object is"+ tempobj.lat);
+
+  tempobj.lat=marker.getPosition().lat();
+  tempobj.lng=marker.getPosition().lng();
+  console.log("The lat object is"+ src);
   userarray.push(JSON.stringify(tempobj));
   marker.setMap(map);
   marker.addListener('click',function () {
@@ -1326,7 +1330,7 @@ function SaveData(){
       sendobj.filename=obj.filename;
       sendobj.lat=obj.lat;
       sendobj.lon=obj.lng;
-      console.log("Built send obg"+sendobj);
+      console.log("Built send obg"+sendobj.filename);
 
       $.ajax({
         url:('/usermarkersave'),

@@ -676,7 +676,7 @@ app.post('/facesmiledetection',function(req,res){
                 facevar = 1;
               });
 
-              /*
+
                connect.addface('mongodb://localhost:27017/testimages', 'storeimages', _mapdataversionid, _markerid, _imagename, _imagepath, _userid, _mapid, facevar, function (message) {
                console.log("Message" + message);
                if (message == "yes")
@@ -684,7 +684,7 @@ app.post('/facesmiledetection',function(req,res){
                else
                return res.end("no");
                });
-               */
+
             });
             //start detecting smiles for each image.
             detector.on('smile', (smiles, face, image) => {
