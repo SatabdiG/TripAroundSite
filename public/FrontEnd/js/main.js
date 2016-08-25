@@ -12,6 +12,8 @@ var userid;
 var password;
 var markers=[];
 var markerarray=[];
+//For user markers
+var userarray=[];
 var loc1=[];
 var nomap=0;
 var map;
@@ -570,13 +572,12 @@ function imagecontroller(){
         var fileemenet=formelement.files;
         console.log("Length  "+fileemenet.length);
         var userpic={};
-        userpic.filename=filename;
+
         userpic.id=userid;
         userpic.mapname=mapname;
         var mapnameobj={};
         mapnameobj.user=userid;
         mapnameobj.name=mapname;
-        form.append('userobj',JSON.stringify(userpic));
         form.append('mapname',JSON.stringify(mapnameobj));
         console.log("Map name"+mapname);
         if(fileemenet.length>0)
@@ -592,6 +593,10 @@ function imagecontroller(){
             console.log("Date Time"+time);
           }
         }
+        console.log("Filename"+filename);
+        userpic.filename=filename;
+        form.append('userobj',JSON.stringify(userpic));
+
         $.ajax({
           url:"/userimageupload",
           type:"POST",
@@ -778,11 +783,17 @@ function initialize(){
 
 function placemarker(location, src){
   var markercoor=[];
-  console.log("In place marker"+location);
+  var tempobj={};
+  tempobj.src=src;
+
+  console.log("In place marker"+src);
   var marker=new google.maps.Marker({
     position:location,
   });
-  markerarray.push(marker);
+  tempobj.lat=location.lat;
+  tempobj.lng=location.lng;
+  console.log("The lat object is"+ tempobj.lat);
+  userarray.push(JSON.stringify(tempobj));
   marker.setMap(map);
   marker.addListener('click',function () {
     console.log("Image Source"+src);
@@ -867,6 +878,7 @@ function imageupload() {
         };
 
         // Create a marker for each place.
+        userarray.push(markers);
         markers.push(new google.maps.Marker({
           map: map,
           title: place.name,
@@ -1293,6 +1305,52 @@ function trainhandler(){
 
   map.setOptions({draggable: true});
 
+
+}
+
+function SaveData(){
+  console.log("In save data "+userarray.length);
+  if(userarray.length<1)
+  {
+    $("#mapinfosec").text("Please click a picture to get a draggable marker");
+
+  }else
+  {
+    //the user has created some markers save the markers
+    for(var i=0;i<userarray.length;i++)
+    {
+      var obj=JSON.parse(userarray[i]);
+      var sendobj={};
+      sendobj.userid=userid;
+      sendobj.mapname=mapname;
+      sendobj.filename=obj.filename;
+      sendobj.lat=obj.lat;
+      sendobj.lon=obj.lng;
+      console.log("Built send obg"+sendobj);
+
+      $.ajax({
+        url:('/usermarkersave'),
+        method:'POST',
+        data:JSON.stringify(sendobj),
+        contentType:'application/JSON'
+      }).done(function(msg){
+        console.log("Returned message"+msg);
+        if(msg == "yes")
+        {
+          $('#mapinfosec').text("Your Map data was saved");
+          $('#mapinfosec').css("color", "green");
+        }
+        else
+        {
+          $('#mapinfosec').text("Your Map data was not saved");
+          $('#mapinfosec').css("color", "red");
+        }
+      });
+
+    }
+
+
+  }
 
 }
 

@@ -16,6 +16,8 @@
 <br>
 <div id="mapinfo"> You are viewing : {{mapname}} </div>
 <br>
+<div id="mapinfosec"></div>
+<br>
 <div id="manualtag" class="container-fluid">
     <div class="row">
      <div class="col-lg-4" id="imagethumb">
@@ -35,7 +37,6 @@
 
 
 <input id="searchbox" class="controls" type="text" placeholder="Search Box">
-
 <!--Modal Window -->
     <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
@@ -58,7 +59,6 @@
       </div>
     </div>
   </div>
-
 <div class="container-fluid">
   <table class="table-responsive">
     <table class="table">
@@ -68,6 +68,7 @@
         <td><button type="button" class="btn btn-primary" onclick="bushandler()">Bus</button></td>
         <td><button type="button" class="btn btn-primary" onclick="trainhandler()">Train</button></td>
         <td><button type="button" class="btn btn-primary" onclick="ResetAll()">Reset All</button></td>
+        <td><button type="button" class="btn btn-primary" onclick="SaveData()">Save Data</button></td>
       </tr>
       </tbody>
     </table>

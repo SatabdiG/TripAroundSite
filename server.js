@@ -300,6 +300,32 @@ app.post('/guestdetailssave',function(req,res){
   }
 });
 
+//User created markers save
+
+app.post('/usermarkersave', function(req, res){
+  var userid=req.body.userid;
+  var mapid=req.body.mapname;
+  var filename=req.body.filename;
+  var lat=req.body.lat;
+  var lon=req.body.lon;
+  var date=new Date();
+  var currenthours=date.getMinutes();
+  var markerid=req.body.userid+currenthours;
+
+  connect.addmarkers("mongodb://localhost:27017/testimages","someversion",markerid,userid,mapid,lat,lon, currenthours,filename,function(mssg){
+    if(mssg!=undefined)
+    {
+      console.log("Retrived mssg"+mssg);
+      if(mssg == "yes")
+        return res.end("yes");
+      else
+        return res.end("no");
+    }
+  });
+
+
+});
+
 //** upload and save map coordinates
 app.post('/mapupload', function(req,res){
   var flag=true;
@@ -566,16 +592,16 @@ app.post('/userimageupload', function(req,res){
       if(name=="userobj"){
         //call data base to update mappings
         var obj=JSON.parse(value);
-        filenames=obj['filename'];
+        var filenames=obj['filename'];
         var mapname=obj['mapname'];
         var userid=obj['id'];
         var uploadpath='/uploads/'+userid+'/' + mapname;
         var mapversion="something";
-        console.log("The value of object user"+JSON.parse(value));
-        console.log("The value of user pictures are"+obj['id']);
+        console.log("The value of user pictures are"+obj);
         //call database and update the database
         for(var i=0;i<filenames.length;i++)
         {
+          console.log("The filename is"+filenames[i]);
           connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,function(msg){
             if(msg!=undefined)
             {
