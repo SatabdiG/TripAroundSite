@@ -357,10 +357,11 @@ module.exports= {
     if (callback) {
       callback();
     }
-    console.log("In store Images");
+
     mongodb.connect(connectionstring, function (err, db) {
       var collec = db.collection('picturescollection');
       if (collec != null) {
+        console.log("In store Images");
         db.collection('picturescollection').insert({
           "mapdataversionid": mapdataversionid,
           "mapid": mapid,

@@ -570,16 +570,14 @@ function imagecontroller(){
         var filename=[];
         var formelement=document.getElementById('userphoto');
         var fileemenet=formelement.files;
-        console.log("Length  "+fileemenet.length);
-        var userpic={};
 
+        var userpic={};
         userpic.id=userid;
         userpic.mapname=mapname;
         var mapnameobj={};
         mapnameobj.user=userid;
         mapnameobj.name=mapname;
-        form.append('mapname',JSON.stringify(mapnameobj));
-        console.log("Map name"+mapname);
+
         if(fileemenet.length>0)
         {
           for(var i=0;i<fileemenet.length;i++)
@@ -593,8 +591,10 @@ function imagecontroller(){
             console.log("Date Time"+time);
           }
         }
-        console.log("Filename"+filename);
+        console.log("Filename"+JSON.stringify(mapnameobj));
+        console.log("Filename"+JSON.stringify(userpic));
         userpic.filename=filename;
+        form.append('mapname',JSON.stringify(mapnameobj));
         form.append('userobj',JSON.stringify(userpic));
 
         $.ajax({

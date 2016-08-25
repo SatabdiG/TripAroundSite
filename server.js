@@ -597,7 +597,7 @@ app.post('/userimageupload', function(req,res){
         var userid=obj['id'];
         var uploadpath='/uploads/'+userid+'/' + mapname;
         var mapversion="something";
-        console.log("The value of user pictures are"+obj);
+
         //call database and update the database
         for(var i=0;i<filenames.length;i++)
         {
@@ -662,7 +662,8 @@ app.post('/facesmiledetection',function(req,res){
         connect.getPictures('mongodb://localhost:27017/testimages', userid, mapid, function (picname, picpath, mapid) {
           if (picname != undefined || picpath != undefined) {
             var imagename = picname;
-            var imagepath = picpath;
+            var imagepath = __dirname+picpath;
+
             console.log("Image name " + imagename + "  " + imagepath);
             /// start detecting faces for each image.
             detector.on('error', (error) => {
@@ -674,6 +675,7 @@ app.post('/facesmiledetection',function(req,res){
                 console.log("found face!")
                 facevar = 1;
               });
+
               /*
                connect.addface('mongodb://localhost:27017/testimages', 'storeimages', _mapdataversionid, _markerid, _imagename, _imagepath, _userid, _mapid, facevar, function (message) {
                console.log("Message" + message);
@@ -703,6 +705,7 @@ app.post('/facesmiledetection',function(req,res){
                */
 
             });
+
             detector.load(path.join(imagepath, imagename)).then((image) => {
               detector.detect(image);
             }).catch((e) => {
