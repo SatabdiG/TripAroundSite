@@ -664,7 +664,7 @@ app.post('/facesmiledetection',function(req,res){
         if(imagename!= undefined || imagepath!= undefined) {
           var imagename = imagename;
           var imagepath = path.join(__dirname,imagepath);
-          console.log("Path is"+imagepath)
+          console.log("Path is"+imagepath);
 
 
           //******** Detection *********
@@ -676,7 +676,7 @@ app.post('/facesmiledetection',function(req,res){
           detector.on('face', (faces, image) => {
             console.log(faces);
             faces.forEach((face) => {
-              console.log("found face!")
+              console.log("found face!");
               facevar = 1;
             });
             /*
@@ -695,7 +695,7 @@ app.post('/facesmiledetection',function(req,res){
           detector.on('smile', (smiles, face, image) => {
             console.log(smiles);
             smiles.forEach((smile) => {
-              console.log("found smile!")
+              console.log("found smile!");
               smilevar = 1;
             });
 
