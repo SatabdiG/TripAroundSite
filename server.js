@@ -5,7 +5,7 @@ var multer	=	require('multer');
 var multerdragdrop = require('multer');
 var multerguest=require('multer');
 var path=require('path');
-var app	= express();
+var app	=	express();
 var fs=require('fs');
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
@@ -16,6 +16,25 @@ app.use(bodyParser.json());
 var userid;
 var filename;
 const mkdirp = require('mkdirp');
+
+//Smile Detection
+
+var SmileFaceDetector = require('./computerVision/SmileFaceDetector');
+//const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 10});
+
+
+var detector = new SmileFaceDetector({
+  // Parameter specifying how much the image size is reduced at each image scale on face detection default: 1.05
+  faceScale: 1.01,
+  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on face detection default: 8
+  faceNeighbor: 2,
+  // Parameter specifying how much the image size is reduced at each image scale on smile detection default: 1.7
+  smileScale: 1.01,
+  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on smile detection default: 22
+  smileNeighbor: 2,
+  //I will adapt the parameters as the dataset grows.
+});
+
 
 //Path for loading static files
 app.use(bodyParser.json());
@@ -281,6 +300,32 @@ app.post('/guestdetailssave',function(req,res){
   }
 });
 
+//User created markers save
+
+app.post('/usermarkersave', function(req, res){
+  var userid=req.body.userid;
+  var mapid=req.body.mapname;
+  var filename=req.body.filename;
+  var lat=req.body.lat;
+  var lon=req.body.lon;
+  var date=new Date();
+  var currenthours=date.getMinutes();
+  var markerid=req.body.userid+currenthours;
+
+  connect.addmarkers("mongodb://localhost:27017/testimages","someversion",markerid,userid,mapid,lat,lon, currenthours,filename,function(mssg){
+    if(mssg!=undefined)
+    {
+      console.log("Retrived mssg"+mssg);
+      if(mssg == "yes")
+        return res.end("yes");
+      else
+        return res.end("no");
+    }
+  });
+
+
+});
+
 //** upload and save map coordinates
 app.post('/mapupload', function(req,res){
   var flag=true;
@@ -291,7 +336,9 @@ app.post('/mapupload', function(req,res){
     console.log(eve);
     marker.push(eve);
   });
+
   if(marker.length>0) {
+    /*
     connect.addmaps("mongodb://localhost:27017/testimages", req.body.name, req.body.id, function (mssg) {
       console.log("Fetched data  " + mssg);
       if (mssg != undefined) {
@@ -300,12 +347,12 @@ app.post('/mapupload', function(req,res){
         else
           flag=false;
       }
-    });
+    });*/
     for(i=0;i<marker.length;i++)
     {
       var markerid=req.body.id+i+currenthours;
       console.log(marker[i]);
-      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",marker[i].id,req.body.id,req.body.name,marker[i].lat,marker[i].lon, marker[i].filename,function(mssg){
+      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",marker[i].id,req.body.id,req.body.name,marker[i].lat,marker[i].lon, marker[i].time,marker[i].filename,function(mssg){
       console.log(mssg);
         if(mssg!=undefined) {
           if (mssg == "yes")
@@ -329,15 +376,110 @@ app.post('/mapupload', function(req,res){
   }
 
 });
+
+//Handler for Map description edit
+app.post('/mapdescriptionedit', function(req, res){
+  console.log(req.body);
+  var username=req.body.userid;
+  var mapid=req.body.mapid;
+  var newdes=req.body.text;
+  console.log("In map description edit"+username+"  "+mapid);
+  //Call MongoDb server
+  connect.updateDescription("mongodb://localhost:27017/testimages",username, mapid,newdes,function(msg){
+    if(msg!=undefined)
+    {
+      console.log("Retrived Message"+msg);
+      if(msg == "done")
+        return res.end("yes");
+      else
+        return res.end("no");
+    }
+  });
+
+});
+
+//Delete Map
+app.post("/detelemap", function(req, res){
+
+  var username=req.body.userid;
+  var delmap=req.body.mapid;
+
+  //Call mongodb delete all referneces to mongodb
+  connect.deleteallmap("mongodb://localhost:27017/testimages", username, delmap, function(msg){
+    if(msg!=undefined) {
+      console.log("Retrived message" + msg);
+      if(msg =="done")
+      {
+        return res.end("yes");
+      }
+      else
+        return res.end("no");
+    }
+  });
+
+
+});
+
 //Handler for drag and drop
 app.post('/dragdrop', function(req,res){
-  console.log("In drag and drop"+req.body.userid);
+  console.log("In drag and drop"+userid);
   var form=new formidable.IncomingForm();
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
   form.on('file',function(field,file){
     console.log("File Name"+file.name);
     fs.rename(file.path,path.join(form.uploadDir,file.name));
+  });
+  form.on('field', function(name,value){
+    console.log("In Drag and Drop"+ name +"  "+ value);
+
+    if(name == "mapname") {
+      var obj=JSON.parse(value);
+      console.log(obj['name']);
+      var dir = __dirname + '/uploads/'+obj['user'];
+      var actual=__dirname+'/uploads/'+obj['user']+'/'+obj['name'];
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }
+      }
+      else
+      {
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }
+      }
+      //form.uploadDir=path.join(__dirname,'/uploads');
+      form.uploadDir = actual;
+    }else
+    {
+      if(name=="userobj"){
+        //call data base to update mappings
+        var obj=JSON.parse(value);
+        var filenames=obj['filename'];
+        var mapname=obj['mapname'];
+        var userid=obj['id'];
+        var uploadpath='/uploads/'+userid+'/' + mapname;
+        var mapversion="something";
+        console.log("The value of object user"+JSON.parse(value));
+        console.log("The value of user pictures are"+obj['id']);
+        //call database and update the database
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames,uploadpath,function(msg){
+            if(msg!=undefined)
+            {
+              if(msg == "yes"){
+                console.log("Yay "+msg);
+              }else
+              {
+                console.log("Could add to user database. Check");
+              }
+            }
+          });
+        }
+
+    }
+
   });
   form.on('error',function(err){
     console.log("Error has ocurred");
@@ -386,7 +528,8 @@ app.post('/mapsave', function(req, res){
   //Call mongodb function and save the map
   connect.addmaps('mongodb://localhost:27017/testimages',user, mapname, description,function(msg){
     if(msg!=undefined){
-       if(msg == 'add'){
+      console.log("Map returned "+msg);
+       if(msg == "add"){
          return res.end('yes');
        }
       else
@@ -420,6 +563,8 @@ app.post('/userimageupload', function(req,res){
   var form=new formidable.IncomingForm();
   var mapname;
   var dir;
+  var filenames;
+  var uploaddir;
   form.multiple=true;
   form.on('field',function(name,value){
     console.log("Response  "+name+":"+value);
@@ -428,13 +573,13 @@ app.post('/userimageupload', function(req,res){
       console.log(obj['name']);
       var dir = __dirname + '/uploads/'+obj['user'];
       var actual=__dirname+'/uploads/'+obj['user']+'/'+obj['name'];
-      if (!fs.existsSync(dir)) {      
+      if (!fs.existsSync(dir)) {
        fs.mkdirSync(dir);
         if(!fs.existsSync(actual)){
           fs.mkdirSync(actual);
-        }        
+        }
       }
-      else 
+      else
       {
         if(!fs.existsSync(actual)){
           fs.mkdirSync(actual);
@@ -452,11 +597,11 @@ app.post('/userimageupload', function(req,res){
         var userid=obj['id'];
         var uploadpath='/uploads/'+userid+'/' + mapname;
         var mapversion="something";
-        console.log("The value of object user"+JSON.parse(value));
-        console.log("The value of user pictures are"+obj['id']);
+
         //call database and update the database
         for(var i=0;i<filenames.length;i++)
         {
+          console.log("The filename is"+filenames[i]);
           connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,function(msg){
             if(msg!=undefined)
             {
@@ -475,6 +620,7 @@ app.post('/userimageupload', function(req,res){
   });
 
   form.on('file',function(field,file){
+    console.log("File name"+file.path+"  "+path.join(form.uploadDir,file.name));
     fs.rename(file.path,path.join(form.uploadDir,file.name));
   });
   form.on('error',function(err){
@@ -493,9 +639,7 @@ app.post('/userdetailssave', function(req, res){
   console.log("Resgistered user details"+req.body);
   return res.end("yes");
 
-
 });
-
 
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
@@ -614,38 +758,6 @@ detector.load(path.join(_imagepath,_imagename)).then((image) => {
 //////*******************************END COMPUTER VISION*********************************************//////
 
 
-
-//******** Socket Function to receive face and smile data *********
-
-//*** Receive face data ****
-  socket.on("loadFaces",function(msg){
-  //Access database and retrive markers
-    var userid=msg.id;
-    var maps=msg.mapid;
-    connect.getFaces("mongodb://localhost:27017/testimages",userid,maps,function(face){
-      if(face != undefined) {
-        console.log("Retrived   " + face);
-        socket.emit("faces", {face: face});
-      }
-    });
-
-  });
-
-//*** Receive face data ****
-  socket.on("LoadSmiles",function(msg){
-  //Access database and retrive markers
-    var userid=msg.id;
-    var maps=msg.mapid;
-    connect.getSmiles("mongodb://localhost:27017/testimages",userid,maps,function(smile){
-      if(smile != undefined) {
-        console.log("Retrived   " + smile);
-        socket.emit("smiles", {smile: smile});
-      }
-    });
-
-  });
-
-
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
@@ -691,37 +803,40 @@ socket.on('connection',function(socket){
   //Access database and retrive markers
     var userid=msg.id;
     var maps=msg.mapid;
-    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng){
-      if(lat != undefined || lng != undefined) {
+    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng,time,filename, mapid){
+      if(lat != undefined && lng != undefined) {
         console.log("Retrived   " + lat + "  " + lng);
-        socket.emit("drawmarkers", {lat: lat, lng: lng});
+        socket.emit("drawmarkers", {lat: lat, lng: lng, time:time, filename:filename, map:mapid});
       }
     });
 
   });
 
   socket.on('ImageGall', function(msg){
-    console.log("Message received"+msg.userid + msg.mapid);
+    console.log("Message received"+ msg.mapid);
     connect.getPictures("mongodb://localhost:27017/testimages", msg.userid, msg.mapid,function(picname, picpath, mapid){
-      console.log(picname+"  "+picpath+"   "+mapid);
-      socket.emit("imagereturn", {picname:picname,picpath:picpath,mapid:mapid});
+      if(picname!=undefined && picpath!= undefined && mapid!= undefined) {
+        console.log(picname + "  " + picpath + "   " + mapid);
+        socket.emit("imagereturn", {picname: picname, picpath: picpath, mapid: mapid, userid:msg.userid});
+      }
     });
 
   });
 
   socket.on('getmaps', function(msg){
      console.log('Message received'+msg.userid);
-    connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(msg){
-      if(msg!=undefined){
-        socket.emit('viewmaps', {name:msg});
+    connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(mapname, mapdescription){
+      if(mapname!=undefined && mapdescription!=undefined){
+        console.log("Map description"+mapdescription);
+        socket.emit('viewmaps', {name:mapname, description:mapdescription});
       }
     });
   });
 
 });
 
-http.listen(3000,function(){
-  console.log("Working on port 3000");
+http.listen(3030,function(){
+  console.log("Working on port 3030");
 });
 
 //For Node to exit gracefully
@@ -730,13 +845,6 @@ process.on('SIGTERM', function(){
     process.exit(0);
   });
 });
-
-
-
-
-
-
-
 
 
 
