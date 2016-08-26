@@ -10,6 +10,7 @@ var fs=require('fs');
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
 var formidable=require('formidable');
+var mv= require('mv');
 app.use(bodyParser.json());
 
 
@@ -232,7 +233,14 @@ app.post('/guestlogin', function(req,res){
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
   form.on('file',function(field,file){
-    fs.rename(file.path,path.join(form.uploadDir,file.name));
+    //fs.rename(file.path,path.join(form.uploadDir,file.name));
+    mv(file.path,join(form.uploadDir,file.name), function(err){
+      if(!err)
+      {
+        console.log("File uploaded");
+      }else
+        console.log("Error occurs"+err);
+    });
   });
   form.on('error',function(err){
     console.log("Error has ocurred");
@@ -246,8 +254,8 @@ app.post('/guestlogin', function(req,res){
 
 });
 
-//Register New users
 
+//Register New users
 app.post('/registeruser', function(req,res){
   var userid=req.body.username;
   var username=req.body.name;
@@ -602,7 +610,7 @@ app.post('/userimageupload', function(req,res){
         for(var i=0;i<filenames.length;i++)
         {
           console.log("The filename is"+filenames[i]);
-          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,function(msg){
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,0,0,function(msg){
             if(msg!=undefined)
             {
               if(msg == "yes"){
@@ -646,107 +654,225 @@ app.post('/userdetailssave', function(req, res){
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 
-app.post('/facesmiledetection',function(req,res){
-    upload(req,res,function(err) {
-      var _userid = req.body.userid;
-      var _mapid= req.body.mapid;
-      var _mapdataversionid =  req.body.mapdataversionid;
-      var _markerid = req.body.markerid;
-      var _imagename= req.body.filename;
-      if(__userid == "guest")
+var COLOR = new Array();
+COLOR['green']=[0, 255, 0];
+COLOR['red']=[0,0,255];
+COLOR['blue']=[255,0,0];
+
+var thickness = 2; // default 1
+
+var optsface= {scale:1.05, neighbors:8};
+var optssmile= {scale:1.7, neighbors:22};
+var optseye= {scale:1.5, neighbors:10};
+var cv = require('opencv');
+
+//const faceClassifier = new cv.CascadeClassifier(cv.FACE_CASCADE);
+//const smileClassifier = new cv.CascadeClassifier('./node_modules/opencv/data/haarcascade_smile.xml');
+
+
+//Read Image
+	cv.readImage('child2.jpg', function(err, im){
+	  if (err) throw err;
+	  if (im.width() < 1 || im.height() < 1) throw new Error('Image has no size');
+
+
+//Detect Face
+	  im.detectObject("./computerVision/data/haarcascade_frontalface_alt2.xml", {}, function(err,faces){
+	    if (err) throw err;
+		console.log(faces.length);
+		if (faces.length>0){        
+	     console.log("found face!");
+             var facevar = 1;
+	};
+    	for (var i = 0; i < faces.length; i++) {
+   		face = faces[i];
+      console.log(face);
+      		im.rectangle([face.x, face.y], [face.width, face.height], COLOR['green'], 4);
+			    im.save('face-detection.png');
+     		//im.save(path.join(imagepath, imagename)+'face-detection.png');
+      		const halfHeight = parseInt(face.height / 2);
+   //const faceImage = im.roi(face.x, face.y, face.width, face.height);
+      const faceImage = im.crop(face.x, face.y, face.width, face.height);
+	faceImage.save('image-detection.png');
+      //	  img_gray.convertGrayscale();
+//Detect Smile		
+		faceImage.detectObject("./computerVision/data/haarcascade_smile.xml",optssmile, function(err, smiles){
+			if (err) throw err;
+			for (var i = 0; i < smiles.length; i++) {
+		        smile = smiles[i];
+			//const smileImage = faceImage.crop(smile.x, smile.y,smile.width, smile.height);
+			//smileImage.save('smile-detection.png');
+                        im.rectangle([smile.x + face.x, smile.y+face.y], [smile.width, smile.height], COLOR['red'], 4);
+		    im.save('face-detection.png');
+			  //  im.save(path.join(imagepath, imagename)+'face-detection.png');
+		//faceImage.rectangle([smile.x,smile.y], [smile.width, smile.height], COLOR['red'], 4);
+		//	    faceImage.save('image-detection.png');
+			};
+		console.log(smiles.length);
+
+			if (smiles.length>0){        			
+				console.log("found smiles!");
+			             var smilevar = 1;
+			};
+    		});
+
+// Detect Open Eyes
+		faceImage.detectObject("./computerVision/data/haarcascade_eye.xml",optseye, function(err, eyes){
+			if (err) throw err;
+			for (var i = 0; i < eyes.length; i++) {
+		        eye = eyes[i];
+			//const eyeImage = faceImage.crop(eye.x, eye.y,eye.width, eye.height);
+
+			//eyeImage.save('eye-detection.png');
+                           im.rectangle([eye.x + face.x, eye.y+face.y], [eye.width, eye.height], COLOR['blue'], 4);
+			//faceImage.rectangle([eye.x,eye.y], [eye.width, eye.height], COLOR['blue'], 4);
+			    im.save('face-detection.png');
+			 //   faceImage.save('image-detection.png');
+
+			}
+		console.log(eyes.length);
+			if (eyes.length>1){
+				console.log("found open eyes!");
+			             var openeyesvar= 1;
+			};
+		});
+		};
+    console.log('Image saved to face-detection.png');
+
+});
+});
+
+
+
+app.post('/facesmiledetection',function(req,res){  
+    upload(req,res,function(err) {   
+      var userid = req.body.userid;
+      var mapid= req.body.mapid;
+      var mapdataversionid =  req.body.mapdataversionid;
+      var markerid = req.body.markerid;
+      var imagename= req.body.filename;
+      var facevar=0;
+      var smilevar=0;
+      if(userid == "guest")
       {
-        _imagename=__dirname+'/uploads/guest';
-        _mapid="guestmap";
-        _mapdataversionid="guestid";
-      }
-      if(__userid != "guest") {
-        connect.retrievevalues('mongodb://localhost:27017/testimages', 'usercollection', _mapdataversionid, _markerid,_imagename, _imagepath,_userid,_mapid, function(message){
-      var _userid = message.body.userid;
-      var _mapid= message.body.mapid;
-      var _mapdataversionid =  message.body.mapdataversionid;
-      var _markerid = message.body.markerid;
-      var _imagename= message.body.filename;
-      var _imagepath= message.body.pathid;
-
-//******** Detection *********
-
-const SmileFaceDetector = require('./computerVision/SmileFaceDetector');
-//const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 10});
+         imagename=__dirname+'/uploads/guest';
+         mapid="guestmap";
+         mapdataversionid="guestid";
+      };
+      if(userid != "guest") {				
+      connect.getPictures('mongodb://localhost:27017/testimages',userid,mapid, function(imagename, imagepath,mapid){ 
+        if(imagename!= undefined || imagepath!= undefined) {
+          var imagename = imagename;
+          var imagepath = path.join(__dirname,imagepath);
+          console.log("Path is"+imagepath);
 
 
-const detector = new SmileFaceDetector({
-  // Parameter specifying how much the image size is reduced at each image scale on face detection default: 1.05 
-  faceScale: 1.01,
-  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on face detection default: 8 
-  faceNeighbor: 2,
-  // Parameter specifying how much the image size is reduced at each image scale on smile detection default: 1.7 
-  smileScale: 1.01,
-  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on smile detection default: 22 
-  smileNeighbor: 2,
-  //I will adapt the parameters as the dataset grows.
-});
+//Read Image
+	cv.readImage(path.join(imagepath,imagename), function(err, im){
+	  if (err) throw err;
+	  if (im.width() < 1 || im.height() < 1) throw new Error('Image has no size');
 
+//Detect Face
+	  im.detectObject("./computerVision/data/haarcascade_frontalface_alt2.xml", {}, function(err,faces){
+	    if (err) throw err;
+		console.log(faces.length);
+		if (faces.length>0){        
+	     console.log("found face!");
+             var facevar = 1;
+/*
+             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,facevar,function(message){
+             console.log("Message"+message);
+             if(message == "yes")
+             return res.end("yes");
+             else
+             return res.end("no");
+             })
+*/
+	};
+    	for (var i = 0; i < faces.length; i++) {
+   		face = faces[i];
+      console.log(face);
+      		im.rectangle([face.x, face.y], [face.width, face.height], COLOR['green'], 4);
+			    im.save('face-detection.png');
+     		//im.save(path.join(imagepath, imagename)+'face-detection.png');
+      		const halfHeight = parseInt(face.height / 2);
+   //const faceImage = im.roi(face.x, face.y, face.width, face.height);
+      const faceImage = im.crop(face.x, face.y, face.width, face.height);
+	faceImage.save('image-detection.png');
+      //	  img_gray.convertGrayscale();
 
+//Detect Smile		
+		faceImage.detectObject("./computerVision/data/haarcascade_smile.xml",optssmile, function(err, smiles){
+			if (err) throw err;
+			for (var i = 0; i < smiles.length; i++) {
+		        smile = smiles[i];
+			//const smileImage = faceImage.crop(smile.x, smile.y,smile.width, smile.height);
+			//smileImage.save('smile-detection.png');
+                        im.rectangle([smile.x + face.x, smile.y+face.y], [smile.width, smile.height], COLOR['red'], 4);
+		    im.save('face-detection.png');
+			  //  im.save(path.join(imagepath, imagename)+'face-detection.png');
+		//faceImage.rectangle([smile.x,smile.y], [smile.width, smile.height], COLOR['red'], 4);
+		//	    faceImage.save('image-detection.png');
+			};
+		console.log(smiles.length);
 
-/// start detecting faces for each image.
-detector.on('error', (error) => {
-  console.error(error);
-});
+			if (smiles.length>0){        			
+				console.log("found smiles!");
+			             var smilevar = 1;
+/*
+			             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,smilevar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+			};
+    		});
 
-detector.on('face', (faces, image) => {
-  console.log(faces);
-  faces.forEach((face) => {
-    console.log("found face!")  
-    facevar=1;
-  });
-    connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,facevar,function(message){
-      console.log("Message"+message);
-      if(message == "yes")
-        return res.end("yes");
-      else
-        return res.end("no");
-    })
+// Detect Open Eyes
+		faceImage.detectObject("./computerVision/data/haarcascade_eye.xml",optseye, function(err, eyes){
+			if (err) throw err;
+			for (var i = 0; i < eyes.length; i++) {
+		        eye = eyes[i];
+			//const eyeImage = faceImage.crop(eye.x, eye.y,eye.width, eye.height);
 
-});
+			//eyeImage.save('eye-detection.png');
+                           im.rectangle([eye.x + face.x, eye.y+face.y], [eye.width, eye.height], COLOR['blue'], 4);
+			//faceImage.rectangle([eye.x,eye.y], [eye.width, eye.height], COLOR['blue'], 4);
+			    im.save('face-detection.png');
+			 //   faceImage.save('image-detection.png');
 
-//start detecting smiles for each image.
+			}
+		console.log(eyes.length);
+			if (eyes.length>1){
+				console.log("found open eyes!");
+			             var openeyesvar= 1;
+/*
+			             connect.addopeneyes('mongodb://localhost:27017/testimages', imagename, userid,mapid,openeyesvar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+			};
+		});
+		};
+    console.log('Image saved to face-detection.png');
+			});
+		});
+	        	if(err) {
+	        	    return res.end("Error uploading file.");
+	        	};
+		};		
 
-detector.on('smile', (smiles, face, image) => {
-  console.log(smiles);
-  smiles.forEach((smile) => {
-    console.log("found smile!")
-    smilevar=1;
-  });
+		});
+	};
+ });
 
-    connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,smilevar,function(message){
-      console.log("Message"+message);
-      if(message == "yes")
-        return res.end("yes");
-      else
-        return res.end("no");
-    })
-
-
-});
-
-detector.load(path.join(_imagepath,_imagename)).then((image) => {
-  detector.detect(image);
-}).catch((e) => {
-  console.error(e);
-});
-
-})
-      }
-      else
-      {
-          console.log("In here");
-      }
-        if(err) {
-            return res.end("Error uploading file.");
-        }
-        res.end("File is uploaded");
-
-    });
 });
 
 //////*******************************END COMPUTER VISION*********************************************//////

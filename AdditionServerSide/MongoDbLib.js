@@ -208,39 +208,27 @@ module.exports= {
 
   //add face to database
   //add face variable to the column of face for each image
-  addface: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,facevar, callback) {
+  addface: function (connectionstring, imagename, userid,mapid,facevar, callback) {
     if (callback) {
       callback();
     }
-    mongodb.connect(connectionstring, function (err, db) {
+    console.log("Imagename "+userid+"  "+mapid+"  "+imagename+"  "+facevar);
+     mongodb.connect(connectionstring,function(err,db){
+        if(!err){
+          var cursor=db.collection("picturescollection").find({"userid":userid, "mapid":mapid, "picname":imagename});
+          cursor.each(function(err,doc){
+            if(doc!=null)
+            {
+              console.log("Document ID "+doc._id+"  "+facevar);
+              var docid=doc._id;
+              db.collection("picturescollection").update({_id:docid},{$set:{"face":facevar}});
+              return callback("done");
 
-      var collec = db.collection('storedimages');
-      if (collec != null) {
-        db.collection('storedimages').insert({
-          "mapdataversionid": mapdataversionid,
-          "imagename": imagename,
-          "imagepath": imagepath,
-          "userid": userid,
-          "mapid": mapid,
-          "face" : facevar
-        }, {w: 1}, function (err, records) {
+            }
+          });
 
-          if (records != null) {
-            console.log("Face Record added");
-            callback("yes");
-            db.close();
-          }
-          else {
-            callback("no");
-            console.log("Face Cannot add");
-          }
-        });
-
-      }
-      else {
-        console.log("Database not found! error");
-      }
-    });
+        }
+      });
   },
   //add smile to database
   //add smile variable to the column of smile for each image
@@ -353,7 +341,7 @@ module.exports= {
   });
 },
 
-  storeImages: function (connectionstring, mapdataversionid, userid,mapid, markerid,picname,picpath,callback) {
+  storeImages: function (connectionstring, mapdataversionid, userid,mapid, markerid,picname,picpath,facevar, smilevar,callback) {
     if (callback) {
       callback();
     }
@@ -368,7 +356,9 @@ module.exports= {
           "userid": userid,
           "markerid":markerid,
           "picname":picname,
-          "picpath":picpath
+          "picpath":picpath,
+          "face":facevar,
+          "smile":smilevar
         }, {w: 1}, function (err, records) {
           if (records != null) {
             console.log("Map Data Version Record added");
