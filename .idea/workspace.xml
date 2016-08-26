@@ -1692,14 +1692,7 @@
       <workItem from="1472119353281" duration="12603000" />
       <workItem from="1472134234745" duration="5317000" />
       <workItem from="1472213237703" duration="1981000" />
-      <workItem from="1472215299841" duration="3045000" />
-    </task>
-    <task id="LOCAL-00013" summary="&#10;clickable pin&#10;">
-      <created>1468513112882</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1468513112882</updated>
+      <workItem from="1472215299841" duration="3163000" />
     </task>
     <task id="LOCAL-00014" summary="Drag and Drop on Map. On Clicking poistioned markers modal window opens.&#10;">
       <created>1468606140253</created>
@@ -2037,11 +2030,18 @@
       <option name="project" value="LOCAL" />
       <updated>1472213783781</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="Computer Vision  code runs &#10;">
+      <created>1472218379921</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1472218379924</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="433941000" />
+    <option name="totallyTimeSpent" value="434059000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
