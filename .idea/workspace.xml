@@ -457,14 +457,7 @@
       <workItem from="1472134234745" duration="5317000" />
       <workItem from="1472213237703" duration="1981000" />
       <workItem from="1472215299841" duration="3163000" />
-      <workItem from="1472218612375" duration="5812000" />
-    </task>
-    <task id="LOCAL-00016" summary="Fixes for thumbnail view&#10;">
-      <created>1468848870755</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1468848870755</updated>
+      <workItem from="1472218612375" duration="5960000" />
     </task>
     <task id="LOCAL-00017" summary="Basic templating&#10;">
       <created>1468868624656</created>
@@ -802,11 +795,18 @@
       <option name="project" value="LOCAL" />
       <updated>1472218731060</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="MV instead of fs.rename for file upload&#10;">
+      <created>1472224472178</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1472224472178</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="439871000" />
+    <option name="totallyTimeSpent" value="440019000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
