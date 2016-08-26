@@ -641,16 +641,11 @@ app.post('/userdetailssave', function(req, res){
 
 });
 
-<<<<<<< HEAD
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 
-
-=======
-//Face detection filters
->>>>>>> 467987f368375762c90d46b132f5dff705d4afe1
 
 app.post('/facesmiledetection',function(req,res){
   console.log("In face smile detection");
@@ -723,7 +718,7 @@ app.post('/facesmiledetection',function(req,res){
           }
         });
 
-<<<<<<< HEAD
+
 const detector = new SmileFaceDetector({
   // Parameter specifying how much the image size is reduced at each image scale on face detection default: 1.05 
   faceScale: 1.01,
@@ -805,16 +800,6 @@ detector.load(path.join(_imagepath,_imagename)).then((image) => {
 //////*******************************END COMPUTER VISION*********************************************//////
 //////*******************************END COMPUTER VISION*********************************************//////
 
-
-=======
-      }
-
-    }
-  });
-});
-
-
->>>>>>> 467987f368375762c90d46b132f5dff705d4afe1
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
