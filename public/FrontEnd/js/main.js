@@ -577,7 +577,8 @@ function imagecontroller(){
         var mapnameobj={};
         mapnameobj.user=userid;
         mapnameobj.name=mapname;
-
+        userpic.filename=filename;
+        form.append('mapname',JSON.stringify(mapnameobj));
         if(fileemenet.length>0)
         {
           for(var i=0;i<fileemenet.length;i++)
@@ -594,9 +595,7 @@ function imagecontroller(){
         console.log("Filename"+JSON.stringify(mapnameobj));
         console.log("Filename"+JSON.stringify(userpic));
         userpic.filename=filename;
-        form.append('mapname',JSON.stringify(mapnameobj));
         form.append('userobj',JSON.stringify(userpic));
-
         $.ajax({
           url:"/userimageupload",
           type:"POST",
@@ -1122,7 +1121,6 @@ function imagegallerycontroller(){
       $('#filtermodal').modal("show");
       //smile check function
       $('#smilecheck').on("click", function (evt) {
-        evt.preventDefault();
         $('#smilecheck').attr("checked", true);
         console.log("Smile checked clicked");
         //call the server function

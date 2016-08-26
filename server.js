@@ -10,6 +10,7 @@ var fs=require('fs');
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
 var formidable=require('formidable');
+var mv= require('mv');
 app.use(bodyParser.json());
 
 
@@ -232,7 +233,14 @@ app.post('/guestlogin', function(req,res){
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
   form.on('file',function(field,file){
-    fs.rename(file.path,path.join(form.uploadDir,file.name));
+    //fs.rename(file.path,path.join(form.uploadDir,file.name));
+    mv(file.path,join(form.uploadDir,file.name), function(err){
+      if(!err)
+      {
+        console.log("File uploaded");
+      }else
+        console.log("Error occurs"+err);
+    });
   });
   form.on('error',function(err){
     console.log("Error has ocurred");
@@ -246,8 +254,8 @@ app.post('/guestlogin', function(req,res){
 
 });
 
-//Register New users
 
+//Register New users
 app.post('/registeruser', function(req,res){
   var userid=req.body.username;
   var username=req.body.name;
@@ -602,7 +610,7 @@ app.post('/userimageupload', function(req,res){
         for(var i=0;i<filenames.length;i++)
         {
           console.log("The filename is"+filenames[i]);
-          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,function(msg){
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,0,0,function(msg){
             if(msg!=undefined)
             {
               if(msg == "yes"){
@@ -653,6 +661,8 @@ app.post('/facesmiledetection',function(req,res){
       var mapdataversionid =  req.body.mapdataversionid;
       var markerid = req.body.markerid;
       var imagename= req.body.filename;
+      var facevar=0;
+      var smilevar=0;
       if(userid == "guest")
       {
          imagename=__dirname+'/uploads/guest';
@@ -674,25 +684,27 @@ app.post('/facesmiledetection',function(req,res){
           });
 
           detector.on('face', (faces, image) => {
+            facevar=0;
             console.log(faces);
             faces.forEach((face) => {
               console.log("found face!");
               facevar = 1;
             });
-            /*
-             connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,facevar,function(message){
+
+             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,facevar,function(message){
              console.log("Message"+message);
              if(message == "yes")
              return res.end("yes");
              else
              return res.end("no");
              })
-             */
+
           });
 
           //start detecting smiles for each image.
 
           detector.on('smile', (smiles, face, image) => {
+            facevar=0;
             console.log(smiles);
             smiles.forEach((smile) => {
               console.log("found smile!");
@@ -719,14 +731,11 @@ app.post('/facesmiledetection',function(req,res){
         }
       })
       }
-      else
-      {
-          console.log("In here");
-      }
+
         if(err) {
             return res.end("Error uploading file.");
         }
-        res.end("File is uploaded");
+
 
     });
 });
