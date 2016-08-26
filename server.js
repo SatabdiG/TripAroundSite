@@ -654,6 +654,7 @@ app.post('/userdetailssave', function(req, res){
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 
+<<<<<<< HEAD
 var COLOR = new Array();
 COLOR['green']=[0, 255, 0];
 COLOR['red']=[0,0,255];
@@ -872,6 +873,90 @@ app.post('/facesmiledetection',function(req,res){
 		});
 	};
  });
+=======
+app.post('/facesmiledetection',function(req,res){
+    upload(req,res,function(err) {
+      var userid = req.body.userid;
+      var mapid= req.body.mapid;
+      var mapdataversionid =  req.body.mapdataversionid;
+      var markerid = req.body.markerid;
+      var imagename= req.body.filename;
+      var facevar=0;
+      var smilevar=0;
+      if(userid == "guest")
+      {
+         imagename=__dirname+'/uploads/guest';
+         mapid="guestmap";
+         mapdataversionid="guestid";
+      }
+      if(userid != "guest") {
+      connect.getPictures('mongodb://localhost:27017/testimages',userid,mapid, function(imagename, imagepath,mapid){
+        if(imagename!= undefined || imagepath!= undefined) {
+          var imagename = imagename;
+          var imagepath = path.join(__dirname,imagepath);
+          console.log("Path is"+imagepath);
+
+
+          //******** Detection *********
+          /// start detecting faces for each image.
+          detector.on('error', (error) => {
+            console.error(error);
+          });
+
+          detector.on('face', (faces, image) => {
+            facevar=0;
+            console.log(faces);
+            faces.forEach((face) => {
+              console.log("found face!");
+              facevar = 1;
+            });
+
+             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,facevar,function(message){
+             console.log("Message"+message);
+             if(message == "yes")
+             return res.end("yes");
+             else
+             return res.end("no");
+             })
+
+          });
+
+          //start detecting smiles for each image.
+
+          detector.on('smile', (smiles, face, image) => {
+            facevar=0;
+            console.log(smiles);
+            smiles.forEach((smile) => {
+              console.log("found smile!");
+              smilevar = 1;
+            });
+
+            /*
+             connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,smilevar,function(message){
+             console.log("Message"+message);
+             if(message == "yes")
+             return res.end("yes");
+             else
+             return res.end("no");
+             })
+             */
+
+          });
+
+          detector.load(path.join(imagepath, imagename)).then((image) => {
+            detector.detect(image);
+          }).catch((e) => {
+            console.error(e);
+          });
+        }
+      })
+      }
+
+        if(err) {
+            return res.end("Error uploading file.");
+        }
+
+>>>>>>> 8f2c89e468506e80b378006211211f13cf5e9be0
 
 });
 
