@@ -18,24 +18,6 @@ var userid;
 var filename;
 const mkdirp = require('mkdirp');
 
-//Smile Detection
-
-var SmileFaceDetector = require('./computerVision/SmileFaceDetector');
-//const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 10});
-
-
-var detector = new SmileFaceDetector({
-  // Parameter specifying how much the image size is reduced at each image scale on face detection default: 1.05
-  faceScale: 1.01,
-  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on face detection default: 8
-  faceNeighbor: 2,
-  // Parameter specifying how much the image size is reduced at each image scale on smile detection default: 1.7
-  smileScale: 1.01,
-  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on smile detection default: 22
-  smileNeighbor: 2,
-  //I will adapt the parameters as the dataset grows.
-});
-
 
 //Path for loading static files
 app.use(bodyParser.json());
@@ -649,12 +631,30 @@ app.post('/userdetailssave', function(req, res){
 
 });
 
+
+
+
+
+
+
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 
-<<<<<<< HEAD
+
+//const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 10});
+//const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 30});
+  // Parameter specifying how much the image size is reduced at each image scale on face detection default: 1.05
+  var faceScale=1.01;
+  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on face detection default: 8
+  var faceNeighbor= 2;
+  // Parameter specifying how much the image size is reduced at each image scale on smile detection default: 1.7
+  var smileScale=1.01;
+  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on smile detection default: 22
+  var smileNeighbor=2;
+  //I will adapt the parameters as the dataset grows.
+
 var COLOR = new Array();
 COLOR['green']=[0, 255, 0];
 COLOR['red']=[0,0,255];
@@ -688,7 +688,7 @@ var cv = require('opencv');
     	for (var i = 0; i < faces.length; i++) {
    		face = faces[i];
       console.log(face);
-      		im.rectangle([face.x, face.y], [face.width, face.height], COLOR['green'], 4);
+      		im.rectangle([face.x, face.y], [face.width, face.height], COLOR['green'], thickness);
 			    im.save('face-detection.png');
      		//im.save(path.join(imagepath, imagename)+'face-detection.png');
       		const halfHeight = parseInt(face.height / 2);
@@ -703,7 +703,7 @@ var cv = require('opencv');
 		        smile = smiles[i];
 			//const smileImage = faceImage.crop(smile.x, smile.y,smile.width, smile.height);
 			//smileImage.save('smile-detection.png');
-                        im.rectangle([smile.x + face.x, smile.y+face.y], [smile.width, smile.height], COLOR['red'], 4);
+                        im.rectangle([smile.x + face.x, smile.y+face.y], [smile.width, smile.height], COLOR['red'], thickness);
 		    im.save('face-detection.png');
 			  //  im.save(path.join(imagepath, imagename)+'face-detection.png');
 		//faceImage.rectangle([smile.x,smile.y], [smile.width, smile.height], COLOR['red'], 4);
@@ -725,7 +725,7 @@ var cv = require('opencv');
 			//const eyeImage = faceImage.crop(eye.x, eye.y,eye.width, eye.height);
 
 			//eyeImage.save('eye-detection.png');
-                           im.rectangle([eye.x + face.x, eye.y+face.y], [eye.width, eye.height], COLOR['blue'], 4);
+                           im.rectangle([eye.x + face.x, eye.y+face.y], [eye.width, eye.height], COLOR['blue'], thickness);
 			//faceImage.rectangle([eye.x,eye.y], [eye.width, eye.height], COLOR['blue'], 4);
 			    im.save('face-detection.png');
 			 //   faceImage.save('image-detection.png');
@@ -794,12 +794,12 @@ app.post('/facesmiledetection',function(req,res){
    		face = faces[i];
       console.log(face);
       		im.rectangle([face.x, face.y], [face.width, face.height], COLOR['green'], 4);
-			    im.save('face-detection.png');
+			    im.save(path.join(imagepath,imagename)+'face-detection.png');
      		//im.save(path.join(imagepath, imagename)+'face-detection.png');
       		const halfHeight = parseInt(face.height / 2);
    //const faceImage = im.roi(face.x, face.y, face.width, face.height);
       const faceImage = im.crop(face.x, face.y, face.width, face.height);
-	faceImage.save('image-detection.png');
+	faceImage.save(path.join(imagepath,imagename)+'image-detection.png');
       //	  img_gray.convertGrayscale();
 
 //Detect Smile		
@@ -810,7 +810,7 @@ app.post('/facesmiledetection',function(req,res){
 			//const smileImage = faceImage.crop(smile.x, smile.y,smile.width, smile.height);
 			//smileImage.save('smile-detection.png');
                         im.rectangle([smile.x + face.x, smile.y+face.y], [smile.width, smile.height], COLOR['red'], 4);
-		    im.save('face-detection.png');
+		    im.save(path.join(imagepath,imagename)+'face-detection.png');
 			  //  im.save(path.join(imagepath, imagename)+'face-detection.png');
 		//faceImage.rectangle([smile.x,smile.y], [smile.width, smile.height], COLOR['red'], 4);
 		//	    faceImage.save('image-detection.png');
@@ -873,90 +873,6 @@ app.post('/facesmiledetection',function(req,res){
 		});
 	};
  });
-=======
-app.post('/facesmiledetection',function(req,res){
-    upload(req,res,function(err) {
-      var userid = req.body.userid;
-      var mapid= req.body.mapid;
-      var mapdataversionid =  req.body.mapdataversionid;
-      var markerid = req.body.markerid;
-      var imagename= req.body.filename;
-      var facevar=0;
-      var smilevar=0;
-      if(userid == "guest")
-      {
-         imagename=__dirname+'/uploads/guest';
-         mapid="guestmap";
-         mapdataversionid="guestid";
-      }
-      if(userid != "guest") {
-      connect.getPictures('mongodb://localhost:27017/testimages',userid,mapid, function(imagename, imagepath,mapid){
-        if(imagename!= undefined || imagepath!= undefined) {
-          var imagename = imagename;
-          var imagepath = path.join(__dirname,imagepath);
-          console.log("Path is"+imagepath);
-
-
-          //******** Detection *********
-          /// start detecting faces for each image.
-          detector.on('error', (error) => {
-            console.error(error);
-          });
-
-          detector.on('face', (faces, image) => {
-            facevar=0;
-            console.log(faces);
-            faces.forEach((face) => {
-              console.log("found face!");
-              facevar = 1;
-            });
-
-             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,facevar,function(message){
-             console.log("Message"+message);
-             if(message == "yes")
-             return res.end("yes");
-             else
-             return res.end("no");
-             })
-
-          });
-
-          //start detecting smiles for each image.
-
-          detector.on('smile', (smiles, face, image) => {
-            facevar=0;
-            console.log(smiles);
-            smiles.forEach((smile) => {
-              console.log("found smile!");
-              smilevar = 1;
-            });
-
-            /*
-             connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,smilevar,function(message){
-             console.log("Message"+message);
-             if(message == "yes")
-             return res.end("yes");
-             else
-             return res.end("no");
-             })
-             */
-
-          });
-
-          detector.load(path.join(imagepath, imagename)).then((image) => {
-            detector.detect(image);
-          }).catch((e) => {
-            console.error(e);
-          });
-        }
-      })
-      }
-
-        if(err) {
-            return res.end("Error uploading file.");
-        }
-
->>>>>>> 8f2c89e468506e80b378006211211f13cf5e9be0
 
 });
 
@@ -964,6 +880,8 @@ app.post('/facesmiledetection',function(req,res){
 //////*******************************END COMPUTER VISION*********************************************//////
 //////*******************************END COMPUTER VISION*********************************************//////
 //////*******************************END COMPUTER VISION*********************************************//////
+
+
 
 //******** Socket Function to receive data *********
 
