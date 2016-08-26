@@ -641,41 +641,89 @@ app.post('/userdetailssave', function(req, res){
 
 });
 
+<<<<<<< HEAD
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 
 
+=======
+//Face detection filters
+>>>>>>> 467987f368375762c90d46b132f5dff705d4afe1
 
 app.post('/facesmiledetection',function(req,res){
-    upload(req,res,function(err) {
-      var _userid = req.body.userid;
-      var _mapid= req.body.mapid;
-      var _mapdataversionid =  req.body.mapdataversionid;
-      var _markerid = req.body.markerid;
-      var _imagename= req.body.filename;
-      if(__userid == "guest")
-      {
-        _imagename=__dirname+'/uploads/guest';
-        _mapid="guestmap";
-        _mapdataversionid="guestid";
+  console.log("In face smile detection");
+  upload(req,res,function(err) {
+    if(!err) {
+      console.log("In upload");
+      var userid = req.body.userid;
+      var mapid = req.body.mapid;
+      var mapdataversionid;
+      //var markerid = req.body.markerid;
+      //var imagename= req.body.filename;
+      if (userid == "guest") {
+        imagename = __dirname + '/uploads/guest';
+        mapid = "guestmap";
+        mapdataversionid = "guestid";
       }
-      if(__userid != "guest") {
-        connect.retrievevalues('mongodb://localhost:27017/testimages', 'usercollection', _mapdataversionid, _markerid,_imagename, _imagepath,_userid,_mapid, function(message){
-      var _userid = message.body.userid;
-      var _mapid= message.body.mapid;
-      var _mapdataversionid =  message.body.mapdataversionid;
-      var _markerid = message.body.markerid;
-      var _imagename= message.body.filename;
-      var _imagepath= message.body.pathid;
+      if (userid != "guest") {
+        connect.getPictures('mongodb://localhost:27017/testimages', userid, mapid, function (picname, picpath, mapid) {
+          if (picname != undefined || picpath != undefined) {
+            var imagename = picname;
+            var imagepath = __dirname+picpath;
 
-//******** Detection *********
+            console.log("Image name " + imagename + "  " + imagepath);
+            /// start detecting faces for each image.
+            detector.on('error', (error) => {
+              console.error(error);
+            });
+            detector.on('face', (faces, image) => {
+              console.log(faces);
+              faces.forEach((face) => {
+                console.log("found face!")
+                facevar = 1;
+              });
 
-const SmileFaceDetector = require('./computerVision/SmileFaceDetector');
-//const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 10});
 
+               connect.addface('mongodb://localhost:27017/testimages', 'storeimages', _mapdataversionid, _markerid, _imagename, _imagepath, _userid, _mapid, facevar, function (message) {
+               console.log("Message" + message);
+               if (message == "yes")
+               return res.end("yes");
+               else
+               return res.end("no");
+               });
 
+            });
+            //start detecting smiles for each image.
+            detector.on('smile', (smiles, face, image) => {
+              console.log(smiles);
+              smiles.forEach((smile) => {
+                console.log("found smile!")
+                smilevar = 1;
+              });
+
+              /*
+               connect.addface('mongodb://localhost:27017/testimages', 'storeimages', _mapdataversionid, _markerid, _imagename, _imagepath, _userid, _mapid, smilevar, function (message) {
+               console.log("Message" + message);
+               if (message == "yes")
+               return res.end("yes");
+               else
+               return res.end("no");
+               });
+               */
+
+            });
+
+            detector.load(path.join(imagepath, imagename)).then((image) => {
+              detector.detect(image);
+            }).catch((e) => {
+              console.error(e);
+            });
+          }
+        });
+
+<<<<<<< HEAD
 const detector = new SmileFaceDetector({
   // Parameter specifying how much the image size is reduced at each image scale on face detection default: 1.05 
   faceScale: 1.01,
@@ -758,6 +806,15 @@ detector.load(path.join(_imagepath,_imagename)).then((image) => {
 //////*******************************END COMPUTER VISION*********************************************//////
 
 
+=======
+      }
+
+    }
+  });
+});
+
+
+>>>>>>> 467987f368375762c90d46b132f5dff705d4afe1
 //******** Socket Function to receive data *********
 
 socket.on('connection',function(socket){
