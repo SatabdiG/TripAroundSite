@@ -802,6 +802,34 @@ app.post('/facesmiledetection',function(req,res){
 			});
 		});
 
+
+//Detect Kissing 
+
+var exec = require('child_process').exec, child;
+
+child = exec('./kissdetector ' +path.join(imagepath,imagename) + ' ./computerVision/data/haarcascade_kiss.xml',
+    function (error, stdout, stderr) {
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+	if (stdout>0){        
+	     console.log("found kiss!");
+             var kissvar = 1;
+/*
+             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,kissvar,function(message){
+             console.log("Message"+message);
+             if(message == "yes")
+             return res.end("yes");
+             else
+             return res.end("no");
+             })
+*/
+
+        if (error !== null) {
+             console.log('exec error: ' + error);
+        }
+
+    });
+
 //Blurred Detection
 
 
@@ -976,6 +1004,43 @@ cv.readImage("./testImages/car3.jpg", function(err, car1) {
 
 });
 
+
+
+//Nudity Detection
+
+
+NUDTHRESHOLD=30;
+var PythonShell = require('python-shell');
+
+var options = {
+args: [path.join(imagepath,imagename),NUDTHRESHOLD]
+};
+
+PythonShell.run('pornscanner.py',options, function (err, results) {
+  if (err) throw err;
+  console.log('results: %j', results);
+
+if (results[2] == "False"){
+console.log('Image is SFW')
+}
+else{
+console.log('Image is NSFW')
+
+var nudvar=1;
+/*
+			             connect.addnudity('mongodb://localhost:27017/testimages', imagename, userid,mapid,nudvar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+
+}
+});
+
+///////////////////
 
  		if(err) {
 	        	    return res.end("Error uploading file.");
