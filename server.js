@@ -806,7 +806,7 @@ app.post('/facesmiledetection',function(req,res){
 
 var exec = require('child_process').exec, child;
 
-child = exec('./kissdetector ' +path.join(imagepath,imagename),
+child = exec('./kissdetector ' +path.join(imagepath,imagename) + ' ./computerVision/data/haarcascade_kiss.xml',
     function (error, stdout, stderr) {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
