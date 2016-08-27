@@ -5,17 +5,28 @@ var multer	=	require('multer');
 var multerdragdrop = require('multer');
 var multerguest=require('multer');
 var path=require('path');
-var app	= express();
+var app	=	express();
 var fs=require('fs');
 var http=require("http").Server(app);
 var socket=require("socket.io")(http);
 var formidable=require('formidable');
+var mv= require('mv');
 app.use(bodyParser.json());
+
+//Computer Vision Middlewares//
+
+//Blurred Detection middlewares.
+var Canvas = require('canvas'),
+    Filters = require('canvasfilters').Filters,
+    image;
+//Detection 
+var cv = require('opencv');
 
 
 var userid;
 var filename;
 const mkdirp = require('mkdirp');
+
 
 //Path for loading static files
 app.use(bodyParser.json());
@@ -213,7 +224,14 @@ app.post('/guestlogin', function(req,res){
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
   form.on('file',function(field,file){
-    fs.rename(file.path,path.join(form.uploadDir,file.name));
+    //fs.rename(file.path,path.join(form.uploadDir,file.name));
+    mv(file.path,join(form.uploadDir,file.name), function(err){
+      if(!err)
+      {
+        console.log("File uploaded");
+      }else
+        console.log("Error occurs"+err);
+    });
   });
   form.on('error',function(err){
     console.log("Error has ocurred");
@@ -227,8 +245,8 @@ app.post('/guestlogin', function(req,res){
 
 });
 
-//Register New users
 
+//Register New users
 app.post('/registeruser', function(req,res){
   var userid=req.body.username;
   var username=req.body.name;
@@ -281,6 +299,32 @@ app.post('/guestdetailssave',function(req,res){
   }
 });
 
+//User created markers save
+
+app.post('/usermarkersave', function(req, res){
+  var userid=req.body.userid;
+  var mapid=req.body.mapname;
+  var filename=req.body.filename;
+  var lat=req.body.lat;
+  var lon=req.body.lon;
+  var date=new Date();
+  var currenthours=date.getMinutes();
+  var markerid=req.body.userid+currenthours;
+
+  connect.addmarkers("mongodb://localhost:27017/testimages","someversion",markerid,userid,mapid,lat,lon, currenthours,filename,function(mssg){
+    if(mssg!=undefined)
+    {
+      console.log("Retrived mssg"+mssg);
+      if(mssg == "yes")
+        return res.end("yes");
+      else
+        return res.end("no");
+    }
+  });
+
+
+});
+
 //** upload and save map coordinates
 app.post('/mapupload', function(req,res){
   var flag=true;
@@ -291,7 +335,9 @@ app.post('/mapupload', function(req,res){
     console.log(eve);
     marker.push(eve);
   });
+
   if(marker.length>0) {
+    /*
     connect.addmaps("mongodb://localhost:27017/testimages", req.body.name, req.body.id, function (mssg) {
       console.log("Fetched data  " + mssg);
       if (mssg != undefined) {
@@ -300,12 +346,12 @@ app.post('/mapupload', function(req,res){
         else
           flag=false;
       }
-    });
+    });*/
     for(i=0;i<marker.length;i++)
     {
       var markerid=req.body.id+i+currenthours;
       console.log(marker[i]);
-      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",marker[i].id,req.body.id,req.body.name,marker[i].lat,marker[i].lon, marker[i].filename,function(mssg){
+      connect.addmarkers("mongodb://localhost:27017/testimages","someversion",marker[i].id,req.body.id,req.body.name,marker[i].lat,marker[i].lon, marker[i].time,marker[i].filename,function(mssg){
       console.log(mssg);
         if(mssg!=undefined) {
           if (mssg == "yes")
@@ -329,15 +375,110 @@ app.post('/mapupload', function(req,res){
   }
 
 });
+
+//Handler for Map description edit
+app.post('/mapdescriptionedit', function(req, res){
+  console.log(req.body);
+  var username=req.body.userid;
+  var mapid=req.body.mapid;
+  var newdes=req.body.text;
+  console.log("In map description edit"+username+"  "+mapid);
+  //Call MongoDb server
+  connect.updateDescription("mongodb://localhost:27017/testimages",username, mapid,newdes,function(msg){
+    if(msg!=undefined)
+    {
+      console.log("Retrived Message"+msg);
+      if(msg == "done")
+        return res.end("yes");
+      else
+        return res.end("no");
+    }
+  });
+
+});
+
+//Delete Map
+app.post("/detelemap", function(req, res){
+
+  var username=req.body.userid;
+  var delmap=req.body.mapid;
+
+  //Call mongodb delete all referneces to mongodb
+  connect.deleteallmap("mongodb://localhost:27017/testimages", username, delmap, function(msg){
+    if(msg!=undefined) {
+      console.log("Retrived message" + msg);
+      if(msg =="done")
+      {
+        return res.end("yes");
+      }
+      else
+        return res.end("no");
+    }
+  });
+
+
+});
+
 //Handler for drag and drop
 app.post('/dragdrop', function(req,res){
-  console.log("In drag and drop"+req.body.userid);
+  console.log("In drag and drop"+userid);
   var form=new formidable.IncomingForm();
   form.multiple=true;
   form.uploadDir=path.join(__dirname,'/uploads');
   form.on('file',function(field,file){
     console.log("File Name"+file.name);
     fs.rename(file.path,path.join(form.uploadDir,file.name));
+  });
+  form.on('field', function(name,value){
+    console.log("In Drag and Drop"+ name +"  "+ value);
+
+    if(name == "mapname") {
+      var obj=JSON.parse(value);
+      console.log(obj['name']);
+      var dir = __dirname + '/uploads/'+obj['user'];
+      var actual=__dirname+'/uploads/'+obj['user']+'/'+obj['name'];
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }
+      }
+      else
+      {
+        if(!fs.existsSync(actual)){
+          fs.mkdirSync(actual);
+        }
+      }
+      //form.uploadDir=path.join(__dirname,'/uploads');
+      form.uploadDir = actual;
+    }else
+    {
+      if(name=="userobj"){
+        //call data base to update mappings
+        var obj=JSON.parse(value);
+        var filenames=obj['filename'];
+        var mapname=obj['mapname'];
+        var userid=obj['id'];
+        var uploadpath='/uploads/'+userid+'/' + mapname;
+        var mapversion="something";
+        console.log("The value of object user"+JSON.parse(value));
+        console.log("The value of user pictures are"+obj['id']);
+        //call database and update the database
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames,uploadpath,function(msg){
+            if(msg!=undefined)
+            {
+              if(msg == "yes"){
+                console.log("Yay "+msg);
+              }else
+              {
+                console.log("Could add to user database. Check");
+              }
+            }
+          });
+        }
+
+    }
+
   });
   form.on('error',function(err){
     console.log("Error has ocurred");
@@ -386,7 +527,8 @@ app.post('/mapsave', function(req, res){
   //Call mongodb function and save the map
   connect.addmaps('mongodb://localhost:27017/testimages',user, mapname, description,function(msg){
     if(msg!=undefined){
-       if(msg == 'add'){
+      console.log("Map returned "+msg);
+       if(msg == "add"){
          return res.end('yes');
        }
       else
@@ -420,6 +562,8 @@ app.post('/userimageupload', function(req,res){
   var form=new formidable.IncomingForm();
   var mapname;
   var dir;
+  var filenames;
+  var uploaddir;
   form.multiple=true;
   form.on('field',function(name,value){
     console.log("Response  "+name+":"+value);
@@ -428,13 +572,13 @@ app.post('/userimageupload', function(req,res){
       console.log(obj['name']);
       var dir = __dirname + '/uploads/'+obj['user'];
       var actual=__dirname+'/uploads/'+obj['user']+'/'+obj['name'];
-      if (!fs.existsSync(dir)) {      
+      if (!fs.existsSync(dir)) {
        fs.mkdirSync(dir);
         if(!fs.existsSync(actual)){
           fs.mkdirSync(actual);
-        }        
+        }
       }
-      else 
+      else
       {
         if(!fs.existsSync(actual)){
           fs.mkdirSync(actual);
@@ -452,12 +596,12 @@ app.post('/userimageupload', function(req,res){
         var userid=obj['id'];
         var uploadpath='/uploads/'+userid+'/' + mapname;
         var mapversion="something";
-        console.log("The value of object user"+JSON.parse(value));
-        console.log("The value of user pictures are"+obj['id']);
+
         //call database and update the database
         for(var i=0;i<filenames.length;i++)
         {
-          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,function(msg){
+          console.log("The filename is"+filenames[i]);
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,0,0,function(msg){
             if(msg!=undefined)
             {
               if(msg == "yes"){
@@ -475,6 +619,7 @@ app.post('/userimageupload', function(req,res){
   });
 
   form.on('file',function(field,file){
+    console.log("File name"+file.path+"  "+path.join(form.uploadDir,file.name));
     fs.rename(file.path,path.join(form.uploadDir,file.name));
   });
   form.on('error',function(err){
@@ -493,157 +638,361 @@ app.post('/userdetailssave', function(req, res){
   console.log("Resgistered user details"+req.body);
   return res.end("yes");
 
-
 });
 
 
+
+
+
+
+
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 
 
-
-app.post('/facesmiledetection',function(req,res){
-    upload(req,res,function(err) {
-      var _userid = req.body.userid;
-      var _mapid= req.body.mapid;
-      var _mapdataversionid =  req.body.mapdataversionid;
-      var _markerid = req.body.markerid;
-      var _imagename= req.body.filename;
-      if(__userid == "guest")
-      {
-        _imagename=__dirname+'/uploads/guest';
-        _mapid="guestmap";
-        _mapdataversionid="guestid";
-      }
-      if(__userid != "guest") {
-        connect.retrievevalues('mongodb://localhost:27017/testimages', 'usercollection', _mapdataversionid, _markerid,_imagename, _imagepath,_userid,_mapid, function(message){
-      var _userid = message.body.userid;
-      var _mapid= message.body.mapid;
-      var _mapdataversionid =  message.body.mapdataversionid;
-      var _markerid = message.body.markerid;
-      var _imagename= message.body.filename;
-      var _imagepath= message.body.pathid;
-
-//******** Detection *********
-
-const SmileFaceDetector = require('./computerVision/SmileFaceDetector');
 //const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 10});
-
-
-const detector = new SmileFaceDetector({
-  // Parameter specifying how much the image size is reduced at each image scale on face detection default: 1.05 
-  faceScale: 1.01,
-  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on face detection default: 8 
-  faceNeighbor: 2,
-  // Parameter specifying how much the image size is reduced at each image scale on smile detection default: 1.7 
-  smileScale: 1.01,
-  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on smile detection default: 22 
-  smileNeighbor: 2,
+//const detector = new SmileFaceDetector({smileScale: 1.01, smileNeighbor: 30});
+  // Parameter specifying how much the image size is reduced at each image scale on face detection default: 1.05
+  var faceScale=1.01;
+  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on face detection default: 8
+  var faceNeighbor= 2;
+  // Parameter specifying how much the image size is reduced at each image scale on smile detection default: 1.7
+  var smileScale=1.01;
+  // Parameter specifying how many neighbors each candidate rectangle should have to retain it on smile detection default: 22
+  var smileNeighbor=2;
   //I will adapt the parameters as the dataset grows.
-});
+
+var COLOR = new Array();
+COLOR['green']=[0, 255, 0];
+COLOR['red']=[0,0,255];
+COLOR['blue']=[255,0,0];
+
+var thickness = 2; // default 1
+
+var optsface= {scale:1.05, neighbors:8};
+var optssmile= {scale:1.7, neighbors:22};
+var optseye= {scale:1.5, neighbors:10};
+var cv = require('opencv');
+
+//const faceClassifier = new cv.CascadeClassifier(cv.FACE_CASCADE);
+//const smileClassifier = new cv.CascadeClassifier('./node_modules/opencv/data/haarcascade_smile.xml');
 
 
 
-/// start detecting faces for each image.
-detector.on('error', (error) => {
-  console.error(error);
-});
-
-detector.on('face', (faces, image) => {
-  console.log(faces);
-  faces.forEach((face) => {
-    console.log("found face!")  
-    facevar=1;
-  });
-    connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,facevar,function(message){
-      console.log("Message"+message);
-      if(message == "yes")
-        return res.end("yes");
-      else
-        return res.end("no");
-    })
-
-});
-
-//start detecting smiles for each image.
-
-detector.on('smile', (smiles, face, image) => {
-  console.log(smiles);
-  smiles.forEach((smile) => {
-    console.log("found smile!")
-    smilevar=1;
-  });
-
-    connect.addface('mongodb://localhost:27017/testimages','storeimages',_mapdataversionid, _markerid,_imagename,_imagepath,_userid,_mapid,smilevar,function(message){
-      console.log("Message"+message);
-      if(message == "yes")
-        return res.end("yes");
-      else
-        return res.end("no");
-    })
-
-
-});
-
-detector.load(path.join(_imagepath,_imagename)).then((image) => {
-  detector.detect(image);
-}).catch((e) => {
-  console.error(e);
-});
-
-})
-      }
-      else
+app.post('/facesmiledetection',function(req,res){  
+    upload(req,res,function(err) {   
+      var userid = req.body.userid;
+      var mapid= req.body.mapid;
+      var mapdataversionid =  req.body.mapdataversionid;
+      var markerid = req.body.markerid;
+      var imagename= req.body.filename;
+      var facevar=0;
+      var smilevar=0;
+      if(userid == "guest")
       {
-          console.log("In here");
-      }
-        if(err) {
-            return res.end("Error uploading file.");
-        }
-        res.end("File is uploaded");
+         imagename=__dirname+'/uploads/guest';
+         mapid="guestmap";
+         mapdataversionid="guestid";
+      };
+      if(userid != "guest") {				
+      connect.getPictures('mongodb://localhost:27017/testimages',userid,mapid, function(imagename, imagepath,mapid){ 
+        if(imagename!= undefined || imagepath!= undefined) {
+          var imagename = imagename;
+          var imagepath = path.join(__dirname,imagepath);
+          console.log("Path is"+imagepath);
 
+
+//Read Image
+	cv.readImage(path.join(imagepath,imagename), function(err, im){
+	  if (err) throw err;
+	  if (im.width() < 1 || im.height() < 1) throw new Error('Image has no size');
+
+//Detect Face
+	  im.detectObject("./computerVision/data/haarcascade_frontalface_alt2.xml", {}, function(err,faces){
+	    if (err) throw err;
+		console.log(faces.length);
+		if (faces.length>0){        
+	     console.log("found face!");
+             var facevar = 1;
+/*
+             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,facevar,function(message){
+             console.log("Message"+message);
+             if(message == "yes")
+             return res.end("yes");
+             else
+             return res.end("no");
+             })
+*/
+	};
+    	for (var i = 0; i < faces.length; i++) {
+   		face = faces[i];
+      console.log(face);
+      		im.rectangle([face.x, face.y], [face.width, face.height], COLOR['green'], 4);
+			    im.save(path.join(imagepath,imagename)+'face-detection.png');
+     		//im.save(path.join(imagepath, imagename)+'face-detection.png');
+      		const halfHeight = parseInt(face.height / 2);
+   //const faceImage = im.roi(face.x, face.y, face.width, face.height);
+      const faceImage = im.crop(face.x, face.y, face.width, face.height);
+//	faceImage.save(path.join(imagepath,imagename)+'image-detection.png');
+      //	  img_gray.convertGrayscale();
+
+//Detect Smile		
+		faceImage.detectObject("./computerVision/data/haarcascade_smile.xml",optssmile, function(err, smiles){
+			if (err) throw err;
+			for (var i = 0; i < smiles.length; i++) {
+		        smile = smiles[i];
+			//const smileImage = faceImage.crop(smile.x, smile.y,smile.width, smile.height);
+			//smileImage.save('smile-detection.png');
+                        im.rectangle([smile.x + face.x, smile.y+face.y], [smile.width, smile.height], COLOR['red'], 4);
+		    im.save(path.join(imagepath,imagename)+'face-detection.png');
+			  //  im.save(path.join(imagepath, imagename)+'face-detection.png');
+		//faceImage.rectangle([smile.x,smile.y], [smile.width, smile.height], COLOR['red'], 4);
+		//	    faceImage.save('image-detection.png');
+			};
+		console.log(smiles.length);
+
+			if (smiles.length>0){        			
+				console.log("found smiles!");
+			             var smilevar = 1;
+/*
+			             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,smilevar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+			};
+    		});
+
+// Detect Open Eyes
+		faceImage.detectObject("./computerVision/data/haarcascade_eye.xml",optseye, function(err, eyes){
+			if (err) throw err;
+			for (var i = 0; i < eyes.length; i++) {
+		        eye = eyes[i];
+			//const eyeImage = faceImage.crop(eye.x, eye.y,eye.width, eye.height);
+
+			//eyeImage.save('eye-detection.png');
+                           im.rectangle([eye.x + face.x, eye.y+face.y], [eye.width, eye.height], COLOR['blue'], 4);
+			//faceImage.rectangle([eye.x,eye.y], [eye.width, eye.height], COLOR['blue'], 4);
+			    im.save(path.join(imagepath,imagename)+'face-detection.png');
+			 //   faceImage.save('image-detection.png');
+
+			}
+		console.log(eyes.length);
+			if (eyes.length>1){
+				console.log("found open eyes!");
+			             var openeyesvar= 1;
+/*
+			             connect.addopeneyes('mongodb://localhost:27017/testimages', imagename, userid,mapid,openeyesvar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+			};
+		});
+		};
+    console.log('Image saved to face-detection.png');
+			});
+		});
+
+//Blurred Detection
+
+
+fs.readFile(path.join(imagepath,imagename), createImage);
+
+function detectEdges(imageData) {
+    var greyscaled, sobelKernel;
+
+    if (imageData.width >= 360) {
+        greyscaled = Filters.luminance(Filters.gaussianBlur(imageData, 5.0));
+    } else {
+        greyscaled = Filters.luminance(imageData);
+    }
+    sobelKernel = Filters.getFloat32Array(
+        [1, 0, -1,
+            2, 0, -2,
+            1, 0, -1]);
+    return Filters.convolve(greyscaled, sobelKernel, true);
+}
+
+// Reduce imageData from RGBA to only one channel (Y/luminance after conversion to greyscale)
+// since RGB all have the same values and Alpha was ignored.
+function reducedPixels(imageData) {
+    var i, x, y, row,
+        pixels = imageData.data,
+        rowLen = imageData.width * 4,
+        rows = [];
+
+    for (y = 0; y < pixels.length; y += rowLen) {
+        row = new Uint8ClampedArray(imageData.width);
+        x = 0;
+        for (i = y; i < y + rowLen; i += 4) {
+            row[x] = pixels[i];
+            x += 1;
+        }
+        rows.push(row);
+    }
+    return rows;
+}
+
+// pixels = Array of Uint8ClampedArrays (row in original image)
+function detectBlur(pixels) {
+    var x, y, value, oldValue, edgeStart, edgeWidth, bm, percWidth,
+        width = pixels[0].length,
+        height = pixels.length,
+        numEdges = 0,
+        sumEdgeWidths = 0,
+        edgeIntensThresh = 20;
+
+    for (y = 0; y < height; y += 1) {
+        // Reset edge marker, none found yet
+        edgeStart = -1;
+        for (x = 0; x < width; x += 1) {
+            value = pixels[y][x];
+            // Edge is still open
+            if (edgeStart >= 0 && x > edgeStart) {
+                oldValue = pixels[y][x - 1];
+                // Value stopped increasing => edge ended
+                if (value < oldValue) {
+                    // Only count edges that reach a certain intensity
+                    if (oldValue >= edgeIntensThresh) {
+                        edgeWidth = x - edgeStart - 1;
+                        numEdges += 1;
+                        sumEdgeWidths += edgeWidth;
+                    }
+                    edgeStart = -1; // Reset edge marker
+                }
+            }
+            // Edge starts
+            if (value == 0) {
+                edgeStart = x;
+            }
+        }
+    }
+
+    if (numEdges === 0) {
+        bm = 0;
+        percWidth = 0;
+    } else {
+        bm = sumEdgeWidths / numEdges;
+        percWidth = bm / width * 100;
+    }
+
+    return {
+        width: width,
+        height: height,
+        num_edges: numEdges,
+        avg_edge_width: bm,
+        avg_edge_width_perc: percWidth
+    };
+}
+
+    
+function createImage(error, data) {
+    if (error) {
+        console.error('Unable to read image file!');
+        throw error;
+    }
+    image = new Canvas.Image;
+    image.onload = drawImageOnCanvas;
+    image.src = data;
+}
+    
+function drawImageOnCanvas() {
+    var canvas = new Canvas(),
+        context;
+
+    canvas.width = image.width;
+    canvas.height = image.height;
+    context = canvas.getContext('2d');
+    context.drawImage(image, 0, 0);
+
+    showBlurScore(context.getImageData(0, 0, canvas.width, canvas.height));
+}
+
+function showBlurScore(imageData) {
+    stats = detectBlur(reducedPixels(detectEdges(imageData)));
+    console.log('Blur score:', Number((stats.avg_edge_width_perc).toFixed(2)));
+    console.log(stats);
+	var THRESHOLD = 0.85;
+	if (Number((stats.avg_edge_width_perc).toFixed(2)) > THRESHOLD){
+		console.log('Blurred Image!');
+		var blurredvar=1;
+/*
+			             connect.addblurred('mongodb://localhost:27017/testimages', imagename, userid,mapid,blurredvar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+
+}
+
+}
+/////////////////////////End of Blurred Detection////////////////////////////////
+
+//Dissimiliarity Detection
+DISSIMTHRESH=25;
+if (cv.ImageSimilarity === undefined) {
+  console.log('port Features2d.cc to OpenCV 3!')
+  process.exit(0);
+}
+
+cv.readImage("./testImages/car3.jpg", function(err, car1) {
+  if (err) throw err;
+
+  cv.readImage("./testImages/car3rotatedright.jpg", function(err, car2) {
+    if (err) throw err;
+
+    cv.ImageSimilarity(car1, car2, function (err, dissimilarity) {
+      if (err) throw err;
+
+      console.log('Dissimilarity: ', dissimilarity);
+	if (dissimilarity < DISSIMTHRESH){
+		console.log('Similar Images');
+		var similarvar=1;
+/*
+			             connect.addblurred('mongodb://localhost:27017/testimages', imagename, userid,mapid,similarvar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+	};
     });
+
+  });
+
 });
 
 
+ 		if(err) {
+	        	    return res.end("Error uploading file.");
+	        	};
+		};		
+
+		});
+	};
+ });
+
+});
+
 //////*******************************END COMPUTER VISION*********************************************//////
 //////*******************************END COMPUTER VISION*********************************************//////
 //////*******************************END COMPUTER VISION*********************************************//////
 //////*******************************END COMPUTER VISION*********************************************//////
 
-
-
-//******** Socket Function to receive face and smile data *********
-
-//*** Receive face data ****
-  socket.on("loadFaces",function(msg){
-  //Access database and retrive markers
-    var userid=msg.id;
-    var maps=msg.mapid;
-    connect.getFaces("mongodb://localhost:27017/testimages",userid,maps,function(face){
-      if(face != undefined) {
-        console.log("Retrived   " + face);
-        socket.emit("faces", {face: face});
-      }
-    });
-
-  });
-
-//*** Receive face data ****
-  socket.on("LoadSmiles",function(msg){
-  //Access database and retrive markers
-    var userid=msg.id;
-    var maps=msg.mapid;
-    connect.getSmiles("mongodb://localhost:27017/testimages",userid,maps,function(smile){
-      if(smile != undefined) {
-        console.log("Retrived   " + smile);
-        socket.emit("smiles", {smile: smile});
-      }
-    });
-
-  });
 
 
 //******** Socket Function to receive data *********
@@ -691,37 +1040,40 @@ socket.on('connection',function(socket){
   //Access database and retrive markers
     var userid=msg.id;
     var maps=msg.mapid;
-    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng){
-      if(lat != undefined || lng != undefined) {
+    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng,time,filename, mapid){
+      if(lat != undefined && lng != undefined) {
         console.log("Retrived   " + lat + "  " + lng);
-        socket.emit("drawmarkers", {lat: lat, lng: lng});
+        socket.emit("drawmarkers", {lat: lat, lng: lng, time:time, filename:filename, map:mapid});
       }
     });
 
   });
 
   socket.on('ImageGall', function(msg){
-    console.log("Message received"+msg.userid + msg.mapid);
+    console.log("Message received"+ msg.mapid);
     connect.getPictures("mongodb://localhost:27017/testimages", msg.userid, msg.mapid,function(picname, picpath, mapid){
-      console.log(picname+"  "+picpath+"   "+mapid);
-      socket.emit("imagereturn", {picname:picname,picpath:picpath,mapid:mapid});
+      if(picname!=undefined && picpath!= undefined && mapid!= undefined) {
+        console.log(picname + "  " + picpath + "   " + mapid);
+        socket.emit("imagereturn", {picname: picname, picpath: picpath, mapid: mapid, userid:msg.userid});
+      }
     });
 
   });
 
   socket.on('getmaps', function(msg){
      console.log('Message received'+msg.userid);
-    connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(msg){
-      if(msg!=undefined){
-        socket.emit('viewmaps', {name:msg});
+    connect.getMaps('mongodb://localhost:27017/testimages', msg.userid, function(mapname, mapdescription){
+      if(mapname!=undefined && mapdescription!=undefined){
+        console.log("Map description"+mapdescription);
+        socket.emit('viewmaps', {name:mapname, description:mapdescription});
       }
     });
   });
 
 });
 
-http.listen(3000,function(){
-  console.log("Working on port 3000");
+http.listen(3030,function(){
+  console.log("Working on port 3030");
 });
 
 //For Node to exit gracefully
@@ -730,13 +1082,6 @@ process.on('SIGTERM', function(){
     process.exit(0);
   });
 });
-
-
-
-
-
-
-
 
 
 
