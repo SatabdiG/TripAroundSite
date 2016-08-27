@@ -726,7 +726,7 @@ app.post('/facesmiledetection',function(req,res){
       		const halfHeight = parseInt(face.height / 2);
    //const faceImage = im.roi(face.x, face.y, face.width, face.height);
       const faceImage = im.crop(face.x, face.y, face.width, face.height);
-	faceImage.save(path.join(imagepath,imagename)+'image-detection.png');
+//	faceImage.save(path.join(imagepath,imagename)+'image-detection.png');
       //	  img_gray.convertGrayscale();
 
 //Detect Smile		
@@ -769,7 +769,7 @@ app.post('/facesmiledetection',function(req,res){
 			//eyeImage.save('eye-detection.png');
                            im.rectangle([eye.x + face.x, eye.y+face.y], [eye.width, eye.height], COLOR['blue'], 4);
 			//faceImage.rectangle([eye.x,eye.y], [eye.width, eye.height], COLOR['blue'], 4);
-			    im.save('face-detection.png');
+			    im.save(path.join(imagepath,imagename)+'face-detection.png');
 			 //   faceImage.save('image-detection.png');
 
 			}
