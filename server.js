@@ -923,6 +923,7 @@ function showBlurScore(imageData) {
     console.log(stats);
 	var THRESHOLD = 0.85;
 	if (Number((stats.avg_edge_width_perc).toFixed(2)) > THRESHOLD){
+		console.log('Blurred Image!');
 		var blurredvar=1;
 /*
 			             connect.addblurred('mongodb://localhost:27017/testimages', imagename, userid,mapid,blurredvar,function(message){
@@ -938,7 +939,45 @@ function showBlurScore(imageData) {
 
 }
 /////////////////////////End of Blurred Detection////////////////////////////////
-	        	if(err) {
+
+//Dissimiliarity Detection
+DISSIMTHRESH=25;
+if (cv.ImageSimilarity === undefined) {
+  console.log('port Features2d.cc to OpenCV 3!')
+  process.exit(0);
+}
+
+cv.readImage("./testImages/car3.jpg", function(err, car1) {
+  if (err) throw err;
+
+  cv.readImage("./testImages/car3rotatedright.jpg", function(err, car2) {
+    if (err) throw err;
+
+    cv.ImageSimilarity(car1, car2, function (err, dissimilarity) {
+      if (err) throw err;
+
+      console.log('Dissimilarity: ', dissimilarity);
+	if (dissimilarity < DISSIMTHRESH){
+		console.log('Similar Images');
+		var similarvar=1;
+/*
+			             connect.addblurred('mongodb://localhost:27017/testimages', imagename, userid,mapid,similarvar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+	};
+    });
+
+  });
+
+});
+
+
+ 		if(err) {
 	        	    return res.end("Error uploading file.");
 	        	};
 		};		
