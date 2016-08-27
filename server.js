@@ -977,6 +977,43 @@ cv.readImage("./testImages/car3.jpg", function(err, car1) {
 });
 
 
+
+//Nudity Detection
+
+
+NUDTHRESHOLD=30;
+var PythonShell = require('python-shell');
+
+var options = {
+args: [path.join(imagepath,imagename),NUDTHRESHOLD]
+};
+
+PythonShell.run('pornscanner.py',options, function (err, results) {
+  if (err) throw err;
+  console.log('results: %j', results);
+
+if (results[2] == "False"){
+console.log('Image is SFW')
+}
+else{
+console.log('Image is NSFW')
+
+var nudvar=1;
+/*
+			             connect.addnudity('mongodb://localhost:27017/testimages', imagename, userid,mapid,nudvar,function(message){
+			             console.log("Message"+message);
+			             if(message == "yes")
+			             return res.end("yes");
+			             else
+			             return res.end("no");
+			             })
+*/
+
+}
+});
+
+///////////////////
+
  		if(err) {
 	        	    return res.end("Error uploading file.");
 	        	};
