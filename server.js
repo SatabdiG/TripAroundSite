@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 var Canvas = require('canvas'),
     Filters = require('canvasfilters').Filters,
     image;
-//Detection 
+//Detection
 var cv = require('opencv');
 
 
@@ -681,8 +681,8 @@ var cv = require('opencv');
 
 
 
-app.post('/facesmiledetection',function(req,res){  
-    upload(req,res,function(err) {   
+app.post('/facesmiledetection',function(req,res){
+    upload(req,res,function(err) {
       var userid = req.body.userid;
       var mapid= req.body.mapid;
       var mapdataversionid =  req.body.mapdataversionid;
@@ -696,8 +696,8 @@ app.post('/facesmiledetection',function(req,res){
          mapid="guestmap";
          mapdataversionid="guestid";
       };
-      if(userid != "guest") {				
-      connect.getPictures('mongodb://localhost:27017/testimages',userid,mapid, function(imagename, imagepath,mapid){ 
+      if(userid != "guest") {
+      connect.getPictures('mongodb://localhost:27017/testimages',userid,mapid, function(imagename, imagepath,mapid){
         if(imagename!= undefined || imagepath!= undefined) {
           var imagename = imagename;
           var imagepath = path.join(__dirname,imagepath);
@@ -713,7 +713,7 @@ app.post('/facesmiledetection',function(req,res){
 	  im.detectObject("./computerVision/data/haarcascade_frontalface_alt2.xml", {}, function(err,faces){
 	    if (err) throw err;
 		console.log(faces.length);
-		if (faces.length>0){        
+		if (faces.length>0){
 	     console.log("found face!");
              var facevar = 1;
 /*
@@ -738,7 +738,7 @@ app.post('/facesmiledetection',function(req,res){
 //	faceImage.save(path.join(imagepath,imagename)+'image-detection.png');
       //	  img_gray.convertGrayscale();
 
-//Detect Smile		
+//Detect Smile
 		faceImage.detectObject("./computerVision/data/haarcascade_smile.xml",optssmile, function(err, smiles){
 			if (err) throw err;
 			for (var i = 0; i < smiles.length; i++) {
@@ -753,7 +753,7 @@ app.post('/facesmiledetection',function(req,res){
 			};
 		console.log(smiles.length);
 
-			if (smiles.length>0){        			
+			if (smiles.length>0){
 				console.log("found smiles!");
 			             var smilevar = 1;
 /*
@@ -803,7 +803,7 @@ app.post('/facesmiledetection',function(req,res){
 		});
 
 
-//Detect Kissing 
+//Detect Kissing
 
 var exec = require('child_process').exec, child;
 
@@ -811,23 +811,23 @@ child = exec('./kissdetector ' +path.join(imagepath,imagename) + ' ./computerVis
     function (error, stdout, stderr) {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
-	if (stdout>0){        
-	     console.log("found kiss!");
-             var kissvar = 1;
-/*
-             connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,kissvar,function(message){
-             console.log("Message"+message);
-             if(message == "yes")
-             return res.end("yes");
-             else
-             return res.end("no");
-             })
-*/
+	if (stdout>0) {
+    console.log("found kiss!");
+    var kissvar = 1;
+    /*
+     connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,kissvar,function(message){
+     console.log("Message"+message);
+     if(message == "yes")
+     return res.end("yes");
+     else
+     return res.end("no");
+     })
+     */
 
-        if (error !== null) {
-             console.log('exec error: ' + error);
-        }
-
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+    }
     });
 
 //Blurred Detection
@@ -922,7 +922,7 @@ function detectBlur(pixels) {
     };
 }
 
-    
+
 function createImage(error, data) {
     if (error) {
         console.error('Unable to read image file!');
@@ -932,7 +932,7 @@ function createImage(error, data) {
     image.onload = drawImageOnCanvas;
     image.src = data;
 }
-    
+
 function drawImageOnCanvas() {
     var canvas = new Canvas(),
         context;
@@ -1045,7 +1045,7 @@ var nudvar=1;
  		if(err) {
 	        	    return res.end("Error uploading file.");
 	        	};
-		};		
+		};
 
 		});
 	};
