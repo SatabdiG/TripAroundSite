@@ -378,7 +378,7 @@ function dashboardfunction(){
     window.location.href="#UploadImages";
 
   });
-
+  /*
   $("#beforepagebutton").hover(function(){
     $("#beforepagebutton span").text("");
   }, function(){
@@ -386,7 +386,7 @@ function dashboardfunction(){
   });
   $("#beforepagebutton").click(function(){
     window.location.href="#";
-  });
+  });*/
 
 
   $("#nextpagebutton").hover(function(){
@@ -741,7 +741,7 @@ function imagecontroller(){
         });
       }
     });
-
+    /*
 
     $("#nextpagebutton").hover(function(){
       $("#nextpagebutton span").text("");
@@ -761,7 +761,7 @@ function imagecontroller(){
 
     $("#beforepagebutton").click(function(){
       window.location.href="#dashboard";
-    });
+    });*/
   });
 
 }
@@ -900,7 +900,7 @@ function imageupload() {
       });
        map.fitBounds(bounds);
     });
-
+    /*
     $("#beforepagebutton").hover(function(){
       $("#beforepagebutton span").text("");
     }, function(){
@@ -908,7 +908,7 @@ function imageupload() {
     });
     $("#beforepagebutton").click(function(){
       window.location.href="#UploadImages";
-    });
+    });*/
 
     $('#something').hide();
     //Fetch images from Server using socketio
