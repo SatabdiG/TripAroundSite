@@ -679,8 +679,6 @@ var cv = require('opencv');
 //const faceClassifier = new cv.CascadeClassifier(cv.FACE_CASCADE);
 //const smileClassifier = new cv.CascadeClassifier('./node_modules/opencv/data/haarcascade_smile.xml');
 
-
-
 app.post('/facesmiledetection',function(req,res){
     upload(req,res,function(err) {
       var userid = req.body.userid;
@@ -716,15 +714,15 @@ app.post('/facesmiledetection',function(req,res){
 		if (faces.length>0){
 	     console.log("found face!");
              var facevar = 1;
-/*
+
              connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,facevar,function(message){
              console.log("Message"+message);
              if(message == "yes")
              return res.end("yes");
              else
              return res.end("no");
-             })
-*/
+             });
+
 	};
     	for (var i = 0; i < faces.length; i++) {
    		face = faces[i];
@@ -778,7 +776,7 @@ app.post('/facesmiledetection',function(req,res){
 			//eyeImage.save('eye-detection.png');
                            im.rectangle([eye.x + face.x, eye.y+face.y], [eye.width, eye.height], COLOR['blue'], 4);
 			//faceImage.rectangle([eye.x,eye.y], [eye.width, eye.height], COLOR['blue'], 4);
-			    im.save(path.join(imagepath,imagename)+'face-detection.png');
+			   // im.save(path.join(imagepath,imagename)+'face-detection.png');
 			 //   faceImage.save('image-detection.png');
 
 			}

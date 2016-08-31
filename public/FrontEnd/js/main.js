@@ -17,12 +17,14 @@ var userarray=[];
 var loc1=[];
 var nomap=0;
 var map;
+
 //From map page
 var usermarkers=[];
 var paths=[];
 
 //For user added paths
 var userpaths=[];
+var usermanualmarker=[];
 
 var deletemapid;
 /*** Home page initializer **/
@@ -804,6 +806,7 @@ function placemarker(location, src){
     $('#myModal').modal('show');
 
   });
+  usermanualmarker.push(marker);
   markercoor.push(marker);
   $('#something').hide();
 
@@ -1421,6 +1424,13 @@ function ResetAll()
   {
     userpaths[i].setMap(null);
   }
+
+  usermanualmarker.forEach(function(marker) {
+    marker.setMap(null);
+  });
+
+
+
 }
 //Angular js and Routing
 
