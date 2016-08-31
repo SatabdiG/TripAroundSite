@@ -1,78 +1,58 @@
-<!--The Home page -->
-<div class="container-fluid">
+<div class="container-login">
+  <!--Login form -->
   <div class="row">
-    <div class="col-md-12">
-       <div class="header">
-        <h1><span id="header">TripAround</span></h1>
-       </div>
-     </div>
-    </div>
-      <!--
-      <button class="button" id="nextpagebutton"><span> > </span></button> -->
-
-      <form id="userentry">
+    <div class="col-sm-12">
+      <h1>TripAround</h1>
+      <form id="userentry" class="user-form">
         <div class="form-group">
-          <label for="usr">User id</label>
-          <input type="text" id="usr" class="form-control" />
+          <label for="usr" class="sr-only">Username</label>
+          <input type="text" id="usr" name="username" class="form-control input-top input-lg" placeholder="Username" required autofocus>
+          <label for="pass" class="sr-only">Password</label>
+          <input type="password" id="pass" name="password" class="form-control input-bottom input-lg" placeholder="Password" required>
         </div>
-        <div class="form-group">
-          <label for="pass">Password</label>
-          <input type="password" id="pass" class="form-control" />
-        </div>
-        <input type="submit" id="usersub" value="Submit"/>
+        <input type="submit" id="usersub" class="btn btn-lg btn-primary btn-block" value="Sign in"/>
       </form>
-      <div class="row">
-        <div class="col-md-6">
-          <a href="" class="button" id="guestlink">Continue as guest</a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Register User</button>
-        </div>
-      </div>
-  <div id="usertext"></div>
+      <div id="usertext"></div>
+    </div>
+  </div>
+  <!--Register new user & continue as guest -->
+  <div class="row">
+    <div class="col-sm-6">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Register</button>
+    </div>
+    <div class="col-sm-6">
+      <a href="" class="button" id="guestlink">Continue as guest</a>
+    </div>
+  </div>
 </div>
 
-
-
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
+<!-- Modal for user registration-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="registerLabel">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Register New User</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+        <h4 class="modal-title" id="registerLabel">Register New User</h4>
       </div>
       <div class="modal-body">
-        <form id="registerusr">
+        <form id="registerusr" class="user-form">
           <div class="form-group">
-            <label for="username"> User Name</label>
-            <input id="username" type="text" placeholder="username">
-          </div>
-          <div class="form-group">
-            <label for="password">Password </label>
-            <input id="password" type="password" placeholder="password">
-          </div>
-          <div class="form-group">
-            <label for="name">Enter Name</label>
-            <input id="name" type="text" placeholder="Enter Name">
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input id="email" type="email" placeholder="email@your.com">
+            <label for="username" class="sr-only">Username</label>
+            <input type="text" id="username" name="username" class="form-control input-top input-lg" placeholder="Username" required>
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" name="password" class="form-control input-middle input-lg" placeholder="Password" required>
+            <label for="name" class="sr-only">Name</label>
+            <input type="text" id="name" name="name" class="form-control input-middle input-lg" placeholder="Name" required>
+            <label for="email" class="sr-only">Email</label>
+            <input type="email" id="email" name="email" class="form-control input-bottom input-lg" placeholder="Email" required>
           </div>
           <div id="info"></div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="register">Submit Now</button>
-
+        <div class="text-right">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="register">Register</button>
+        </div>
       </div>
     </div>
-
   </div>
 </div>
