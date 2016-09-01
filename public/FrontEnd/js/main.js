@@ -1205,7 +1205,7 @@ function imagegallerycontroller(){
         loc1.push(loc);
         var temp=document.getElementById(mssg.picname);
         if(temp == undefined)
-          $('#imagegall').append('<a href="'+loc+'" id="image"><img class="images" src="'+loc+'" height="75" width="75"id="'+mssg.picname+'"></a>');
+          $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '"></a></div>');
 
 
 
