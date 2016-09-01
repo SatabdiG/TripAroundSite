@@ -158,8 +158,7 @@ function dashboardfunction(){
   //User has selected no maps
   if(nomap==0)
   {
-    $('#info').text("Please select a Map. Or create a new One");
-    $('#info').css('color', 'green');
+    $('#info').text("Select a map or create a new one.");
   }
   //Save maps user
   $('#formcontainer').dialog({
@@ -241,37 +240,44 @@ function dashboardfunction(){
       width:400,
       modal:true,
       autoOpen:false,
-      buttons: {
-       "I want to delete this map":function(){
-         console.log("Clicked"+deletemapid);
-         //Send a post request to server delete all references to map and refresh page.
-         var deletedata={};
-         deletedata.userid=userid;
-         deletedata.mapid=deletemapid;
-         $.ajax({
-           url:"/detelemap",
-           type:"POST",
-           data:JSON.stringify(deletedata),
-           contentType:"application/JSON"
+      buttons: [
+        {
+          text: "I want to delete this map",
+          "class": "btn btn-danger",
+          click: function() {
+             console.log("Clicked"+deletemapid);
+             //Send a post request to server delete all references to map and refresh page.
+             var deletedata={};
+             deletedata.userid=userid;
+             deletedata.mapid=deletemapid;
+             $.ajax({
+               url:"/detelemap",
+               type:"POST",
+               data:JSON.stringify(deletedata),
+               contentType:"application/JSON"
 
-         }).done(function(msg){
-           console.log("Message is "+msg)
-           if(msg == "yes")
-           {
-             console.log("Yes returned"+msg.name);
-             //Refresh the Page
-             if($('#confirmdeletion').dialog("isOpen"))
-               $('#confirmdeletion').dialog("close");
+             }).done(function(msg){
+               console.log("Message is "+msg)
+               if(msg == "yes")
+               {
+                 console.log("Yes returned"+msg.name);
+                 //Refresh the Page
+                 if($('#confirmdeletion').dialog("isOpen"))
+                   $('#confirmdeletion').dialog("close");
 
-             $('#maps'+deletemapid).remove();
-           }
-         });
-       },
-        "I want to keep this map":function(){
-         $(this).dialog("close");
+                 $('#maps'+deletemapid).remove();
+               }
+             });
+          }
+        },
+        {
+          text: "I want to keep this map",
+          "class": 'btn btn-default',
+          click: function() {
+            $(this).dialog("close");
+          }
         }
-
-      }
+      ]
 
       });
     if($('#confirmdeletion').dialog("isOpen"))
@@ -307,13 +313,18 @@ function dashboardfunction(){
           //Clear view map region
             var obj=document.getElementById(msg.name);
             if(obj == null) {
-              $('#viewmapregion').append('<div id="maps'+msg.name+'"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit </button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');
-              $('#viewmapregion').css('color', 'green');
+              $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + msg.name +'"><h3>' + msg.name + '</h3>' + '<p>Description: ' + msg.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + msg.name + '"><i class="fa fa-picture-o fa-lg" aria-hidden="true"></i> Upload images</a> ' + '<button class="btn btn-default btn-xs '+msg.name+'" id="editbutton'+msg.name+'"><i class="fa fa-edit fa-lg" aria-hidden="true"></i> Edit map</button> <button class="btn btn-danger btn-xs '+msg.name+'" id="removebutton'+msg.name+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');/*
+              
+              
+              
+              
+              '<div id="maps'+msg.name+'"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit </button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');*/
               var editbutt=document.getElementById("editbutton"+msg.name);
               editbutt.addEventListener("click", function(evt){
                 console.log("Hello");
                 //launch modal
                 $("#DescriptionEdit").modal("show");
+                $("#description").val(msg.description);
                 $("#descriptionsub").on("click", function(evt){
                   evt.preventDefault();
                   console.log("Hello");

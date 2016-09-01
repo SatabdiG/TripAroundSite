@@ -1,4 +1,20 @@
-/* pages without navbar */
+body {
+  background-image:url("/FrontEnd/Pictures/striped_lens.png");
+  background-repeat: repeat;
+}
+
+nav {
+  margin-top: 15px;
+}
+
+/*
+.navbar-inverse {
+  background-image:url("/FrontEnd/Pictures/subtle_carbon.png");
+  background-repeat: repeat;
+}
+*/
+
+/* login page */
 .body-user {
   background: #F8F8F8;
 }
