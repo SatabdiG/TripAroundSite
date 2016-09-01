@@ -354,7 +354,7 @@ function dashboardfunction(){
                       if(msg=="yes")
                       {
                         $("#DescriptionEdit").modal("hide");
-                        $('#info'+msg.info).text("Description :"+data.text);
+                        $('#info'+msg.info).text("Description: "+data.text);
 
                       }
                     });
@@ -652,7 +652,7 @@ function imagecontroller(){
         }).done(function(response){
           console.log(response);
           if(response =="yes") {
-            $("#uploadstatus").text("The Map has been saved");
+            $("#uploadstatus").text("The map has been saved.");
             $("#uploadstatus").css({"color":"green"});
             //Reset Map
             if($.isEmptyObject(markers) == false) {
@@ -665,7 +665,7 @@ function imagecontroller(){
           }
           else
           {
-            $("#uploadstatus").text("The Map has not been saved");
+            $("#uploadstatus").text("The map has not been saved.");
             $("#uploadstatus").css({"color":"red"});
           }
         });
@@ -685,7 +685,7 @@ function imagecontroller(){
         }).done(function(response){
           console.log(response);
           if(response =="yes") {
-            $("#uploadstatus").text("The Map has been saved");
+            $("#uploadstatus").text("The map has been saved.");
             $("#uploadstatus").css({"color":"green"});
             //Reset Map
             if($.isEmptyObject(markers) == false) {
@@ -698,7 +698,7 @@ function imagecontroller(){
           }
           else
           {
-            $("#uploadstatus").text("The Map has not been saved");
+            $("#uploadstatus").text("The map has not been saved.");
             $("#uploadstatus").css({"color":"red"});
           }
         });
