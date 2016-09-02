@@ -36,6 +36,7 @@ function homeinit(){
   });
 
   userid="";
+  mapname="";
   password="";
   $(document).ready(function(){
     $('#guestlink').click(function(event){
