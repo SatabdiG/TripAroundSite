@@ -314,10 +314,10 @@ function dashboardfunction(){
             var obj=document.getElementById(msg.name);
             if(obj == null) {
               $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + msg.name +'"><h3>' + msg.name + '</h3>' + '<p>Description: ' + msg.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + msg.name + '"><i class="fa fa-picture-o fa-lg" aria-hidden="true"></i> Upload images</a> ' + '<button class="btn btn-default btn-xs '+msg.name+'" id="editbutton'+msg.name+'"><i class="fa fa-edit fa-lg" aria-hidden="true"></i> Edit map</button> <button class="btn btn-danger btn-xs '+msg.name+'" id="removebutton'+msg.name+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');/*
-              
-              
-              
-              
+
+
+
+
               '<div id="maps'+msg.name+'"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit </button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');*/
               var editbutt=document.getElementById("editbutton"+msg.name);
               editbutt.addEventListener("click", function(evt){
@@ -702,6 +702,24 @@ function imagecontroller(){
             $("#uploadstatus").css({"color":"red"});
           }
         });
+
+        //Save trail data
+          var trail={};
+          trail.markerobj=markercollec;
+          trail.username=userid;
+          trail.map=mapname;
+          trail.description="";
+          trail.mode="bus";
+
+          $.ajax({
+              url:"/usertrailsave",
+              method:'POST',
+              data:JSON.stringify(trail),
+              contentType:'application/JSON'
+            }
+          ).done(function(msg){
+            console.log("Returbned message"+ msg);
+          });
       }
     });
     $("#userphoto").on('change', function (event) {
@@ -710,7 +728,6 @@ function imagecontroller(){
       var count=0;
       for(var i=0;i<input.length;i++)
       {
-
         EXIF.getData(input[i], function(){
           var markerobj={};
           var lat=EXIF.getTag(this,"GPSLatitude");
@@ -752,8 +769,8 @@ function imagecontroller(){
         });
       }
     });
-    /*
 
+    /*
     $("#nextpagebutton").hover(function(){
       $("#nextpagebutton span").text("");
     }, function(){
@@ -1021,7 +1038,6 @@ function imageupload() {
     else
     {
       //registered users
-
       //airplane line
       var dashedline={
         path: 'M 0,-1 0,1',
@@ -1036,12 +1052,109 @@ function imageupload() {
         strokeColor:'#393',
         scale: 2
       };
-
       var linesymbol={
         path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
         scale:8,
         strokeColor:'#393'
       };
+
+      socket.emit("GetTrails", {id:userid, mapid:mapname});
+      socket.on("drawtrails", function(msg){
+        console.log("Draw Trails gives"+msg.src.lat+"  "+msg.des.lon);
+        var srctemp={lat: msg.src.lat, lng:msg.src.lon};
+        var finaltemp={lat: msg.des.lat, lng:msg.des.lon};
+        var paths=[];
+        paths.push(srctemp);
+        paths.push(finaltemp);
+        var path=new google.maps.Polyline({
+          path:paths,
+          geodesic:true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+        //animateCircle(path);
+        path.setMap(map);
+
+
+        path.addListener("click", function(event){
+          var latitude=event.latLng.lat();
+          var longitude=event.latLng.lng();
+          var vehicle="";
+          //call a function that brings up the modular
+          $('#optionsmodal').modal('show');
+
+          $('#airplane').on('click', function (evt) {
+            evt.preventDefault();
+            path.setOptions({
+              icons:[{
+                icon:dashedline,
+                offset:'0',
+                repeat:'90px'
+              }],
+              strokeColor: '#ffc433',
+            });
+            vehicle="airplane";
+          });
+          $('#bus').on('click', function (evt) {
+            evt.preventDefault();
+            path.setOptions({
+              icons:[{
+                icon:busline,
+                offset:'0',
+                repeat:'50px'
+              }],
+              strokeColor: '#9ba3f3',
+            });
+            vehicle="bus";
+          });
+
+          $('#trailsub').on("click",function(event){
+            //Save the Map details
+            var desc=$('#traildescription').val();
+            if(desc == "")
+            {
+              console.log("Trail Description is empty");
+              $('#infotxt').text("Please enter a valid Trail Description");
+            }else
+            {
+              var trail={};
+              trail.name=userid;
+              trail.map=mapname;
+              console.log("Trail description is present");
+              trail.pathobj=path.getPath().getArray().toString();
+              trail.description=desc;
+              if(vehicle == "")
+              {
+                $('#infotxt').text("Please choose Bus or Airplane");
+                trail.mode="";
+              }else {
+                trail.mode = vehicle;
+              }
+                console.log("Created Object" + JSON.stringify(trail) + latitude + longitude);
+
+                $.ajax({
+                  url:'/traildescription',
+                  method:'POST',
+                  data:JSON.stringify(trail),
+                  contentType:'application/JSON'
+                }).done(function (msg) {
+
+                  console.log("Returend message"+msg);
+                  if(msg == "yes")
+                  {
+                    //close the modal
+                    $("#optionsmodal").modal("hide");
+                  }
+
+                });
+
+            }
+          });
+
+        });
+
+      });
 
       socket.emit("LoadMarker", {id:userid, mapid:mapname});
       socket.on("drawmarkers",function data(msg){
@@ -1063,7 +1176,7 @@ function imageupload() {
           $('#image-container').append('<img class="imageholder" src="uploads/'+userid+'/'+msg.map+'/'+msg.filename+'"</img>');
           $('#myModal').modal('show');
         });
-
+        /*
         var path=new google.maps.Polyline({
           path:paths,
           geodesic:true,
@@ -1072,47 +1185,65 @@ function imageupload() {
           strokeWeight: 2
         });
         //animateCircle(path);
-        path.setMap(map);
+        path.setMap(map);*/
 
-        map.addListener("click", function(event){
-           var latitude=event.latLng.lat();
-           var longitude=event.latLng.lng();
+        var trail={};
 
-          loop1:
-           for(var i=0;i<paths.length;i++){
-             //do something
-              console.log(Math.abs(Math.abs(paths[i].lat) - Math.abs(latitude)));
-              if(Math.abs((Math.abs(paths[i].lat) - Math.abs(latitude)))<5)
+        var vehicle="airplane";
+        /*
+        path.addListener("click", function(event){
+          var latitude=event.latLng.lat();
+          var longitude=event.latLng.lng();
+          //call a function that brings up the modular
+           $('#optionsmodal').modal('show');
+
+           $('#airplane').on('click', function (evt) {
+              evt.preventDefault();
+              path.setOptions({
+                icons:[{
+                  icon:dashedline,
+                  offset:'0',
+                  repeat:'90px'
+                }],
+                strokeColor: '#ffc433',
+              });
+             vehicle="airplane";
+            });
+            $('#bus').on('click', function (evt) {
+              evt.preventDefault();
+              path.setOptions({
+                icons:[{
+                  icon:busline,
+                  offset:'0',
+                  repeat:'50px'
+                }],
+                strokeColor: '#9ba3f3',
+              });
+              vehicle="bus";
+            });
+
+            $('#trailsub').on("click",function(event){
+              //Save the Map details
+              var desc=$('#traildescription').val();
+              if(desc == "")
               {
-               //call a function that brings up the modular
-                $('#optionsmodal').modal('show');
-                $('#airplane').on('click', function (evt) {
-                  evt.preventDefault();
-                  path.setOptions({
-                    icons:[{
-                      icon:dashedline,
-                      offset:'0',
-                      repeat:'90px'
-                    }],
-                    strokeColor: '#ffc433',
-                  });
-                });
-                $('#bus').on('click', function (evt) {
-                  evt.preventDefault();
-                  path.setOptions({
-                    icons:[{
-                      icon:busline,
-                      offset:'0',
-                      repeat:'50px'
-                    }],
-                    strokeColor: '#9ba3f3',
-                  });
-                });
-                break loop1;
+                console.log("Trail Description is empty");
+                $('#infotxt').text("Please enter a valid Trail Description");
+              }else
+              {
+                console.log("Trail description is present");
+                trail.pathobj=path.getPath();
+                trail.description=desc;
+                trail.mode=vehicle;
+                console.log("Created Object"+JSON.stringify(trail)+latitude+longitude);
               }
-           }
+              });
+
         });
-      });
+        */
+
+
+        });
 
     }
   });
@@ -1262,7 +1393,11 @@ function airplanehandler(){
       });
     }
     airplanehandler.userpath=path;
-    userpaths.push(path);
+    var data={};
+    data.mode="airplane";
+    data.path=path;
+    bushandler.userpath=path;
+    userpaths.push(data);
   });
 
   map.setOptions({draggable: true});
@@ -1316,7 +1451,11 @@ function trainhandler(){
       });
     }
     trainhandler.userpath=path;
-    userpaths.push(path);
+    var data={};
+    data.mode="train";
+    data.path=path;
+    bushandler.userpath=path;
+    userpaths.push(data);
   });
 
   map.setOptions({draggable: true});
@@ -1362,9 +1501,45 @@ function SaveData(){
           $('#mapinfosec').css("color", "red");
         }
       });
-
     }
+  }
+  if(userpaths.length<1)
+  {
+    $("#mapinfosec").text("Please click either airplane,bus,train handler");
 
+  }else {
+    for (var i = 0; i < userpaths.length; i++) {
+      var obj=userpaths[i].path;
+
+      var path=obj.getPath().getArray().toString();
+      console.log("Obj is"+path);
+
+      var sendobj={};
+      sendobj.userid=userid;
+      sendobj.mapname=mapname;
+      sendobj.path=path;
+      sendobj.des="";
+      sendobj.mode=userpaths[i].mode;
+     // sendobj.lat=obj.lat;
+    //  sendobj.lon=obj.lng;
+    //  console.log("Built send og"+sendobj.filename);
+
+      $.ajax({
+        url:('/usertrailmanual'),
+        method:'POST',
+        data:JSON.stringify(sendobj),
+        contentType:'application/JSON'
+      }).done(function(msg){
+        console.log("Returned message"+msg);
+        if(msg == "yes")
+        {
+          console.log("Yes returned");
+        }else
+        {
+          console.log("No returned");
+        }
+      });
+    }
 
   }
 
@@ -1419,8 +1594,11 @@ function bushandler()
         console.log("Dragging");
       });
     }
+    var data={};
+    data.mode="bus";
+    data.path=path;
     bushandler.userpath=path;
-    userpaths.push(path);
+    userpaths.push(data);
   });
 
   map.setOptions({draggable: true});
@@ -1433,7 +1611,7 @@ function ResetAll()
 
   for( var i=0; i< userpaths.length;i++)
   {
-    userpaths[i].setMap(null);
+    userpaths[i].path.setMap(null);
   }
 
   usermanualmarker.forEach(function(marker) {

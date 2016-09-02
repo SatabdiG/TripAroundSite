@@ -36,6 +36,7 @@ app.use("/FrontEnd/partials",express.static(__dirname+'/public/FrontEnd/partials
 app.use("/uploads",express.static(__dirname+'/uploads'));
 app.use("/FrontEnd/Pictures",express.static(__dirname+'/public/FrontEnd/Pictures'));
 var connect=require('./AdditionServerSide/MongoDbLib');
+var trail=require('./AdditionServerSide/Classes');
 
 /*
 //Json Data Extraction
@@ -325,6 +326,174 @@ app.post('/usermarkersave', function(req, res){
 
 });
 
+app.post('/traildescription', function (req,res) {
+  //Trail description
+  var username=req.body.name;
+  var mapid=req.body.map;
+  var trails=req.body.pathobj;
+  var mode=req.body.mode;
+  var coorarr=[];
+  var temparr=trails.split(',');
+  var src={};
+  var des={};
+  var descr=req.body.description;
+  console.log("trails"+trails);
+  for(var i=0;i<temparr.length;i++)
+  {
+
+    if(temparr[i].indexOf("(")>=0)
+    {
+      var tempstr=temparr[i].replace('(','');
+      coorarr.push(parseFloat(tempstr));
+    }else if(temparr[i].indexOf(')')>0)
+    {
+      var tempstr=temparr[i].replace(')','');
+      coorarr.push(parseFloat(tempstr));
+    }else
+    {
+      coorarr.push(parseFloat(temparr[i]));
+    }
+
+  }
+  console.log(coorarr);
+  var count=0;
+
+  src.lon=coorarr[count];
+  count=count+1;
+  src.lat=coorarr[count];
+  count=count+1;
+  des.lon=coorarr[count];
+  count=count+1;
+  des.lat=coorarr[count];
+
+  console.log(src.lat+"  "+src.lon);
+  connect.updatetrail('mongodb://localhost:27017/testimages',username, mapid, src, des,descr,mode, function(msg){
+    console.log("Returned "+msg);
+    if(msg!=undefined)
+    {
+      if(msg == "done")
+        return res.end("yes");
+      else
+        return res.end("no");
+    }
+  });
+});
+
+//Save trails for user's manual trails on the map page
+app.post('/usertrailmanual', function(req, res){
+  console.log("User trail manual Save");
+  var username=req.body.userid;
+  var mapid=req.body.mapname;
+  var mode=req.body.mode;
+  var paths=[];
+  var path=req.body.path;
+  var coorarr=[];
+  var temparr=path.split(',');
+  var desc=req.body.des;
+  for(var i=0;i<temparr.length;i++)
+  {
+
+    if(temparr[i].indexOf("(")>=0)
+    {
+      var tempstr=temparr[i].replace('(','');
+      coorarr.push(tempstr);
+    }else if(temparr[i].indexOf(')')>0)
+    {
+      var tempstr=temparr[i].replace(')','');
+      coorarr.push(tempstr);
+    }else
+    {
+      coorarr.push(temparr[i]);
+    }
+
+  }
+
+
+
+
+  //Create the trail array
+  var finalarr=[];
+  for(var i=0;i<coorarr.length;i=i+2)
+  {
+    var obj={};
+    obj.lat=coorarr[i];
+    obj.lon=coorarr[i+1];
+    console.log("obj is"+obj);
+    finalarr.push(obj);
+
+  }
+  var src = [];
+  var dest = {};
+  for(var i=0;i<finalarr.length;i++) {
+    if (i == finalarr[i].length - 1) {
+      dest.lon = finalarr[i].lon;
+      dest.lat = finalarr[i].lat;
+    } else {
+      var tempsrc = {};
+      tempsrc.lon = finalarr[i].lon;
+      tempsrc.lat = finalarr[i].lat;
+      src.push(tempsrc);
+    }
+  }
+
+
+    connect.addtrails('mongodb://localhost:27017/testimages', username, mapid, src, dest,desc, mode, function (msg) {
+      console.log("The msg is" + msg);
+      if (msg != undefined) {
+        if (msg == "yes")
+          return res.end("yes");
+        else
+          return res.end("no");
+      }
+    });
+
+
+});
+
+app.post('/usertrailsave', function(req, res){
+  console.log("In user trail Save");
+  var marker=[];
+  (req.body.markerobj).forEach(function(eve){
+    console.log(eve);
+    marker.push(eve);
+  });
+  var username=req.body.username;
+  var mapname=req.body.map;
+  var descp=req.body.description;
+  var mode=req.body.mode;
+  if(marker.length >1) {
+    for (var i = 0; i < marker.length; i++) {
+      console.log("I is" + i);
+      var src = {};
+      src.lon = marker[i].lon;
+      src.lat = marker[i].lat;
+      var dest = {};
+
+      if((i+1)>= marker.length) {
+        dest.lon = marker[i].lon;
+        dest.lat = marker[i].lat;
+      }else {
+        dest.lon = marker[i + 1].lon;
+        dest.lat = marker[i + 1].lat;
+      }
+      connect.addtrails('mongodb://localhost:27017/testimages', username, mapname, src, dest,descp,mode, function (msg) {
+        console.log("The msg is" + msg);
+        if (msg != undefined) {
+          if (msg == "yes")
+            return res.end("yes");
+          else
+            return res.end("no");
+        }
+      });
+    }
+  }else
+  {
+    return res.end("no");
+  }
+
+});
+
+
 //** upload and save map coordinates
 app.post('/mapupload', function(req,res){
   var flag=true;
@@ -337,16 +506,7 @@ app.post('/mapupload', function(req,res){
   });
 
   if(marker.length>0) {
-    /*
-    connect.addmaps("mongodb://localhost:27017/testimages", req.body.name, req.body.id, function (mssg) {
-      console.log("Fetched data  " + mssg);
-      if (mssg != undefined) {
-        if (mssg == "true")
-           flag=true;
-        else
-          flag=false;
-      }
-    });*/
+
     for(i=0;i<marker.length;i++)
     {
       var markerid=req.body.id+i+currenthours;
@@ -519,6 +679,8 @@ app.post('/login',function(req,res){
 
 });
 
+
+
 app.post('/mapsave', function(req, res){
   var mapname=req.body.name;
   var description=req.body.description;
@@ -642,10 +804,6 @@ app.post('/userdetailssave', function(req, res){
 
 
 
-
-
-
-
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
@@ -732,7 +890,7 @@ app.post('/facesmiledetection',function(req,res){
      		//im.save(path.join(imagepath, imagename)+'face-detection.png');
       		const halfHeight = parseInt(face.height / 2);
    //const faceImage = im.roi(face.x, face.y, face.width, face.height);
-      const faceImage = im.crop(face.x, face.y, face.width, face.height);
+         const faceImage = im.crop(face.x, face.y, face.width, face.height);
 //	faceImage.save(path.join(imagepath,imagename)+'image-detection.png');
       //	  img_gray.convertGrayscale();
 
@@ -1103,10 +1261,26 @@ socket.on('connection',function(socket){
   //Access database and retrive markers
     var userid=msg.id;
     var maps=msg.mapid;
+    //create the intitial trail database
     connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng,time,filename, mapid){
       if(lat != undefined && lng != undefined) {
         console.log("Retrived   " + lat + "  " + lng);
         socket.emit("drawmarkers", {lat: lat, lng: lng, time:time, filename:filename, map:mapid});
+      }
+    });
+
+  });
+
+  socket.on("GetTrails", function(msg){
+    console.log("In get trails");
+    //Get the trails
+    var userid=msg.id;
+    var maps=msg.mapid;
+
+    connect.getTrails("mongodb://localhost:27017/testimages",userid,maps,function(userid,mapid,src,des, description, mode){
+      if(src != undefined && des != undefined) {
+        console.log("Retrived for trails   " + src + "  " + des);
+        socket.emit("drawtrails", {src: src, des: des, map:mapid});
       }
     });
 
@@ -1145,7 +1319,6 @@ process.on('SIGTERM', function(){
     process.exit(0);
   });
 });
-
 
 
 

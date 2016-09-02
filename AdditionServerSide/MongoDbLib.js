@@ -51,6 +51,26 @@ module.exports= {
       }
     });
   },
+  getTrails:function(connectionstring, userid,mapid, callback){
+    console.log("In get Trails mongodb");
+    if(callback)
+      callback();
+    console.log("UserID trail"+userid+mapid);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection('trailcollection').find({"userid":userid, "mapid":mapid});
+        cursor.each(function(err,doc){
+          console.log("In trail"+doc);
+          if(doc!=null)
+          {
+            console.log("In cursor"+doc.src);
+            callback(doc.userid, doc.mapid, doc.src, doc.des, doc.description, doc.mode);
+          }
+        });
+
+      }
+    });
+  },
   //Delete all references of the map
   deleteallmap:function(connectionstring, userid, mapid, callback)
   {
@@ -206,6 +226,93 @@ module.exports= {
     });
   },
 
+  trailPresent:function(connectionstring,userid, mapid, callback){
+    if (callback) {
+      callback();
+    }
+
+    mongodb.connect(connectionstring, function (err, db) {
+        var tempsur = db.collection('trailcollection').count({"userid": userid, "mapid":mapid}, function(err, count){
+          if(!err){
+            console.log("User present "+ count);
+            if(count>0){
+              return callback("present");
+            }
+            else
+              return callback("nothing");
+          }
+        });
+    });
+  },
+
+  getmarkerssorted:function (connectionstring,userid,mapid, callback) {
+    console.log("In added Trail");
+
+    if (callback) {
+      callback();
+    }
+    var time=0;
+    var temparr=[];
+    //get markerdata based on the time paramter
+    mongodb.connect(connectionstring, function (err, db) {
+      time=0;
+
+      if(!err)
+      {
+        console.log("userid"+userid+"  "+mapid);
+        var cursor=db.collection("markercollection").find({"userid":userid, "mapid":mapid}).sort({"time":1});
+          cursor.each(function(err, doc){
+            if(!err) {
+              if (doc != undefined) {
+                time += 1;
+                console.log("Obj" + doc.Lat + "  " + doc.Lng);
+                temparr.push(doc.Lat);
+                callback(temparr);
+                }
+              }
+          });
+      }
+    });
+
+  },
+  //Add trailsby extracting two markers
+  addtrails:function(connectionstring, userid, mapid, src,des,descp,mode, callback){
+    console.log("In add trails");
+    if(callback)
+      callback();
+    mongodb.connect(connectionstring, function (err, db) {
+
+      var collec = db.collection('trailcollection');
+      if (collec != null) {
+        db.collection('trailcollection').insert({
+          "userid": userid,
+          "mapid": mapid,
+          "src": src,
+          "des": des,
+          "description": descp,
+          "mode" : mode
+        }, {w: 1}, function (err, records) {
+
+          if (records != null) {
+            console.log("Trail Added");
+            callback("yes");
+            db.close();
+          }
+          else {
+            callback("no");
+            console.log("Trail cannot add");
+          }
+        });
+
+      }
+
+
+
+    });
+
+  },
+
+
   //add face to database
   //add face variable to the column of face for each image
   addface: function (connectionstring, imagename, userid,mapid,facevar, callback) {
@@ -230,6 +337,42 @@ module.exports= {
         }
       });
   },
+
+  //update trail description
+
+  updatetrail: function (connectionstring, userid,mapid, src, des, desc,mode, callback) {
+    if (callback) {
+      callback();
+    }
+    var srclat=Math.round(src.lat*100)/100;
+    var srclon=Math.round(src.lon*100)/100;
+    console.log("trail "+userid+"  "+mapid+"  "+src.lat+src.lon);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection("trailcollection").find({"userid":userid, "mapid":mapid});
+        cursor.each(function(err,doc){
+          if(doc!=null)
+          {
+            console.log("Src"+doc.src.lat);
+            var lat= Math.round((doc.src.lon)*100)/100;
+            if(lat === srclat)
+            {
+              var docid=doc._id;
+              db.collection("trailcollection").update({_id:docid},{$set:{"description":desc, "mode":mode}});
+              return callback("done");
+            }
+            console.log("Trail ID "+lat+"  "+srclat);
+
+
+          }
+
+        });
+
+      }
+    });
+  },
+
+
   //add smile to database
   //add smile variable to the column of smile for each image
   addsmile: function (connectionstring,mapdataversionid, imagename, imagepath,userid,mapid,smilvar, callback) {

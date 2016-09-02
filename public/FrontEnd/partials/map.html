@@ -34,8 +34,6 @@
     </div>
   </div>
 
-
-
 <input id="searchbox" class="controls" type="text" placeholder="Search Box">
 <!--Modal Window -->
     <div class="modal fade" id="myModal" role="dialog">
@@ -73,13 +71,11 @@
       </tbody>
     </table>
   </table>
-
 </div>
 
 <!-- Options Modal -->
 <div id="optionsmodal" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -87,8 +83,12 @@
         <h4 class="modal-title">Select Option</h4>
       </div>
       <div class="modal-body">
+        <div id="infotxt"></div>
+        <input type="text" id="traildescription" placeholder="Enter a description">
+        <br>
         <button class="btn btn-primary" id="airplane">Airplane</button>
         <button class="btn btn-primary" id="bus">Bus</button>
+        <button class="btn btn-primary" id="trailsub">Submit Now</button>
       </div>
       <div class="modal-footer" id="optionsfooter">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
