@@ -831,7 +831,8 @@ function placemarker(location, src){
   marker.setMap(map);
   marker.addListener('click',function () {
     console.log("Image Source"+src);
-    $('#image-container').append('<img class="imageholder" src="'+src+'"</img>');
+   document.getElementById("image").innerHTML='<img src="'+src+'" />';
+    //$('#image-container').append('<img class="imageholder" src="'+src+'"</img>');
     $('#myModal').modal('show');
 
   });
@@ -1337,7 +1338,7 @@ function imagegallerycontroller(){
         loc1.push(loc);
         var temp=document.getElementById(mssg.picname);
         if(temp == undefined)
-          $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '"></a></div>');
+          $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '" id="'+mssg.picname+'"></a></div>');
 
 
 
