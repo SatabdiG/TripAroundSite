@@ -624,7 +624,7 @@ app.post('/dragdrop', function(req,res){
         console.log("The value of object user"+JSON.parse(value));
         console.log("The value of user pictures are"+obj['id']);
         //call database and update the database
-          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames,uploadpath,function(msg){
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames,uploadpath,0,0,function(msg){
             if(msg!=undefined)
             {
               if(msg == "yes"){
