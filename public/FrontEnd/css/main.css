@@ -14,6 +14,62 @@ nav {
 }
 */
 
+
+/* steps */
+.steps {
+  margin-bottom: 2em;
+}
+.step {
+  text-align: center;
+  border-bottom-width: 4px;
+  border-bottom-style: solid;
+  font-weight: bold;
+}
+.step::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 16px;
+  background-color: white;
+  float: left;
+  position: relative;
+  top: 34px;
+  left: 50%;
+  border-width: 4px;
+  border-style: solid;
+}
+
+.step-past {
+  border-bottom-color: #338;
+}
+.step-current {
+  border-bottom-color: #99f;
+}
+.step-future {
+  border-bottom-color: #ccc;
+}
+.step-past::after {
+  border-color: #338;
+}
+.step-current::after {
+  border-color: #99f;
+}
+.step-future::after {
+  border-color: #ccc;
+}
+
+.step a {
+  line-height: 40px;
+  color: black;
+}
+.step-future a {
+  color: #ccc;
+}
+.step a:hover {
+  text-decoration: none;
+}
+
+
 /* login page */
 .body-user {
   background: #F8F8F8;
