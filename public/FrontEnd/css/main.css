@@ -1,6 +1,7 @@
 body {
   background-image:url("/FrontEnd/Pictures/striped_lens.png");
   background-repeat: repeat;
+  padding-bottom: 20px;
 }
 
 nav {
@@ -46,7 +47,7 @@ nav {
   width: 16px;
   height: 16px;
   border-radius: 16px;
-  background-color: white;
+  background-image: url("/FrontEnd/Pictures/striped_lens.png");
   float: left;
   position: relative;
   top: 34px;
