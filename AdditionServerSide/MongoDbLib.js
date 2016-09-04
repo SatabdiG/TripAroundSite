@@ -149,8 +149,8 @@ module.exports= {
         cursor.each(function(err,doc){
           if(doc!=null)
           {
-            console.log("Document"+doc);
-            callback(doc.picname,doc.picpath,doc.mapid, doc.description);
+            console.log("Document"+doc.face);
+            callback(doc.picname,doc.picpath,doc.mapid, doc.description, doc.face, doc.smile);
           }
         });
 
