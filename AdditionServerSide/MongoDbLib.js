@@ -44,7 +44,7 @@ module.exports= {
         cursor.each(function(err,doc){
           if(doc!=null)
           {
-            callback(doc.Lat,doc.Lng,doc.time,doc.filename, doc.mapid);
+            callback(doc.Lat,doc.Lng,doc.time,doc.filename, doc.mapid, doc._id);
           }
         });
 

@@ -1262,10 +1262,10 @@ socket.on('connection',function(socket){
     var userid=msg.id;
     var maps=msg.mapid;
     //create the intitial trail database
-    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng,time,filename, mapid){
+    connect.getMarkers("mongodb://localhost:27017/testimages",userid,maps,function(lat,lng,time,filename, mapid, id){
       if(lat != undefined && lng != undefined) {
         console.log("Retrived   " + lat + "  " + lng);
-        socket.emit("drawmarkers", {lat: lat, lng: lng, time:time, filename:filename, map:mapid});
+        socket.emit("drawmarkers", {lat: lat, lng: lng, time:time, filename:filename, map:mapid, id:id});
       }
     });
 
