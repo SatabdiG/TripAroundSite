@@ -90,7 +90,7 @@ h1 {
 
 .step a {
   line-height: 40px;
-  color: black;
+  color: #333;
 }
 .step-future a {
   color: #ccc;
