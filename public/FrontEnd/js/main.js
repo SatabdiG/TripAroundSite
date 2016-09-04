@@ -1244,7 +1244,7 @@ function imageupload() {
       socket.emit("LoadMarker", {id:userid, mapid:mapname});
       socket.on("drawmarkers",function data(msg){
         //draw markers on map
-        console.log("Fetched data"+msg.lat+"  "+msg.lng);
+        console.log("Fetched data"+msg.lat+"  "+msg.lng+"  "+msg.id);
         var temp={lat: msg.lat, lng:msg.lng};
         paths.push(temp);
 
@@ -1258,74 +1258,17 @@ function imageupload() {
         marker.setMap(map);
         markerarray.push(marker);
         marker.addListener('click',function () {
-          $('#image-container').append('<img class="imageholder" src="uploads/'+userid+'/'+msg.map+'/'+msg.filename+'"</img>');
+
+          var tempimg=$("#image-container .imageholder").html();
+          if(tempimg!= undefined) {
+            var str="uploads/"+userid+"/"+msg.map+"/"+msg.filename;
+            $("#image-container .imageholder").attr("src", str);
+
+          }else {
+             $('#image-container').append('<img class="imageholder" src="uploads/'+userid+'/'+msg.map+'/'+msg.filename+'"</img>');
+          }
           $('#myModal').modal('show');
         });
-        /*
-        var path=new google.maps.Polyline({
-          path:paths,
-          geodesic:true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2
-        });
-        //animateCircle(path);
-        path.setMap(map);*/
-
-        var trail={};
-
-        var vehicle="airplane";
-        /*
-        path.addListener("click", function(event){
-          var latitude=event.latLng.lat();
-          var longitude=event.latLng.lng();
-          //call a function that brings up the modular
-           $('#optionsmodal').modal('show');
-
-           $('#airplane').on('click', function (evt) {
-              evt.preventDefault();
-              path.setOptions({
-                icons:[{
-                  icon:dashedline,
-                  offset:'0',
-                  repeat:'90px'
-                }],
-                strokeColor: '#ffc433',
-              });
-             vehicle="airplane";
-            });
-            $('#bus').on('click', function (evt) {
-              evt.preventDefault();
-              path.setOptions({
-                icons:[{
-                  icon:busline,
-                  offset:'0',
-                  repeat:'50px'
-                }],
-                strokeColor: '#9ba3f3',
-              });
-              vehicle="bus";
-            });
-
-            $('#trailsub').on("click",function(event){
-              //Save the Map details
-              var desc=$('#traildescription').val();
-              if(desc == "")
-              {
-                console.log("Trail Description is empty");
-                $('#infotxt').text("Please enter a valid Trail Description");
-              }else
-              {
-                console.log("Trail description is present");
-                trail.pathobj=path.getPath();
-                trail.description=desc;
-                trail.mode=vehicle;
-                console.log("Created Object"+JSON.stringify(trail)+latitude+longitude);
-              }
-              });
-
-        });
-        */
 
 
         });
