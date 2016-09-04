@@ -901,6 +901,7 @@ app.post('/facesmiledetection',function(req,res){
              });
 
 	};
+
     	for (var i = 0; i < faces.length; i++) {
    		face = faces[i];
       console.log(face);
@@ -908,12 +909,12 @@ app.post('/facesmiledetection',function(req,res){
 			    im.save(path.join(imagepath,imagename)+'face-detection.png');
      		//im.save(path.join(imagepath, imagename)+'face-detection.png');
       		const halfHeight = parseInt(face.height / 2);
-   //const faceImage = im.roi(face.x, face.y, face.width, face.height);
+        //const faceImage = im.roi(face.x, face.y, face.width, face.height);
          const faceImage = im.crop(face.x, face.y, face.width, face.height);
-//	faceImage.save(path.join(imagepath,imagename)+'image-detection.png');
+      //	faceImage.save(path.join(imagepath,imagename)+'image-detection.png');
       //	  img_gray.convertGrayscale();
 
-//Detect Smile
+    //Detect Smile
 		faceImage.detectObject("./computerVision/data/haarcascade_smile.xml",optssmile, function(err, smiles){
 			if (err) throw err;
 			for (var i = 0; i < smiles.length; i++) {
@@ -926,9 +927,7 @@ app.post('/facesmiledetection',function(req,res){
 		//faceImage.rectangle([smile.x,smile.y], [smile.width, smile.height], COLOR['red'], 4);
 		//	    faceImage.save('image-detection.png');
 			};
-		console.log(smiles.length);
-
-			if (smiles.length>0){
+					if (smiles.length>0){
 				console.log("found smiles!");
 			             var smilevar = 1;
 /*

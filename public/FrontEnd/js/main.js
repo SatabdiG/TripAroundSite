@@ -262,7 +262,7 @@ function dashboardfunction(){
                console.log("Message is "+msg)
                if(msg == "yes")
                {
-                 console.log("Yes returned"+msg.name);
+                 console.log("Yes returned"+msg+"  "+deletemapid);
                  //Refresh the Page
                  if($('#confirmdeletion').dialog("isOpen"))
                    $('#confirmdeletion').dialog("close");
@@ -316,7 +316,9 @@ function dashboardfunction(){
             if(obj == null) {
               $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + msg.name +'"><h3>' + msg.name + '</h3>' + '<p>Description: ' + msg.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + msg.name + '"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Select map</a> ' + '<!--<button class="btn btn-default btn-xs '+msg.name+'" id="editbutton'+msg.name+'"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Edit map</button>--> <button class="btn btn-danger btn-xs '+msg.name+'" id="removebutton'+msg.name+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');/*
               '<div id="maps'+msg.name+'"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit </button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');*/
+              /*
               var editbutt=document.getElementById("editbutton"+msg.name);
+
               editbutt.addEventListener("click", function(evt){
                 console.log("Hello");
                 //launch modal
@@ -357,17 +359,21 @@ function dashboardfunction(){
                   }
                 });
 
-              });
+              });*/
 
 
               var removebutt=document.getElementById("removebutton"+msg.name);
               removebutt.addEventListener("click", function(evt){
                 evt.preventDefault();
-                console.log("Remove clicked");
+                var tempid=this.id;
+                var tempstr=tempid.substring(12, tempid.length);
+                console.log("Remove clicked " + tempstr);
+                /*
                 if(mapname == undefined) {
                   deletemapid = msg.name;
                 }else
-                  deletemapid=mapname;
+                  deletemapid=mapname;*/
+                deletemapid=tempstr;
                 $('#confirmdeletion').dialog("open");
               });
 
