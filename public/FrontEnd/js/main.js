@@ -215,6 +215,7 @@ function dashboardfunction(){
               $('#infofrm').text('Map is Saved');
               $('#infofrm').css('color', 'green');
               mapname=dat.name;
+              $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + mapname +'"><h3>' + mapname + '</h3>' + '<p>Description: ' + dat.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + mapname + '"><i class="fa fa-picture-o fa-lg" aria-hidden="true"></i> Upload images</a> ' + '<button class="btn btn-default btn-xs '+mapname+'" id="editbutton'+mapname+'"><i class="fa fa-edit fa-lg" aria-hidden="true"></i> Edit map</button> <button class="btn btn-danger btn-xs '+mapname+'" id="removebutton'+mapname+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');
 
               //return false;
             }
@@ -284,8 +285,7 @@ function dashboardfunction(){
     if($('#confirmdeletion').dialog("isOpen"))
       $('#confirmdeletion').dialog("close");
   //View Button
-  $('#viewbutt').on('click', function(){
-    console.log("Clicked on the view saved button options");
+
     if(userid =="guest"){
       $('#dialog').dialog("open");
 
@@ -315,10 +315,6 @@ function dashboardfunction(){
             var obj=document.getElementById(msg.name);
             if(obj == null) {
               $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + msg.name +'"><h3>' + msg.name + '</h3>' + '<p>Description: ' + msg.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + msg.name + '"><i class="fa fa-picture-o fa-lg" aria-hidden="true"></i> Upload images</a> ' + '<button class="btn btn-default btn-xs '+msg.name+'" id="editbutton'+msg.name+'"><i class="fa fa-edit fa-lg" aria-hidden="true"></i> Edit map</button> <button class="btn btn-danger btn-xs '+msg.name+'" id="removebutton'+msg.name+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');/*
-
-
-
-
               '<div id="maps'+msg.name+'"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit </button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');*/
               var editbutt=document.getElementById("editbutton"+msg.name);
               editbutt.addEventListener("click", function(evt){
@@ -356,7 +352,6 @@ function dashboardfunction(){
                       {
                         $("#DescriptionEdit").modal("hide");
                         $('#info'+msg.info).text("Description: "+data.text);
-
                       }
                     });
                   }
@@ -381,7 +376,7 @@ function dashboardfunction(){
         }
       });
     }
-  });
+
 
   $('#viewmapregion').on('click','a', function(event){
     console.log("Link clicked");
@@ -401,14 +396,7 @@ function dashboardfunction(){
   });*/
 
 
-  $("#nextpagebutton").hover(function(){
-    $("#nextpagebutton span").text("");
-  }, function(){
-    $("#nextpagebutton span").text(">");
-  });
-  $("#nextpagebutton").click(function(){
-    window.location.href="#UploadImages";
-  });
+
 
   });
   //document ready function concludes
@@ -1011,7 +999,14 @@ function imageupload() {
           $('#image-container').append('<img class="imageholder" src="uploads/'+userid+'/'+msg.filename+'"</img>');
           $('#myModal').modal('show');
           $("#imagedescriptionsub").on("click", function(evt){
-            console.log("Submit button Clicked");
+            var content=$('#imageinfo').val();
+            if(content != "")
+            {
+              var imgdesdata={};
+              imgdesdata.filename=msg.filename;
+              imgdesdata.username=userid;
+              imgdesdata.mapid=mapname;
+            }
           });
         });
         markerarray.push(marker);
@@ -1258,7 +1253,6 @@ function imageupload() {
         marker.setMap(map);
         markerarray.push(marker);
         marker.addListener('click',function () {
-
           var tempimg=$("#image-container .imageholder").html();
           if(tempimg!= undefined) {
             var str="uploads/"+userid+"/"+msg.map+"/"+msg.filename;
@@ -1267,10 +1261,35 @@ function imageupload() {
           }else {
              $('#image-container').append('<img class="imageholder" src="uploads/'+userid+'/'+msg.map+'/'+msg.filename+'"</img>');
           }
+
+          $("#imagedescriptionsub").on("click", function(evt){
+            console.log("Image description clicked");
+            var content=$('#imageinfo').val();
+            if(content != "")
+            {
+              var imgdesdata={};
+              imgdesdata.filename=msg.filename;
+              imgdesdata.username=userid;
+              imgdesdata.mapid = mapname;
+              imgdesdata.description=content;
+
+              $.ajax({
+                url:'/updateimagedescription',
+                method:'POST',
+                data:JSON.stringify(imgdesdata),
+                contentType:'application/JSON'
+              }).done(function(msg){
+                console.log("Return msg"+msg);
+                if(msg == "yes")
+                {
+                  $('#image-des').text(msg);
+                }
+              });
+            }
+          });
+
           $('#myModal').modal('show');
         });
-
-
         });
 
     }
@@ -1348,7 +1367,7 @@ function imagegallerycontroller(){
 
     socket.emit("ImageGall",{userid: userid, mapid:mapid});
     socket.on("imagereturn", function(mssg){
-      console.log(mssg);
+      console.log(mssg.description);
       console.log(mssg.picname);
       console.log(mssg.picpath);
       if(userid=="guest"){
@@ -1364,7 +1383,14 @@ function imagegallerycontroller(){
         loc1.push(loc);
         var temp=document.getElementById(mssg.picname);
         if(temp == undefined)
-          $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '" id="'+mssg.picname+'"><div class="caption"><p>caption</p></div></a></div>');
+        {
+          var text=mssg.description;
+          if(text == "")
+            text="No description yet";
+
+
+          $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '" id="'+mssg.picname+'"><div class="caption"><p id="cap'+mssg.picname+'">' +text+'</p></div></a></div>');
+        }
 
 
 

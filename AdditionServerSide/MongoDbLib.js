@@ -114,6 +114,31 @@ module.exports= {
 
   },
 
+  updatePictures:function(connectionstring, userid, mapid,filename,usertext, callback){
+    if(callback)
+      callback();
+    //find the description
+    console.log("In Update Pictures"+filename);
+    mongodb.connect(connectionstring,function(err,db){
+      if(!err){
+        var cursor=db.collection("picturescollection").find({"userid":userid, "mapid":mapid, "picname":filename});
+        cursor.each(function(err,doc){
+          console.log("In doc"+userid+"  "+mapid);
+          if(doc!=null)
+          {
+            console.log("Document ID"+doc._id+"  "+usertext);
+            var docid=doc._id;
+            db.collection("picturescollection").update({_id:docid},{$set:{"description":usertext}});
+            return callback("done");
+
+          }
+        });
+
+      }
+    });
+
+  },
+
   getPictures:function(connectionstring, userid,mapid, callback){
     if(callback)
       callback();
@@ -125,7 +150,7 @@ module.exports= {
           if(doc!=null)
           {
             console.log("Document"+doc);
-            callback(doc.picname,doc.picpath,doc.mapid);
+            callback(doc.picname,doc.picpath,doc.mapid, doc.description);
           }
         });
 
@@ -482,7 +507,7 @@ module.exports= {
   });
 },
 
-  storeImages: function (connectionstring, mapdataversionid, userid,mapid, markerid,picname,picpath,facevar, smilevar,callback) {
+  storeImages: function (connectionstring, mapdataversionid, userid,mapid, markerid,picname,picpath,facevar, smilevar, des,callback) {
     if (callback) {
       callback();
     }
@@ -499,7 +524,8 @@ module.exports= {
           "picname":picname,
           "picpath":picpath,
           "face":facevar,
-          "smile":smilevar
+          "smile":smilevar,
+          "description":des,
         }, {w: 1}, function (err, records) {
           if (records != null) {
             console.log("Map Data Version Record added");

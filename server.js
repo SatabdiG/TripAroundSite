@@ -624,7 +624,7 @@ app.post('/dragdrop', function(req,res){
         console.log("The value of object user"+JSON.parse(value));
         console.log("The value of user pictures are"+obj['id']);
         //call database and update the database
-          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames,uploadpath,0,0,function(msg){
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames,uploadpath,0,0,"",function(msg){
             if(msg!=undefined)
             {
               if(msg == "yes"){
@@ -717,6 +717,7 @@ app.post('/viewmap', function(req,res){
   });
 });
 
+
 //Save Images of registered users
 
 app.post('/userimageupload', function(req,res){
@@ -763,7 +764,7 @@ app.post('/userimageupload', function(req,res){
         for(var i=0;i<filenames.length;i++)
         {
           console.log("The filename is"+filenames[i]);
-          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,0,0,function(msg){
+          connect.storeImages("mongodb://localhost:27017/testimages",mapversion,userid,mapname,"markerid",filenames[i],uploadpath,0,0,"", function(msg){
             if(msg!=undefined)
             {
               if(msg == "yes"){
@@ -802,7 +803,25 @@ app.post('/userdetailssave', function(req, res){
 
 });
 
+app.post('/updateimagedescription', function (req, res) {
+  console.log("In image update description");
+  var filename=req.body.filename;
+  var username=req.body.username;
+  var mapname=req.body.mapid;
+  var desc=req.body.description;
+  connect.updatePictures('mongodb://localhost:27017/testimages',username,mapname,filename, desc, function (msg) {
+    if(msg!= undefined)
+    {
+      if(msg == "done")
+      {
+        console.log("ImageDescription updated"+ msg);
+        return res.end("yes");
+      }else
+        return res.end("no");
+    }
 
+  });
+});
 
 //////*******************************START COMPUTER VISION*********************************************//////
 //////*******************************START COMPUTER VISION*********************************************//////
@@ -1289,10 +1308,10 @@ socket.on('connection',function(socket){
 
   socket.on('ImageGall', function(msg){
     console.log("Message received"+ msg.mapid);
-    connect.getPictures("mongodb://localhost:27017/testimages", msg.userid, msg.mapid,function(picname, picpath, mapid){
+    connect.getPictures("mongodb://localhost:27017/testimages", msg.userid, msg.mapid,function(picname, picpath, mapid, description){
       if(picname!=undefined && picpath!= undefined && mapid!= undefined) {
         console.log(picname + "  " + picpath + "   " + mapid);
-        socket.emit("imagereturn", {picname: picname, picpath: picpath, mapid: mapid, userid:msg.userid});
+        socket.emit("imagereturn", {picname: picname, picpath: picpath, mapid: mapid, userid:msg.userid, description:description});
       }
     });
 
