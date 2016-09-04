@@ -21,12 +21,43 @@ var map;
 //From map page
 var usermarkers=[];
 var paths=[];
+var busactive=0;
+var trainactive=0;
+var planeactive=0;
 
 //For user added paths
 var userpaths=[];
 var usermanualmarker=[];
 
 var deletemapid;
+
+//Lines
+var dashedline={
+  path: 'M 0,-1 0,1',
+  strokeOpacity: 1,
+  strokeColor:'#393',
+  scale: 5
+};
+//train line
+var trainline={
+  path: 'M 0,-1 0,1',
+  strokeOpacity: 1,
+  strokeColor:'#396',
+  scale: 3
+};
+//Bus line
+var busline={
+  path: 'M 0,0,-1,-1,0, 0,1, 1',
+  strokeOpacity: 1,
+  strokeColor:'#393',
+  scale: 2
+};
+var linesymbol={
+  path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+  scale:8,
+  strokeColor:'#393'
+};
+
 /*** Home page initializer **/
 function homeinit(){
   //Reset Modal
@@ -215,7 +246,9 @@ function dashboardfunction(){
               $('#infofrm').text('Map is Saved');
               $('#infofrm').css('color', 'green');
               mapname=dat.name;
-              $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + mapname +'"><h3>' + mapname + '</h3>' + '<p>Description: ' + dat.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + mapname + '"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Select map</a> ' + '<!--<button class="btn btn-default btn-xs '+mapname+'" id="editbutton'+mapname+'"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Edit map</button>--> <button class="btn btn-danger btn-xs '+mapname+'" id="removebutton'+mapname+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');
+              var obj=document.getElementById('maps'+mapname);
+              if(obj == null)
+               $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + mapname +'"><h3>' + mapname + '</h3>' + '<p>Description: ' + dat.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + mapname + '"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Select map</a> ' + '<!--<button class="btn btn-default btn-xs '+mapname+'" id="editbutton'+mapname+'"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Edit map</button>--> <button class="btn btn-danger btn-xs '+mapname+'" id="removebutton'+mapname+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');
 
               //return false;
             }
@@ -803,7 +836,7 @@ function initialize(){
   overlay = new google.maps.OverlayView();
   overlay.draw = function() {};
   overlay.setMap(map);
-  
+
   // prevent panning into grey zone
   google.maps.event.addListener(map, 'center_changed', function() {
       checkBounds(map);
@@ -821,16 +854,16 @@ function initialize(){
       if(latNorth>85 && latSouth<-85)   /* out both side -> it's ok */
           return;
       else {
-          if(latNorth>85)   
+          if(latNorth>85)
               newLat =  map.getCenter().lat() - (latNorth-85);   /* too north, centering */
-          if(latSouth<-85) 
+          if(latSouth<-85)
               newLat =  map.getCenter().lat() - (latSouth+85);   /* too south, centering */
-      }   
+      }
   }
   if(newLat) {
       var newCenter= new google.maps.LatLng( newLat ,map.getCenter().lng() );
       map.setCenter(newCenter);
-      }   
+      }
   }
 
 
@@ -857,8 +890,9 @@ function placemarker(location, src){
   marker.setMap(map);
   marker.addListener('click',function () {
     console.log("Image Source"+src);
-   document.getElementById("image").innerHTML='<img src="'+src+'" />';
+   //document.getElementById("image").innerHTML='<img src="'+src+'" />';
     //$('#image-container').append('<img class="imageholder" src="'+src+'"</img>');
+    $('#image-container').attr("src",src);
     $('#myModal').modal('show');
 
   });
@@ -890,6 +924,7 @@ $("#menu-toggle").click(function(e){
 /** Controller for Map Page **/
 function imageupload() {
   $(document).ready(function(){
+
     if(mapname == undefined)
       window.location.href="#UploadImages";
     else
@@ -1074,31 +1109,7 @@ function imageupload() {
     {
       //registered users
       //airplane line
-      var dashedline={
-        path: 'M 0,-1 0,1',
-        strokeOpacity: 1,
-        strokeColor:'#393',
-        scale: 5
-      };
-      //train line
-      var trainline={
-        path: 'M 0,-1 0,1',
-        strokeOpacity: 1,
-        strokeColor:'#396',
-        scale: 3
-      };
-      //Bus line
-      var busline={
-        path: 'M 0,0,-1,-1,0, 0,1, 1',
-        strokeOpacity: 1,
-        strokeColor:'#393',
-        scale: 2
-      };
-      var linesymbol={
-        path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-        scale:8,
-        strokeColor:'#393'
-      };
+
 
       socket.emit("GetTrails", {id:userid, mapid:mapname});
       socket.on("drawtrails", function(msg){
@@ -1112,15 +1123,17 @@ function imageupload() {
           var srcarr=[];
           for(var i=0;i<src.length;i++)
           {
+            var latt=parseFloat(src[i].lat);
+            var lont=parseFloat(src[i].lon);
             console.log("Src"+src[i].lat+"  "+src[i].lon);
-            var srctemp={lat: src[i].lat, lng:src[i].lon};
+            var srctemp={lat: latt, lng:lont};
             srcarr.push(srctemp);
           }
-          if(des.lat != undefined)
-            srcarr.push({lat: des.lat, lng:des.lon});
+          if(des.lat != undefined || des.lon != undefined)
+            srcarr.push({lat: parseFloat(des.lat), lng:parseFloat(des.lon)});
+          console.log(srctemp);
           paths=srcarr;
         }else {
-
 
           var srctemp = {lat: msg.src.lat, lng: msg.src.lon};
           var finaltemp = {lat: msg.des.lat, lng: msg.des.lon};
@@ -1348,19 +1361,50 @@ function imagegallerycontroller(){
       $('#filtermodal').modal("show");
       //smile check function
       $('#smilecheck').on("click", function (evt) {
-        $('#smilecheck').attr("checked", true);
+        $('#facecheck').attr("checked", true);
         console.log("Smile checked clicked");
         //call the server function
         var data={};
         data.userid=userid;
-        data.mapid=mapname;
+        data.mapid=mapname;/*
         $.ajax({
-          url:'/facesmiledetection',
+          url:'/facedetection',
           data:JSON.stringify(data),
           method:'POST',
           contentType:'application/JSON'
         }).done(function(msg){
           console.log("Message Returned"+msg);
+          //call draw images functions and redraw the page
+          socket.emit("ImageGall",{userid: userid, mapid:mapid});
+          socket.on("imagereturn", function(mssg) {
+            //Check if the image is  present if it is remove
+            var facevar=mssg.facevar;
+            var smilevar=mssg.smilevar;
+            console.log("Data  "+facevar+"  "+mssg.picname);
+            if(facevar == 1) {
+              var tempimg = document.getElementById(mssg.picname);
+              tempimg.remove();
+            }
+
+
+          });
+
+
+        });*/
+
+        socket.emit("ImageGall",{userid: userid, mapid:mapid});
+        socket.on("imagereturn", function(mssg) {
+          //Check if the image is  present if it is remove
+          var facevar=mssg.facevar;
+          var smilevar=mssg.smilevar;
+          var tempimg = document.getElementById("div"+mssg.picname);
+          console.log("Data  "+facevar+"  "+mssg.picname);
+
+          if(facevar == 0) {
+            tempimg.remove();
+          }
+
+
         });
 
       });
@@ -1424,7 +1468,7 @@ function imagegallerycontroller(){
             text="No description yet";
 
 
-          $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '" id="'+mssg.picname+'"><div class="caption"><p id="cap'+mssg.picname+'">' +text+'</p></div></a></div>');
+          $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" id="div'+mssg.picname+'"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '" id="'+mssg.picname+'"><div class="caption"><p id="cap'+mssg.picname+'">' +text+'</p></div></a></div>');
         }
 
 
@@ -1435,119 +1479,107 @@ function imagegallerycontroller(){
   });
 }
 
+
 function airplanehandler(){
-  var startpos,startend;
-  var path;
-  var dashedline={
-    path: 'M 0,-1 0,1',
-    strokeOpacity: 1,
-    strokeColor:'#393',
-    scale: 5
-  };
-  console.log("In airplane loop");
-  var flightPlanCoordinates = [
-    {lat: 37.772, lng: -122.214},
-    {lat: 21.291, lng: -157.821},
-    {lat: -18.142, lng: 178.431},
-    {lat: -27.467, lng: 153.027}
-  ];
+    planeactive= 1;
+    if(busactive != 1 && trainactive != 1) {
+      var startpos, startend;
+      var path;
 
-  map.addListener("click",function(event){
-    var obj=[];
-    map.setOptions({draggable: false});
-    console.log(event.latLng);
-    startpos=event.latLng.lat();
-    startend=event.latLng.lng();
-    var coors=new google.maps.LatLng(startpos,startend);
-    var coorssum=new google.maps.LatLng(startpos+5,startend+5);
-    map.panTo(coors);
-    var tempobj= {lat: 37.772, lng: -122.214};
-    obj.push(coors);
-    obj.push(coorssum);
-    console.log("obj"+obj);
-     path=new google.maps.Polyline({
-      path:obj,
-      editable:true,
-      map:map,
-       icons:[{
-        icon:dashedline,
-         offset:'0',
-         repeat:'50px'
-       }],
-       strokeColor:'#0000FF'
-    });
-    if(path!=undefined) {
-      path.addListener("click", function (event) {
-        console.log("Dragging");
+      console.log("In airplane loop");
+      map.addListener("click", function (event) {
+        var objplane = [];
+        console.log("0obj"+objplane);
+        map.setOptions({draggable: false});
+        console.log(event.latLng+"  "+objplane);
+        startpos = event.latLng.lat();
+        startend = event.latLng.lng();
+
+        var coors = new google.maps.LatLng(startpos, startend);
+        var coorssum = new google.maps.LatLng(startpos + 5, startend + 5);
+        map.panTo(coors);
+        objplane.push(coors);
+        objplane.push(coorssum);
+        console.log("obj" + objplane);
+        var path1 = new google.maps.Polyline({
+          path: objplane,
+          editable: true,
+          map: map,
+          icons: [{
+            icon: dashedline,
+            offset: '0',
+            repeat: '50px'
+          }],
+          strokeColor: '#0000FF'
+        });
+        if (path1 != undefined) {
+          path1.addListener("click", function (event) {
+            console.log("Dragging");
+          });
+        }
+        var data = {};
+        data.mode = "airplane";
+        data.path = path1;
+        bushandler.userpath = path1;
+        userpaths.push(data);
       });
+      map.setOptions({draggable: true});
+      planeactive = 0;
     }
-    airplanehandler.userpath=path;
-    var data={};
-    data.mode="airplane";
-    data.path=path;
-    bushandler.userpath=path;
-    userpaths.push(data);
-  });
-
-  map.setOptions({draggable: true});
 
 }
 
 function trainhandler(){
-  var startpos,startend;
-  var path;
-  var dashedline={
-    path: 'M 0,-1 0,1',
-    strokeOpacity: 1,
-    strokeColor:'#393',
-    scale: 5
-  };
-  console.log("In airplane loop");
-  var flightPlanCoordinates = [
-    {lat: 37.772, lng: -122.214},
-    {lat: 21.291, lng: -157.821},
-    {lat: -18.142, lng: 178.431},
-    {lat: -27.467, lng: 153.027}
-  ];
+  trainactive=1;
+  if(planeactive != 1 && busactive !=1)
+  {
 
-  map.addListener("click",function(event){
-    var obj=[];
-    map.setOptions({draggable: false});
-    console.log(event.latLng);
-    startpos=event.latLng.lat();
-    startend=event.latLng.lng();
-    var coors=new google.maps.LatLng(startpos,startend);
-    var coorssum=new google.maps.LatLng(startpos+5,startend+5);
-    map.panTo(coors);
-    var tempobj= {lat: 37.772, lng: -122.214};
-    obj.push(coors);
-    obj.push(coorssum);
-    console.log("obj"+obj);
-    var path=new google.maps.Polyline({
-      path:obj,
-      editable:true,
-      map:map,
-      icons:[{
-        icon:dashedline,
-        offset:'0',
-        repeat:'30px'
-      }],
-      strokeColor:'#000000'
-    });
-    if(path!=undefined) {
-      path.addListener("click", function (event) {
-        console.log("Dragging");
+    var startpos, startend;
+    var path;
+
+    console.log("In airplane loop");
+    map.addListener("click", function (event) {
+      var objtrain = [];
+      map.setOptions({draggable: false});
+      console.log(event.latLng);
+      startpos = event.latLng.lat();
+      startend = event.latLng.lng();
+      var coors = new google.maps.LatLng(startpos, startend);
+      var coorssum = new google.maps.LatLng(startpos + 5, startend + 5);
+      map.panTo(coors);
+      var src = {lat: startpos, lng: startend};
+      var des={lat: startpos+5, lng: startend+5};
+      objtrain.push(src);
+      objtrain.push(des);
+      console.log("obj" + objtrain);
+      var path2 = new google.maps.Polyline({
+        path: objtrain,
+        editable: true,
+        map: map,
+        icons: [{
+          icon: trainline,
+          offset: '0',
+          repeat: '30px'
+        }],
+        strokeColor: '#000000'
       });
-    }
-    trainhandler.userpath=path;
-    var data={};
-    data.mode="train";
-    data.path=path;
-    bushandler.userpath=path;
-    userpaths.push(data);
-  });
+      /*
+      if (path2 != undefined) {
+        path2.addListener("click", function (event) {
+          console.log("Dragging");
+        });
+      }*/
+      trainhandler.userpath = path2;
+      var data = {};
+      data.mode = "train";
+      data.path = path2;
+      bushandler.userpath = path2;
+      userpaths.push(data);
+    });
 
-  map.setOptions({draggable: true});
+    map.setOptions({draggable: true});
+   trainactive=0;
+  }
 
 
 }
@@ -1611,7 +1643,7 @@ function SaveData(){
       sendobj.mode=userpaths[i].mode;
      // sendobj.lat=obj.lat;
     //  sendobj.lon=obj.lng;
-     console.log("Built send og"+sendobj.filename);
+     console.log("Built send obj"+sendobj.path);
 
       $.ajax({
         url:('/usertrailmanual'),
@@ -1623,9 +1655,11 @@ function SaveData(){
         if(msg == "yes")
         {
           console.log("Yes returned");
+          userpaths=[];
         }else
         {
           console.log("No returned");
+          userpaths=[];
         }
       });
     }
@@ -1637,60 +1671,56 @@ function SaveData(){
 
 function bushandler()
 {
-  var startpos,startend;
-  var path;
-  var dashedline={
-    path: 'M 0,-1 0,1',
-    strokeOpacity: 1,
-    strokeColor:'#393',
-    scale: 5
-  };
+      busactive=1;
+      console.log(airplanehandler.active +"  "+trainhandler.active);
+      if(planeactive != 1 && trainactive != 1) {
 
-  console.log("In airplane loop");
-  var flightPlanCoordinates = [
-    {lat: 37.772, lng: -122.214},
-    {lat: 21.291, lng: -157.821},
-    {lat: -18.142, lng: 178.431},
-    {lat: -27.467, lng: 153.027}
-  ];
+      var startpos, startend;
+      var path;
 
-  map.addListener("click",function(event){
-    var obj=[];
-    map.setOptions({draggable: false});
-    console.log(event.latLng);
-    startpos=event.latLng.lat();
-    startend=event.latLng.lng();
-    var coors=new google.maps.LatLng(startpos,startend);
-    var coorssum=new google.maps.LatLng(startpos+5,startend+5);
-    map.panTo(coors);
-    var tempobj= {lat: 37.772, lng: -122.214};
-    obj.push(coors);
-    obj.push(coorssum);
-    console.log("obj"+obj);
-    path=new google.maps.Polyline({
-      path:obj,
-      editable:true,
-      map:map,
-      icons:[{
-        icon:dashedline,
-        offset:'0',
-        repeat:'30px'
-      }],
-      strokeColor:'#4d7859'
-    });
-    if(path!=undefined) {
-      path.addListener("click", function (event) {
-        console.log("Dragging");
+      console.log("In airplane loop");
+
+      map.addListener("click", function (event) {
+
+        var objbus = [];
+        map.setOptions({draggable: false});
+        console.log(event.latLng);
+        startpos = event.latLng.lat();
+        startend = event.latLng.lng();
+        var coors = new google.maps.LatLng(startpos, startend);
+        var coorssum = new google.maps.LatLng(startpos + 5, startend + 5);
+        map.panTo(coors);
+
+        objbus.push(coors);
+        objbus.push(coorssum);
+        console.log("obj" + objbus);
+        path = new google.maps.Polyline({
+          path: objbus,
+          editable: true,
+          map: map,
+          icons: [{
+            icon: busline,
+            offset: '0',
+            repeat: '30px'
+          }],
+          strokeColor: '#4d7859'
+        });
+        if (path != undefined) {
+          path.addListener("click", function (event) {
+            console.log("Dragging");
+          });
+        }
+        var data = {};
+        data.mode = "bus";
+        data.path = path;
+        bushandler.userpath = path;
+        userpaths.push(data);
       });
-    }
-    var data={};
-    data.mode="bus";
-    data.path=path;
-    bushandler.userpath=path;
-    userpaths.push(data);
-  });
 
-  map.setOptions({draggable: true});
+      map.setOptions({draggable: true});
+      busactive=0;
+
+    }
 
 }
 //end of the code for product html
