@@ -215,7 +215,7 @@ function dashboardfunction(){
               $('#infofrm').text('Map is Saved');
               $('#infofrm').css('color', 'green');
               mapname=dat.name;
-              $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + mapname +'"><h3>' + mapname + '</h3>' + '<p>Description: ' + dat.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + mapname + '"><i class="fa fa-picture-o fa-lg" aria-hidden="true"></i> Upload images</a> ' + '<button class="btn btn-default btn-xs '+mapname+'" id="editbutton'+mapname+'"><i class="fa fa-edit fa-lg" aria-hidden="true"></i> Edit map</button> <button class="btn btn-danger btn-xs '+mapname+'" id="removebutton'+mapname+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');
+              $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + mapname +'"><h3>' + mapname + '</h3>' + '<p>Description: ' + dat.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + mapname + '"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Select map</a> ' + '<!--<button class="btn btn-default btn-xs '+mapname+'" id="editbutton'+mapname+'"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Edit map</button>--> <button class="btn btn-danger btn-xs '+mapname+'" id="removebutton'+mapname+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');
 
               //return false;
             }
@@ -314,7 +314,7 @@ function dashboardfunction(){
           //Clear view map region
             var obj=document.getElementById(msg.name);
             if(obj == null) {
-              $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + msg.name +'"><h3>' + msg.name + '</h3>' + '<p>Description: ' + msg.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + msg.name + '"><i class="fa fa-picture-o fa-lg" aria-hidden="true"></i> Upload images</a> ' + '<button class="btn btn-default btn-xs '+msg.name+'" id="editbutton'+msg.name+'"><i class="fa fa-edit fa-lg" aria-hidden="true"></i> Edit map</button> <button class="btn btn-danger btn-xs '+msg.name+'" id="removebutton'+msg.name+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');/*
+              $('#viewmapregion').append('<div class="row"><div class="col-lg-6"><div id="maps' + msg.name +'"><h3>' + msg.name + '</h3>' + '<p>Description: ' + msg.description + '</p>' + '<a class="btn btn-primary btn-xs" id="' + msg.name + '"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Select map</a> ' + '<!--<button class="btn btn-default btn-xs '+msg.name+'" id="editbutton'+msg.name+'"><i class="fa fa-check-circle fa-lg" aria-hidden="true"></i> Edit map</button>--> <button class="btn btn-danger btn-xs '+msg.name+'" id="removebutton'+msg.name+'"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete map</button>' + '</div></div></div>');/*
               '<div id="maps'+msg.name+'"><a id="' + msg.name + '" class="button">' + msg.name + '</a> <div id="info'+msg.info+'"> Description : '+msg.description+'</div><button class="'+msg.name+'" id="editbutton'+msg.name+'"> Edit </button><button class="'+msg.name+'" id="removebutton'+msg.name+'"> Remove Map </button></div><br>');*/
               var editbutt=document.getElementById("editbutton"+msg.name);
               editbutt.addEventListener("click", function(evt){

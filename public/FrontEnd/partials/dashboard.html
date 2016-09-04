@@ -1,7 +1,7 @@
 <!-- Upon loggin in the user sees this page first -->
+<!-- old navbar
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
@@ -12,7 +12,6 @@
       <a class="navbar-brand" href="#">TripAround</a>
     </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="nav navbar-nav">
         <li class="active"><a>Dashboard <span class="sr-only">(current)</span></a></li>
@@ -20,11 +19,13 @@
         <li><a href="#ViewImages">View Uploaded Images</a></li>
         <li><a href="#imagegallery">Browse Image Gallery</a></li>
       </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    </div>
+  </div>
 </nav>
+-->
 
-<h1 id="dashboard">Welcome, {{userid}}.</h1>
+<h1>(TripAround logo)</h1>
+<h3>Welcome, {{userid}}</h3>
 <div class="row steps">
   <div class="col-md-3 step step-current">
     <a>1. Create or choose a map.</a>
@@ -39,15 +40,20 @@
     <a>4. Edit your map.</a>
   </div>
 </div>
+<!--Display user's last created Maps -->
+<div class="row">
+  <div class="col-lg-12">
+    <p>Welcome to TripAround. Here, you can create a new map or you can select a previously saved map.</p>
+  </div>
+</div>
 <div class="row">
   <div class="col-lg-12">
     <p id="info"></p>
   </div>
 </div>
-<!--Display user's last created Maps -->
 <div class="row">
   <div class="col-lg-12">
-      <a class="btn btn-primary" href="" id="viewbutt" ><i class="fa fa-map-o fa-lg" aria-hidden="true"></i> View saved maps </a>
+      <!--<a class="btn btn-primary" href="" id="viewbutt" ><i class="fa fa-map-o fa-lg" aria-hidden="true"></i> View saved maps </a>-->
       <a class="btn btn-success" href="" id="savebutt" data-toggle="modal"><i class="fa fa-map-o fa-lg"></i><sup>&nbsp;<i class="fa fa-plus fa-lg"></i></sup>&nbsp;Create new map</a>
   </div>
 </div>
@@ -68,8 +74,6 @@
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
-    <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -105,8 +109,6 @@
 
 <div id="DescriptionEdit" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
-    <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
