@@ -55,15 +55,13 @@ module.exports= {
     console.log("In get Trails mongodb");
     if(callback)
       callback();
-    console.log("UserID trail"+userid+mapid);
     mongodb.connect(connectionstring,function(err,db){
       if(!err){
         var cursor=db.collection('trailcollection').find({"userid":userid, "mapid":mapid});
         cursor.each(function(err,doc){
-          console.log("In trail"+doc);
           if(doc!=null)
           {
-            console.log("In cursor"+doc.src);
+            console.log("In cursor"+doc.mode);
             callback(doc.userid, doc.mapid, doc.src, doc.des, doc.description, doc.mode);
           }
         });

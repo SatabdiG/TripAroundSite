@@ -1278,9 +1278,10 @@ socket.on('connection',function(socket){
     var maps=msg.mapid;
 
     connect.getTrails("mongodb://localhost:27017/testimages",userid,maps,function(userid,mapid,src,des, description, mode){
-      if(src != undefined && des != undefined) {
-        console.log("Retrived for trails   " + src + "  " + des);
-        socket.emit("drawtrails", {src: src, des: des, map:mapid});
+      console.log("In get Trails");
+      if(src != undefined || des != undefined ||mode != undefined ) {
+        console.log("Retrived for trails   " + src.lat + "  " + des.lon+"  "+mode);
+        socket.emit("drawtrails", {src: src, des: des, map:mapid, mode:mode, description:description});
       }
     });
 

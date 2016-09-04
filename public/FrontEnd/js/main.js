@@ -1047,6 +1047,13 @@ function imageupload() {
         strokeColor:'#393',
         scale: 5
       };
+      //train line
+      var trainline={
+        path: 'M 0,-1 0,1',
+        strokeOpacity: 1,
+        strokeColor:'#396',
+        scale: 3
+      };
       //Bus line
       var busline={
         path: 'M 0,0,-1,-1,0, 0,1, 1',
@@ -1062,99 +1069,175 @@ function imageupload() {
 
       socket.emit("GetTrails", {id:userid, mapid:mapname});
       socket.on("drawtrails", function(msg){
-        console.log("Draw Trails gives"+msg.src.lat+"  "+msg.des.lon);
-        var srctemp={lat: msg.src.lat, lng:msg.src.lon};
-        var finaltemp={lat: msg.des.lat, lng:msg.des.lon};
+        console.log("Draw Trails gives"+msg.src+"  "+msg.des);
+        var src=msg.src;
+        var des=msg.des;
         var paths=[];
-        paths.push(srctemp);
-        paths.push(finaltemp);
-        var path=new google.maps.Polyline({
-          path:paths,
-          geodesic:true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2
-        });
-        //animateCircle(path);
-        path.setMap(map);
+        if(src.length > 1)
+        {
+          console.log("fetched more than one src objs");
+          var srcarr=[];
+          for(var i=0;i<src.length;i++)
+          {
+            console.log("Src"+src[i].lat+"  "+src[i].lon);
+            var srctemp={lat: src[i].lat, lng:src[i].lon};
+            srcarr.push(srctemp);
+          }
+          if(des.lat != undefined)
+            srcarr.push({lat: des.lat, lng:des.lon});
+          paths=srcarr;
+        }else {
 
 
-        path.addListener("click", function(event){
-          var latitude=event.latLng.lat();
-          var longitude=event.latLng.lng();
-          var vehicle="";
-          //call a function that brings up the modular
-          $('#optionsmodal').modal('show');
+          var srctemp = {lat: msg.src.lat, lng: msg.src.lon};
+          var finaltemp = {lat: msg.des.lat, lng: msg.des.lon};
 
-          $('#airplane').on('click', function (evt) {
-            evt.preventDefault();
+          paths.push(srctemp);
+          paths.push(finaltemp);
+        }
+        console.log("Final Paths"+paths);
+          var description = msg.description;
+          var vehicle = msg.mode;
+          var path = new google.maps.Polyline({
+            path: paths,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          });
+          if (vehicle == "airplane") {
             path.setOptions({
-              icons:[{
-                icon:dashedline,
-                offset:'0',
-                repeat:'90px'
+              icons: [{
+                icon: dashedline,
+                offset: '0',
+                repeat: '90px'
               }],
               strokeColor: '#ffc433',
             });
-            vehicle="airplane";
-          });
-          $('#bus').on('click', function (evt) {
-            evt.preventDefault();
+          } else if (vehicle = "bus") {
             path.setOptions({
-              icons:[{
-                icon:busline,
-                offset:'0',
-                repeat:'50px'
+              icons: [{
+                icon: busline,
+                offset: '0',
+                repeat: '50px'
               }],
               strokeColor: '#9ba3f3',
             });
-            vehicle="bus";
-          });
+          } else if (vehicle == "train") {
+            path.setOptions({
+              icons: [{
+                icon: trainline,
+                offset: '0',
+                repeat: '50px'
+              }],
+              strokeColor: '#9ba3f4',
+            });
+          }
+          //animateCircle(path);
+          path.setMap(map);
+          path.addListener("click", function (event) {
+            this.descr = description;
+            if (description == "") {
+              $('#infotxt').text("You don't have a description for this trail yet. Please click edit description to get a description");
+            }
+            else {
+              $('#infotxt').text(description);
+            }
 
-          $('#trailsub').on("click",function(event){
-            //Save the Map details
-            var desc=$('#traildescription').val();
-            if(desc == "")
-            {
-              console.log("Trail Description is empty");
-              $('#infotxt').text("Please enter a valid Trail Description");
-            }else
-            {
-              var trail={};
-              trail.name=userid;
-              trail.map=mapname;
-              console.log("Trail description is present");
-              trail.pathobj=path.getPath().getArray().toString();
-              trail.description=desc;
-              if(vehicle == "")
-              {
-                $('#infotxt').text("Please choose Bus or Airplane");
-                trail.mode="";
-              }else {
-                trail.mode = vehicle;
-              }
+            var latitude = event.latLng.lat();
+            var longitude = event.latLng.lng();
+
+            //call a function that brings up the modular
+            $('#optionsmodal').modal('show');
+
+            $('#airplane').on('click', function (evt) {
+              evt.preventDefault();
+              path.setOptions({
+                icons: [{
+                  icon: dashedline,
+                  offset: '0',
+                  repeat: '90px'
+                }],
+                strokeColor: '#ffc433',
+              });
+              vehicle = "airplane";
+            });
+            $('#bus').on('click', function (evt) {
+              evt.preventDefault();
+              path.setOptions({
+                icons: [{
+                  icon: busline,
+                  offset: '0',
+                  repeat: '50px'
+                }],
+                strokeColor: '#9ba3f3',
+              });
+              vehicle = "bus";
+            });
+            $('#train').on('click', function (evt) {
+              evt.preventDefault();
+              path.setOptions({
+                icons: [{
+                  icon: trainline,
+                  offset: '0',
+                  repeat: '50px'
+                }],
+                strokeColor: '#9ba3f4',
+              });
+              vehicle = "train";
+            });
+            $('#trailsub').on("click", function (event) {
+              //Save the Map details
+              var desc = $('#traildescription').val();
+              if (desc == "") {
+                console.log("Trail Description is empty");
+                $('#traildescription').text("Please enter a valid Trail Description");
+              } else {
+                var trail = {};
+                trail.name = userid;
+                trail.map = mapname;
+                console.log("Trail description is present");
+                trail.pathobj = path.getPath().getArray().toString();
+                trail.description = desc;
+                if (vehicle == "") {
+                  $('#traildescription').text("Please choose Bus or Airplane");
+                  trail.mode = "";
+                } else {
+                  trail.mode = vehicle;
+                }
                 console.log("Created Object" + JSON.stringify(trail) + latitude + longitude);
-
                 $.ajax({
-                  url:'/traildescription',
-                  method:'POST',
-                  data:JSON.stringify(trail),
-                  contentType:'application/JSON'
+                  url: '/traildescription',
+                  method: 'POST',
+                  data: JSON.stringify(trail),
+                  contentType: 'application/JSON'
                 }).done(function (msg) {
-
-                  console.log("Returend message"+msg);
-                  if(msg == "yes")
-                  {
+                  console.log("Returend message" + msg);
+                  if (msg == "yes") {
                     //close the modal
                     $("#optionsmodal").modal("hide");
+                    var divhtml = $('#traildescription').html();
+                    var temphtml = $('<div id="infotxt"></div>');
+                    temphtml.val(divhtml);
+                    $('#traildescription').replaceWith(temphtml);
+                    description = desc;
+                    $("#infotxt").text(description);
                   }
-
                 });
 
-            }
+              }
+            });
+            $('#editdes').on('click', function (evt) {
+              //Replace the infotxt with an editable textare
+              var divhtml = $('#infotxt').html();
+              var editabletext = $("<textarea id='traildescription'/>");
+              editabletext.val(divhtml);
+              $('#infotxt').replaceWith(editabletext);
+              editabletext.focus();
+            });
+
           });
 
-        });
 
       });
 
@@ -1524,7 +1607,7 @@ function SaveData(){
       sendobj.mode=userpaths[i].mode;
      // sendobj.lat=obj.lat;
     //  sendobj.lon=obj.lng;
-    //  console.log("Built send og"+sendobj.filename);
+     console.log("Built send og"+sendobj.filename);
 
       $.ajax({
         url:('/usertrailmanual'),
