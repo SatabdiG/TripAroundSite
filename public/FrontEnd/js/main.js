@@ -1184,7 +1184,6 @@ function imageupload() {
             $('#optionsmodal').modal('show');
 
             $('#airplane').on('click', function (evt) {
-              evt.preventDefault();
               path.setOptions({
                 icons: [{
                   icon: dashedline,
@@ -1196,7 +1195,6 @@ function imageupload() {
               vehicle = "airplane";
             });
             $('#bus').on('click', function (evt) {
-              evt.preventDefault();
               path.setOptions({
                 icons: [{
                   icon: busline,
@@ -1208,7 +1206,6 @@ function imageupload() {
               vehicle = "bus";
             });
             $('#train').on('click', function (evt) {
-              evt.preventDefault();
               path.setOptions({
                 icons: [{
                   icon: trainline,

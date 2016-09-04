@@ -49,30 +49,28 @@
 
 <input id="searchbox" class="controls" type="text" placeholder="Search Box">
 <!--Modal Window -->
-    <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Tagged Image</h4>
-        </div>
-        <div class="modal-body">
-          <div id="image-des"></div>
-         <div id="image-container">
-           <img src="" id="image">
-         </div>
-          <form id="imagedescription">
-            <input type="text" placeholder=" Enter Description" id="imageinfo">
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-default" id="imagedescriptionsub">Submit</button>
-        </div>
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Tagged Image</h4>
+      </div>
+      <div class="modal-body">
+        <div id="image-des"></div>
+       <div id="image-container"></div>
+        <form id="imagedescription">
+          <input type="text" placeholder="Enter Description" id="imageinfo">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" id="imagedescriptionsub">Save</button>
       </div>
     </div>
   </div>
+</div>
 
 <!-- Options Modal -->
 <div id="optionsmodal" class="modal fade" role="dialog">
@@ -81,24 +79,30 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Select Trail Options and Edit Descriptions</h4>
+        <h4 class="modal-title">Edit this route segment</h4>
       </div>
       <div class="modal-body">
-        <div id="infotxt"></div>
-        <br>
-        <button class="btn btn-primary" id="airplane">Airplane</button>
-        <button class="btn btn-primary" id="bus">Bus</button>
-        <button class="btn btn-primary" id="train">Train</button>
+        <p id="infotxt"></p>
+        <form>
+        <p><label class="form-label">Mode of transportation</label></p>
+        <p>
+          <label class="radio-inline">
+            <input type="radio" id="airplane" name="transport" value="airplane"> Airplane
+          </label>
+          <label class="radio-inline">
+            <input type="radio" id="bus" name="transport" value="bus"> Bus
+          </label>
+          <label class="radio-inline">
+            <input type="radio" id="train" name="transport" value="train"> Train
+          </label>
+        </p>
         <button class="btn btn-primary" id="editdes">Edit Description</button>
-        <button class="btn btn-primary" id="trailsub">Submit Now</button>
+        </form>
       </div>
       <div class="modal-footer" id="optionsfooter">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-success" id="trailsub">Save</button>
       </div>
     </div>
-
   </div>
 </div>
-
-
-
