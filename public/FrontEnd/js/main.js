@@ -793,7 +793,8 @@ function initialize(){
   var mapProp = {
     center:new google.maps.LatLng(51.508742,-0.120850),
     zoom:5,
-    mapTypeId:'terrain'
+    mapTypeId:'terrain',
+    minZoom: 2
 
   };
 
@@ -802,6 +803,37 @@ function initialize(){
   overlay = new google.maps.OverlayView();
   overlay.draw = function() {};
   overlay.setMap(map);
+  
+  // prevent panning into grey zone
+  google.maps.event.addListener(map, 'center_changed', function() {
+      checkBounds(map);
+  });
+  // If the map position is out of range, move it back
+  function checkBounds(map) {
+
+  var latNorth = map.getBounds().getNorthEast().lat();
+  var latSouth = map.getBounds().getSouthWest().lat();
+  var newLat;
+
+  if(latNorth<85 && latSouth>-85)     /* in both side -> it's ok */
+      return;
+  else {
+      if(latNorth>85 && latSouth<-85)   /* out both side -> it's ok */
+          return;
+      else {
+          if(latNorth>85)   
+              newLat =  map.getCenter().lat() - (latNorth-85);   /* too north, centering */
+          if(latSouth<-85) 
+              newLat =  map.getCenter().lat() - (latSouth+85);   /* too south, centering */
+      }   
+  }
+  if(newLat) {
+      var newCenter= new google.maps.LatLng( newLat ,map.getCenter().lng() );
+      map.setCenter(newCenter);
+      }   
+  }
+
+
 
 }
 
@@ -955,7 +987,7 @@ function imageupload() {
       //if($("#thumbnail li").length === 0)
       var pic=document.getElementById(mssg.picname);
       if(pic == undefined)
-        $("#thumbnail").append('<img src="'+loc+'" class="img-thumbnail" alt="Cinque Terre" id="'+mssg.picname+'">');
+        $("#thumbnail").append('<div class="col-xs-4 col-sm-2 col-md-1"><img class="img-responsive img-thumbnail" src="' + loc + '" alt="' + mssg.picname + '" id="'+mssg.picname+'"></div>');
     });
     $("#thumbnail").tooltip({
       content:"Click here for Draggable Marker"

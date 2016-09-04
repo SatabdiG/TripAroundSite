@@ -14,6 +14,22 @@ nav {
 }
 */
 
+#googlemapcontainer{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#googleMap {
+  height: 400px;
+}
+#something{
+  height: 34px;
+  width: 21px;
+  z-index: 1000;
+  background-image: url("/FrontEnd/Pictures/marker.png");
+  background-repeat: no-repeat;
+  position: absolute;
+}
 
 /* steps */
 .steps {
@@ -40,19 +56,19 @@ nav {
 }
 
 .step-past {
-  border-bottom-color: #338;
+  border-bottom-color: #268;
 }
 .step-current {
-  border-bottom-color: #99f;
+  border-bottom-color: #37c;
 }
 .step-future {
   border-bottom-color: #ccc;
 }
 .step-past::after {
-  border-color: #338;
+  border-color: #268;
 }
 .step-current::after {
-  border-color: #99f;
+  border-color: #37c;
 }
 .step-future::after {
   border-color: #ccc;
@@ -68,7 +84,6 @@ nav {
 .step a:hover {
   text-decoration: none;
 }
-
 
 /* login page */
 .body-user {

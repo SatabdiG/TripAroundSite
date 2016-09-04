@@ -1,38 +1,36 @@
 <!-- Description : User can drag drop images to images -->
-
-<nav  class="navbar navbar-inverse" id="mapnavigation">
-    <div class="container-fluid">
-      <ul class="nav navbar-nav navbar-left" id="maplinks">
-        <li><a href="#dashboard">Dashboard</a></li>
-        <li><a href="#UploadImages">Upload Images</a></li>
-        <li class="active"><a href="#ViewImages">View Uploaded Images</a></li>
-        <li><a href="#imagegallery">Browse Image Gallery</a></li>
-      </ul>
-    </div>
-  </nav>
-<br>
-<h3 id="dashboard">Welcome {{userid}} </h3>
-<br>
-<br>
-<div id="mapinfo"> You are viewing : {{mapname}} </div>
-<br>
-<div id="mapinfosec"></div>
-<br>
-<div id="manualtag" class="container-fluid">
-    <div class="row">
-     <div class="col-lg-4" id="imagethumb">
-      <!-- Display uploaded images here as thumbnails -->
-       <ul class="lists" id="thumbnail"></ul>
-     </div>
-     <div id="something" class="test"></div>
-    <!--Start of Google Maps -->
-      <div id="googlemapcontainer">
-        <div class="col-lg-8">
-              <div id="googleMap"style="height:380px;"></div>
-         </div>
-      </div>
-    </div>
+<h1>(TripAround logo)</h1>
+<h3>Welcome, {{userid}}</h3>
+<div class="row steps">
+  <div class="col-md-3 step step-past">
+    <a href="#dashboard">1. Create or choose a map.</a>
   </div>
+  <div class="col-md-3 step step-past">
+    <a href="#UploadImages">2. Upload pictures.</a>
+  </div>
+  <div class="col-md-3 step step-past">
+    <a href="#imagegallery">3. Manage your gallery.</a>
+  </div>
+  <div class="col-md-3 step step-current">
+    <a>4. Edit your map.</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <p id="mapinfo"> You are viewing : {{mapname}} </p>
+    <p id="mapinfosec"></p>
+  </div>
+</div>
+
+<div class="row" id="thumbnail"></div>
+<div id="something" class="test"></div>
+
+<div class="row">
+  <div class="col-lg-12" id="googlemapcontainer">
+    <div id="googleMap"></div>
+  </div>
+</div>
 
 <input id="searchbox" class="controls" type="text" placeholder="Search Box">
 <!--Modal Window -->
