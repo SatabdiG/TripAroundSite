@@ -189,7 +189,7 @@ module.exports= {
                 console.log("Password  "+doc.userpassword);
                 if(doc.userpassword == queryval) {
 
-                  return callback("success");
+                  return callback("success", doc.username);
 
                 }
                 else {

@@ -654,13 +654,16 @@ app.post('/login',function(req,res){
   var username=req.body.name;
   var password=req.body.password;
   //Access MongoDB - see if user is authorized
-  connect.verifyusers('mongodb://localhost:27017/testimages','usercollection',username, password,function(results){
+  connect.verifyusers('mongodb://localhost:27017/testimages','usercollection',username, password,function(results, username){
     if(results!=undefined){
       console.log("fetched results"+ results);
       if(results == 'success')
       {
         //user present entered correct password allow login
-        return res.end("success");
+        var data={};
+        data.username=username;
+        data.status="success";
+        return res.end(JSON.stringify(data));
 
       }
       else

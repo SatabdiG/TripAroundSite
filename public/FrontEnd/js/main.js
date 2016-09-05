@@ -18,6 +18,8 @@ var loc1=[];
 var nomap=0;
 var map;
 
+var name;
+
 //From map page
 var usermarkers=[];
 var paths=[];
@@ -65,7 +67,7 @@ function homeinit(){
     $('#registerusr')[0].reset();
     $('#info').text('');
   });
-
+  name="";
   userid="";
   mapname="";
   password="";
@@ -89,11 +91,13 @@ function homeinit(){
         data: JSON.stringify(data),
         contentType: 'application/json'
       }).done(function (data) {
-        console.log("Browser Data"+data);
-        if(data != "fail")
+        var dat=JSON.parse(data);
+        console.log("Browser Data"+dat.status);
+        if(dat.status != "fail")
         {
           console.log("Successful Login");
           userid=username;
+          name=dat.username;
           password=data.password;
           window.location.href="#dashboard";
         }
@@ -503,6 +507,14 @@ function imagecontroller(){
                 map.setCenter(marker.getPosition());
                 map.setZoom(4);
                 marker.setMap(map);
+                marker.addListener('click',function () {
+                  var reader=new FileReader();
+                  reader.onload=function (e) {
+                    $('#image-container').attr("src", e.traget.results);
+                  };
+                  reader.readAsDataURL(file);
+
+                });
                 markers.push(marker);
               }
             });
@@ -781,7 +793,8 @@ function imagecontroller(){
             var filename = $('#userphoto').val().split('\\').pop();
             var fil=document.getElementById("userphoto");
             console.log("Name is"+ this.name);
-            markerobj.filename=this.name; //fix this
+            markerobj.filename=this.name;
+            var fil=$("#userphoto").get(0).files[i];
             //********* input name *****************
             //markercollec.push(markerobj);
             markercollec[count++]=markerobj;
@@ -792,6 +805,15 @@ function imagecontroller(){
             map.setCenter(marker.getPosition());
             map.setZoom(4);
             marker.setMap(map);
+            marker.addListener('click',function () {
+              var reader=new FileReader();
+              console.log(fil);
+              reader.readAsDataURL(fil);
+              reader.onload=function (e) {
+                $('#image-container').attr("src", e.target.result);
+              };
+
+            });
             markers.push(marker);
           }
         });
@@ -1845,28 +1867,28 @@ tripapp.controller('productcontroller', function($scope){
 });
 
 tripapp.controller('mapcontroller', function($scope){
-  $scope.userid=userid;
+  $scope.userid=name;
   $scope.mapname=mapname;
   $scope.init=imageupload();
 
 });
 
 tripapp.controller('imagecontroller', function($scope){
-  $scope.userid=userid;
+  $scope.userid=name;
   $scope.map=mapname;
   $scope.init=imagecontroller();
 
 });
 
 tripapp.controller('imagegallerycontroller', function($scope){
-  $scope.userid=userid;
+  $scope.userid=name;
   $scope.map=mapname;
   $scope.init=imagegallerycontroller();
 
 });
 
 tripapp.controller('dashboardcontroller', function($scope){
-  $scope.userid=userid;
+  $scope.userid=name;
   $scope.init=dashboardfunction();
 
 });
