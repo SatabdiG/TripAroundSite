@@ -800,7 +800,7 @@ app.post('/userdetailssave', function(req, res){
 
 });
 
-app.post('updateimagedescription', function (req, res) {
+app.post('/updateimagedescription', function (req, res) {
   console.log("In image update description");
   var filename=req.body.filename;
   var username=req.body.username;
@@ -874,20 +874,15 @@ app.post('/facedetection', function(req, res){
         if (imagename != undefined || imagepath != undefined) {
           var imagename = imagename;
           var imagepath = path.join(__dirname, imagepath);
+          var totalimg=path.join(imagepath, imagename);
           console.log("Path is" + imagepath);
+          var facevar=0;
+          cv.readImage(totalimg, function(err, im){
 
-          cv.readImage(path.join(imagepath,imagename), function(err, im){
-            if (err) throw err;
-            if (im.width() < 1 || im.height() < 1) throw new Error('Image has no size');
-
-//Detect Face
-            im.detectObject("./computerVision/data/haarcascade_frontalface_alt2.xml", {}, function(err,faces){
-              if (err) throw err;
-              console.log(faces.length);
-              if (faces.length>0){
-                console.log("found face!");
-                var facevar = 1;
-
+            im.detectObject(cv.FACE_CASCADE, {}, function (err, faces) {
+              if(faces.length>1)
+              {
+                var facevar=1;
                 connect.addface('mongodb://localhost:27017/testimages', imagename, userid,mapid,facevar,function(message){
                   console.log("Message"+message);
                   if(message == "done")
@@ -895,14 +890,11 @@ app.post('/facedetection', function(req, res){
                   else
                     return res.end("no");
                 });
-
               }
-
-              console.log('Image saved to face-detection.png');
             });
+
           });
-
-
+          return res.end("yes");
         }
       });
     }

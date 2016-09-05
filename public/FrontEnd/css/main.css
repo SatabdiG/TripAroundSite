@@ -26,6 +26,11 @@ h1 {
   max-width: 100%;
 }
 
+#image-container
+{
+  max-width: 100%;
+}
+
 #googlemapcontainer{
   padding-top: 20px;
   padding-bottom: 20px;

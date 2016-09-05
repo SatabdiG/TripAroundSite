@@ -1301,14 +1301,19 @@ function imageupload() {
         marker.setMap(map);
         markerarray.push(marker);
         marker.addListener('click',function () {
-          var tempimg=$("#image-container .imageholder").html();
-          if(tempimg!= undefined) {
-            var str="uploads/"+userid+"/"+msg.map+"/"+msg.filename;
-            $("#image-container .imageholder").attr("src", str);
+          //var tempimg=$("#image-container .imageholder").html();
+         // if(tempimg!= undefined) {
 
-          }else {
-             $('#image-container').append('<img class="imageholder" src="uploads/'+userid+'/'+msg.map+'/'+msg.filename+'"</img>');
-          }
+            //$("#image-container .imageholder").attr("src", str);
+
+          //}
+          var str="uploads/"+userid+"/"+msg.map+"/"+msg.filename;
+          $('#image-container').attr("src",str);
+          /*
+          else {
+             $('#image-container').append('<img class="imageholder" src="uploads/'+userid+'/'+msg.map+'/'+msg.filename+'">');
+          }*/
+
 
           $("#imagedescriptionsub").on("click", function(evt){
             console.log("Image description clicked");
@@ -1331,6 +1336,7 @@ function imageupload() {
                 if(msg == "yes")
                 {
                   $('#image-des').text(msg);
+
                 }
               });
             }
@@ -1360,13 +1366,14 @@ function imagegallerycontroller(){
       //display the filters
       $('#filtermodal').modal("show");
       //smile check function
-      $('#smilecheck').on("click", function (evt) {
+      $('#facecheck').on("click", function (evt) {
         $('#facecheck').attr("checked", true);
         console.log("Smile checked clicked");
         //call the server function
         var data={};
         data.userid=userid;
-        data.mapid=mapname;/*
+        data.mapid=mapname;
+        /*
         $.ajax({
           url:'/facedetection',
           data:JSON.stringify(data),
@@ -1381,14 +1388,13 @@ function imagegallerycontroller(){
             var facevar=mssg.facevar;
             var smilevar=mssg.smilevar;
             console.log("Data  "+facevar+"  "+mssg.picname);
-            if(facevar == 1) {
+            if(facevar == 0) {
               var tempimg = document.getElementById(mssg.picname);
               tempimg.remove();
             }
 
 
           });
-
 
         });*/
 
@@ -1399,21 +1405,63 @@ function imagegallerycontroller(){
           var smilevar=mssg.smilevar;
           var tempimg = document.getElementById("div"+mssg.picname);
           console.log("Data  "+facevar+"  "+mssg.picname);
-
-          if(facevar == 0) {
-            tempimg.remove();
+          if(tempimg!= undefined) {
+            if (facevar == 0) {
+              tempimg.remove();
+            }
           }
-
-
         });
 
       });
       //face check  function
-      $('#facecheck').on("click", function(evt){
-        evt.preventDefault();
-        console.log("Face check detected");
+      $('#smilecheck').on("click", function(evt){
+        $('#smilecheck').attr("checked", true);
+        console.log("Smile checked clicked");
 
+        socket.emit("ImageGall",{userid: userid, mapid:mapid});
+        socket.on("imagereturn", function(mssg) {
+          //Check if the image is  present if it is remove
+          var facevar=mssg.facevar;
+          var smilevar=mssg.smilevar;
+          var tempimg = document.getElementById("div"+mssg.picname);
+          console.log("Data  "+facevar+"  "+mssg.picname);
+          if(tempimg!=undefined) {
+            if (smilevar == 0) {
+              tempimg.remove();
+            }
+          }
+        });
       });
+
+    });
+
+    $('#dispall').on("click", function (evt) {
+        $('#dispall').attr("checked", true);
+        console.log("Display all checked clicked");
+        socket.emit("ImageGall",{userid: userid, mapid:mapid});
+        socket.on("imagereturn", function(mssg) {
+          //Check if the image is  present if it is remove
+          var facevar=mssg.facevar;
+          var tempimg = document.getElementById("div"+mssg.picname);
+          console.log("Data  "+facevar+"  "+mssg.picname);
+          if(userid=="guest"){
+            var mapid="guestmap";
+            var loc="uploads/"+mssg.picname;
+          }
+          else
+          {
+            var loc=mssg.picpath+"/"+mssg.picname;
+          }
+          if(tempimg == undefined)
+          {
+            var text=mssg.description;
+            if(text == "")
+              text="No description yet";
+            $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" id="div'+mssg.picname+'"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '" id="'+mssg.picname+'"><div class="caption"><p id="cap'+mssg.picname+'">' +text+'</p></div></a></div>');
+          }
+
+        });
+
 
     });
 
@@ -1467,7 +1515,6 @@ function imagegallerycontroller(){
           if(text == "")
             text="No description yet";
 
-
           $('#imagegall').append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" id="div'+mssg.picname+'"><a href="' + loc + '" class="thumbnail"><img class="img-responsive" src="' + loc + '" alt="' + mssg.picname + '" id="'+mssg.picname+'"><div class="caption"><p id="cap'+mssg.picname+'">' +text+'</p></div></a></div>');
         }
 
@@ -1489,9 +1536,18 @@ function airplanehandler(){
       console.log("In airplane loop");
       map.addListener("click", function (event) {
         var objplane = [];
+        if(objplane.count>0)
+        {
+          for(var i in objplane)
+          {
+            var index=objplane.indexOf(i);
+            objplane.splice(index,1);
+          }
+        }
         console.log("0obj"+objplane);
         map.setOptions({draggable: false});
-        console.log(event.latLng+"  "+objplane);
+
+        console.log("ZZZ"+event.latLng+"  "+objplane);
         startpos = event.latLng.lat();
         startend = event.latLng.lng();
 
