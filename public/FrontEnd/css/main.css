@@ -57,6 +57,8 @@ h1 {
   border-bottom-width: 4px;
   border-bottom-style: solid;
   font-weight: bold;
+  font-family: 'Indie Flower', cursive;
+  font-size: 120%;
 }
 .step::after {
   content: "";
@@ -93,7 +95,7 @@ h1 {
 
 .step a {
   line-height: 40px;
-  color: black;
+  color: #333;
 }
 .step-future a {
   color: #ccc;
