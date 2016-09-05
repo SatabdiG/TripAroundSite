@@ -1357,7 +1357,7 @@ function imageupload() {
                 console.log("Return msg"+msg);
                 if(msg == "yes")
                 {
-                  $('#image-des').text(msg);
+                  $('#image-des').text(content);
 
                 }
               });
