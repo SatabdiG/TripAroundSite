@@ -1013,15 +1013,7 @@ function imageupload() {
       });
        map.fitBounds(bounds);
     });
-    /*
-    $("#beforepagebutton").hover(function(){
-      $("#beforepagebutton span").text("");
-    }, function(){
-      $("#beforepagebutton span").text("<");
-    });
-    $("#beforepagebutton").click(function(){
-      window.location.href="#UploadImages";
-    });*/
+
 
     $('#something').hide();
     //Fetch images from Server using socketio
@@ -1388,6 +1380,7 @@ function imagegallerycontroller(){
       //display the filters
       $('#filtermodal').modal("show");
       //smile check function
+      /*
       $('#facecheck').on("click", function (evt) {
         $('#facecheck').attr("checked", true);
         console.log("Smile checked clicked");
@@ -1395,30 +1388,7 @@ function imagegallerycontroller(){
         var data={};
         data.userid=userid;
         data.mapid=mapname;
-        /*
-        $.ajax({
-          url:'/facedetection',
-          data:JSON.stringify(data),
-          method:'POST',
-          contentType:'application/JSON'
-        }).done(function(msg){
-          console.log("Message Returned"+msg);
-          //call draw images functions and redraw the page
-          socket.emit("ImageGall",{userid: userid, mapid:mapid});
-          socket.on("imagereturn", function(mssg) {
-            //Check if the image is  present if it is remove
-            var facevar=mssg.facevar;
-            var smilevar=mssg.smilevar;
-            console.log("Data  "+facevar+"  "+mssg.picname);
-            if(facevar == 0) {
-              var tempimg = document.getElementById(mssg.picname);
-              tempimg.remove();
-            }
 
-
-          });
-
-        });*/
 
         socket.emit("ImageGall",{userid: userid, mapid:mapid});
         socket.on("imagereturn", function(mssg) {
@@ -1435,7 +1405,8 @@ function imagegallerycontroller(){
         });
 
       });
-      //face check  function
+      */
+      //Smile check  function
       $('#smilecheck').on("click", function(evt){
         $('#smilecheck').attr("checked", true);
         console.log("Smile checked clicked");
@@ -1563,7 +1534,7 @@ function airplanehandler(){
           for(var i in objplane)
           {
             var index=objplane.indexOf(i);
-            objplane.splice(index,1);
+            objplane.pop();
           }
         }
         console.log("0obj"+objplane);
@@ -1588,11 +1559,11 @@ function airplanehandler(){
             offset: '0',
             repeat: '50px'
           }],
-          strokeColor: '#0000FF'
+          strokeColor: '#ffc433',
         });
         if (path1 != undefined) {
-          path1.addListener("click", function (event) {
-            console.log("Dragging");
+           path1.addListener("click", function (event) {
+            path1.setMap(null);
           });
         }
         var data = {};
@@ -1639,14 +1610,15 @@ function trainhandler(){
           offset: '0',
           repeat: '30px'
         }],
-        strokeColor: '#000000'
+        strokeColor: '#9ba3f4',
       });
-      /*
+
       if (path2 != undefined) {
         path2.addListener("click", function (event) {
           console.log("Dragging");
+          path2.setMap(null);
         });
-      }*/
+      }
       trainhandler.userpath = path2;
       var data = {};
       data.mode = "train";
@@ -1768,11 +1740,10 @@ function bushandler()
         var coors = new google.maps.LatLng(startpos, startend);
         var coorssum = new google.maps.LatLng(startpos + 5, startend + 5);
         map.panTo(coors);
-
         objbus.push(coors);
         objbus.push(coorssum);
         console.log("obj" + objbus);
-        path = new google.maps.Polyline({
+        var path = new google.maps.Polyline({
           path: objbus,
           editable: true,
           map: map,
@@ -1781,11 +1752,12 @@ function bushandler()
             offset: '0',
             repeat: '30px'
           }],
-          strokeColor: '#4d7859'
+          strokeColor: '#9ba3f3',
         });
         if (path != undefined) {
           path.addListener("click", function (event) {
             console.log("Dragging");
+            path.setMap(null);
           });
         }
         var data = {};
